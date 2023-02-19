@@ -1,21 +1,27 @@
 import { type NextPage } from "next";
-import { useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import CategoryCard from "../components/CategoryCard";
+import { api } from "../utils/api";
+import { ClipLoader } from "react-spinners";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
+const categories = [
+  { title: "Hoodies", href: "/category/hoodies" },
+  { title: "T-Shirts", href: "/category/t-shirts" },
+  { title: "Jeans", href: "/category/jeans" },
+];
 const Home: NextPage = () => {
-  const categories = [
-    { title: "Hoodies", href: "/category/hoodies" },
-    { title: "T-Shirts", href: "/category/t-shirts" },
-    { title: "Jeans", href: "/category/jeans" },
-  ];
-  const session = useSession();
-  useEffect(() => {
-    console.log({ session });
-  }, []);
+  const [selectedItem, setSelectedItem] = useState(0);
+  const router = useRouter();
+  const { data, isLoading } = api.printify.getPrintifyShopProducts.useQuery();
 
+  if (isLoading) return <ClipLoader size={200} />;
+  const arr = [0, 10, 11, 12, 14, 16, 20, 24, 28, 30, 32, 36, 40];
   return (
     <>
       <Head>
@@ -29,28 +35,53 @@ const Home: NextPage = () => {
           <h2 className="text-center text-3xl font-medium ">
             Featured Products
           </h2>
-          <div className="flex flex-wrap justify-center">
-            <div className="w-1/3 p-4">
-              <Image
-                src=""
-                alt="Product 1"
-                className="h-64 w-full object-cover"
-              />
-            </div>
-            <div className="w-1/3 p-4">
-              <Image
-                src=""
-                alt="Product 2"
-                className="h-64 w-full object-cover"
-              />
-            </div>
-            <div className="w-1/3 p-4">
-              <Image
-                src=""
-                alt="Product 3"
-                className="h-64 w-full object-cover"
-              />
-            </div>
+          <div className="flex flex-wrap justify-center bg-white">
+            {!isLoading && data ? (
+              <Carousel
+                showArrows={true}
+                selectedItem={selectedItem}
+                swipeable
+                showThumbs={false}
+                renderIndicator={(e, isSelected, index, label) => {
+                  return (
+                    <li
+                      value={index}
+                      role="button"
+                      onClick={() => {
+                        setSelectedItem(index);
+                      }}
+                      className={`${
+                        isSelected ? "border-2 border-white" : null
+                      } mx-2 inline-block h-2 w-2 rounded-full bg-black duration-150`}
+                    ></li>
+                  );
+                }}
+                className="w-3/4 "
+                autoPlay
+                infiniteLoop
+                onClickItem={(i, product) => {
+                  const prod = product as any;
+                  router.push(prod.props.href);
+                }}
+                emulateTouch
+              >
+                {data.data.map((product) => (
+                  <Link href={`/product/${product.id}`} key={product.id}>
+                    <Image
+                      src={product.images[1]?.src + ""}
+                      alt={product.title}
+                      className="w-full object-cover"
+                      width={500}
+                      height={500}
+                    />
+                  </Link>
+                ))}
+              </Carousel>
+            ) : (
+              <div className="w-1/3 p-4">
+                <ClipLoader color="white" />
+              </div>
+            )}
           </div>
         </div>
 
@@ -73,7 +104,13 @@ const Home: NextPage = () => {
           <h2 className="text-center text-3xl font-medium ">User Reviews</h2>
           <div className="flex flex-col justify-center md:flex-row">
             <div className="p-4 md:w-1/3">
-              <Image src="" alt="User 1" className="h-64 w-full object-cover" />
+              <Image
+                src={data?.data[1]?.images[0]?.src + ""}
+                alt="User 1"
+                width={100}
+                height={100}
+                className="h-64 w-full object-cover"
+              />
             </div>
             <div className="p-4 md:w-2/3">
               <h3 className="text-xl font-medium ">User 1</h3>
@@ -88,7 +125,13 @@ const Home: NextPage = () => {
           </div>
           <div className="flex flex-col justify-center md:flex-row">
             <div className="p-4 md:w-1/3">
-              <Image src="" alt="User 2" className="h-64 w-full object-cover" />
+              <Image
+                src={data?.data[1]?.images[0]?.src + ""}
+                alt="User 2"
+                height={100}
+                width={100}
+                className="h-64 w-full object-cover"
+              />
             </div>
             <div className="p-4 md:w-2/3">
               <h3 className="text-xl font-medium ">User 2</h3>

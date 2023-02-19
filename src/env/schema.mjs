@@ -21,6 +21,9 @@ export const serverSchema = z.object({
   ),
   FACEBOOK_CLIENT_ID: z.string(),
   FACEBOOK_CLIENT_SECRET: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+  PRINTIFY_ACCESS_TOKEN: z.string(),
 });
 
 /**
@@ -30,11 +33,14 @@ export const serverSchema = z.object({
  */
 export const serverEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
+  PRINTIFY_ACCESS_TOKEN: process.env.PRINTIFY_ACCESS_TOKEN,
   NODE_ENV: process.env.NODE_ENV,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
   FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 };
 
 /**
@@ -42,9 +48,7 @@ export const serverEnv = {
  * This way you can ensure the app isn't built with invalid env vars.
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
-export const clientSchema = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string(),
-});
+export const clientSchema = z.object({});
 
 /**
  * You can't destruct `process.env` as a regular object, so you have to do
@@ -52,6 +56,4 @@ export const clientSchema = z.object({
  * and only used environment variables are included in the build.
  * @type {{ [k in keyof z.input<typeof clientSchema>]: string | undefined }}
  */
-export const clientEnv = {
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
-};
+export const clientEnv = {};

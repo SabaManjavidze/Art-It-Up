@@ -16,6 +16,13 @@ const config = {
    *
    * @see https://github.com/vercel/next.js/issues/41980
    */
+  images: {
+    domains: [
+      "platform-lookaside.fbsbx.com",
+      "lh3.googleusercontent.com",
+      "images-api.printify.com",
+    ],
+  },
   i18n: {
     locales: ["en"],
     defaultLocale: "en",

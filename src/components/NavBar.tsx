@@ -1,27 +1,27 @@
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useEffect } from "react";
 import { FiShoppingCart, FiHeart, FiLogIn } from "react-icons/fi";
+import { TfiGallery } from "react-icons/tfi";
+import { ClipLoader } from "react-spinners";
+import UserProfileButton from "./UserProfileButton";
 
 const buttons = [
   {
-    href: "/wishlist",
+    href: "/user/gallery",
+    icon: <TfiGallery size={20} />,
+  },
+  {
+    href: "/user/wishlist",
     icon: <FiHeart size={20} />,
   },
   {
-    href: "/cart",
+    href: "/user/cart",
     icon: <FiShoppingCart size={20} />,
-  },
-  {
-    href: "/api/auth/signin",
-    icon: <FiLogIn size={20} />,
-    text: "Login",
   },
 ];
 const Navbar = () => {
-  const session = useSession();
-  useEffect(() => {
-    console.log({ session });
-  }, [session]);
+  const { data: session, status } = useSession();
 
   return (
     <nav className="flex items-center justify-between bg-skin-secondary p-4 text-white">
@@ -31,17 +31,42 @@ const Navbar = () => {
       </div>
 
       {/* Buttons */}
-      <div className="flex w-52 items-center justify-around">
-        {buttons.map((button) => (
-          <a
-            href={button.href}
-            className="text-skin-primary hover:text-skin-secondary "
-            key={button.href}
-          >
-            {button.icon}
-            {button?.text || ""}
-          </a>
-        ))}
+      <div className="flex min-w-[5vh] items-center justify-around">
+        <div
+          className={`${
+            session?.user && "mr-12"
+          } flex w-32 items-center justify-around`}
+        >
+          {buttons.map((button) => (
+            <a
+              href={button.href}
+              className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
+              key={button.href}
+            >
+              {button.icon}
+            </a>
+          ))}
+        </div>
+        <div className="flex w-32 flex-col items-center">
+          {status === "loading" ? (
+            <ClipLoader color="white" />
+          ) : session?.user ? (
+            <div className="mr-12 w-full">
+              <UserProfileButton
+                userPicture={session.user.image + ""}
+                username={session.user?.name + ""}
+              />
+            </div>
+          ) : (
+            <a
+              href={"/api/auth/signin"}
+              className="text-skin-primary hover:text-skin-secondary "
+            >
+              <FiLogIn size={20} />
+              LogIn
+            </a>
+          )}
+        </div>
       </div>
     </nav>
   );

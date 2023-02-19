@@ -45,6 +45,7 @@ module.exports = {
         skin: {
           main: withOpacity("--color-background-main"),
           secondary: withOpacity("--color-background-secondary"),
+          "light-secondary": withOpacity("--color-background-light-secondary"),
         },
       },
       borderColor: {
