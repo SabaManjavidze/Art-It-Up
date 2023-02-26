@@ -24,6 +24,7 @@ export const serverSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   PRINTIFY_ACCESS_TOKEN: z.string(),
+  PRINTIFY_WEBHOOK_SECRET: z.string(),
 });
 
 /**
@@ -34,6 +35,7 @@ export const serverSchema = z.object({
 export const serverEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   PRINTIFY_ACCESS_TOKEN: process.env.PRINTIFY_ACCESS_TOKEN,
+  PRINTIFY_WEBHOOK_SECRET: process.env.PRINTIFY_WEBHOOK_SECRET,
   NODE_ENV: process.env.NODE_ENV,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,

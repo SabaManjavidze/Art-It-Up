@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 import { FiShoppingCart, FiHeart, FiLogIn } from "react-icons/fi";
 import { TfiGallery } from "react-icons/tfi";
@@ -26,15 +27,15 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between bg-skin-secondary p-4 text-white">
       {/* Logo */}
-      <div className="text-skin-primary text-lg font-medium">
+      <Link href="/" className="text-skin-primary text-lg font-medium">
         Online Clothing Store
-      </div>
+      </Link>
 
       {/* Buttons */}
       <div className="flex min-w-[5vh] items-center justify-around">
         <div
           className={`${
-            session?.user && "mr-12"
+            session?.user ? "mr-12" : ""
           } flex w-32 items-center justify-around`}
         >
           {buttons.map((button) => (
@@ -53,8 +54,8 @@ const Navbar = () => {
           ) : session?.user ? (
             <div className="mr-12 w-full">
               <UserProfileButton
-                userPicture={session.user.image + ""}
-                username={session.user?.name + ""}
+                userPicture={session.user.image as string}
+                username={session.user?.name as string}
               />
             </div>
           ) : (

@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import CategoryCard from "../components/CategoryCard";
@@ -20,8 +20,12 @@ const Home: NextPage = () => {
   const router = useRouter();
   const { data, isLoading } = api.printify.getPrintifyShopProducts.useQuery();
 
-  if (isLoading) return <ClipLoader size={200} />;
-  const arr = [0, 10, 11, 12, 14, 16, 20, 24, 28, 30, 32, 36, 40];
+  if (isLoading)
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-skin-main">
+        <ClipLoader size={200} color={"white"} />
+      </div>
+    );
   return (
     <>
       <Head>
@@ -41,8 +45,9 @@ const Home: NextPage = () => {
                 showArrows={true}
                 selectedItem={selectedItem}
                 swipeable
+                className="w-3/4 xl:w-1/4"
                 showThumbs={false}
-                renderIndicator={(e, isSelected, index, label) => {
+                renderIndicator={(e, isSelected, index) => {
                   return (
                     <li
                       value={index}
@@ -56,7 +61,6 @@ const Home: NextPage = () => {
                     ></li>
                   );
                 }}
-                className="w-3/4 "
                 autoPlay
                 infiniteLoop
                 onClickItem={(i, product) => {
@@ -68,11 +72,11 @@ const Home: NextPage = () => {
                 {data.data.map((product) => (
                   <Link href={`/product/${product.id}`} key={product.id}>
                     <Image
-                      src={product.images[1]?.src + ""}
+                      src={product.images[1]?.src as string}
                       alt={product.title}
                       className="w-full object-cover"
-                      width={500}
-                      height={500}
+                      width={1920}
+                      height={1080}
                     />
                   </Link>
                 ))}
@@ -94,6 +98,9 @@ const Home: NextPage = () => {
                 key={category.title}
                 href={category.href}
                 title={category.title}
+                src={
+                  "https://images-api.printify.com/mockup/63efefd567339f06780ed876/75760/54942/canvas-gallery-wraps.jpg"
+                }
               />
             ))}
           </div>
@@ -105,10 +112,10 @@ const Home: NextPage = () => {
           <div className="flex flex-col justify-center md:flex-row">
             <div className="p-4 md:w-1/3">
               <Image
-                src={data?.data[1]?.images[0]?.src + ""}
+                src={data?.data[1]?.images[0]?.src as string}
                 alt="User 1"
-                width={100}
-                height={100}
+                width={500}
+                height={500}
                 className="h-64 w-full object-cover"
               />
             </div>
@@ -126,10 +133,10 @@ const Home: NextPage = () => {
           <div className="flex flex-col justify-center md:flex-row">
             <div className="p-4 md:w-1/3">
               <Image
-                src={data?.data[1]?.images[0]?.src + ""}
+                src={data?.data[1]?.images[0]?.src as string}
                 alt="User 2"
-                height={100}
-                width={100}
+                height={500}
+                width={500}
                 className="h-64 w-full object-cover"
               />
             </div>

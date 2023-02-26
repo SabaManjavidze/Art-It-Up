@@ -10,7 +10,7 @@ export const servicesRouter = createTRPCRouter({
     .input(z.object({ picture: z.string() }))
     .mutation(async ({ input, ctx: { session } }) => {
       const result = await cloudinary.uploader.upload(input.picture, {
-        filename_override: session?.user.name + "",
+        filename_override: session?.user.name as string,
       });
       if (!result) return;
       return result;

@@ -8,8 +8,9 @@ const ProductPage = () => {
   const router = useRouter();
   const productId = router.query.productId as string;
   const { data: product, error } = api.printify.getPrintifyProduct.useQuery({
-    product_id: productId,
+    id: productId,
   });
+  const { mutateAsync: addToCart } = api.user.addProductToCart.useMutation();
   const [quantity, setQuantity] = useState(1);
 
   if (error) {
@@ -18,8 +19,8 @@ const ProductPage = () => {
 
   if (!product) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <ClipLoader />
+      <div className="flex h-screen items-center justify-center bg-skin-main">
+        <ClipLoader color="white" />
       </div>
     );
   }
@@ -28,20 +29,26 @@ const ProductPage = () => {
     setQuantity(parseInt(event.target.value));
   };
 
-  const handleAddToCart = () => {
-    // Add the product to the cart with the selected quantity
+  const handleAddToCart = async () => {
+    await addToCart({
+      productId,
+      description: product.description,
+      title: product.title,
+      picture: product.images[0]?.src as string,
+    });
   };
 
   return (
     <div className="min-h-screen w-full bg-skin-main text-white">
       <div className="container mx-auto py-10">
         <div className="grid grid-cols-2 gap-8">
-          <div>
+          <div className="relative h-[600px] w-[600px] md:h-[300px] md:w-[300px]">
             <Image
-              src={product.images[0]?.src + ""}
+              src={product.images[0]?.src as string}
               alt={product.title}
-              width={600}
-              height={600}
+              fill
+              //   width={600}
+              //   height={600}
             />
           </div>
           <div>
