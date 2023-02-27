@@ -4,6 +4,7 @@ import { useDropzone, Accept } from "react-dropzone";
 import { AiFillPlusCircle as PlusCircleIcon } from "react-icons/ai";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { nanoid } from "nanoid";
+import { api } from "../utils/api";
 
 interface Props {
   onImagesSelected: (images: File[]) => void;
@@ -11,7 +12,6 @@ interface Props {
 
 const ImageInput: React.FC<Props> = ({ onImagesSelected }) => {
   const [images, setImages] = useState<File[]>([]);
-
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setImages((prevImages) => [...prevImages, ...acceptedFiles]);
   }, []);
@@ -26,8 +26,11 @@ const ImageInput: React.FC<Props> = ({ onImagesSelected }) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
-  const handleImagesSelected = () => {
+  const handleImagesSelected = async () => {
     onImagesSelected(images);
+  };
+  const handleClearClick = async () => {
+    setImages([]);
   };
   const [divRef] = useAutoAnimate<HTMLDivElement>();
 
@@ -51,10 +54,15 @@ const ImageInput: React.FC<Props> = ({ onImagesSelected }) => {
           )}
         </div>
       </div>
+      <div className="flex w-full justify-end px-3">
+        <button onClick={handleClearClick}>
+          <h2 className="text-lg">Clear</h2>
+        </button>
+      </div>
       {images.length > 0 && (
         <div className="mt-4 grid grid-cols-4 gap-4" ref={divRef}>
           {images.map((image, index) => (
-            <div key={nanoid()} className="relative h-64">
+            <div key={nanoid()} className="relative h-64 w-48">
               <button
                 className="absolute top-0 right-0 z-10 h-6 w-6 text-gray-400 hover:text-red-500"
                 onClick={() => removeImage(index)}
@@ -65,7 +73,7 @@ const ImageInput: React.FC<Props> = ({ onImagesSelected }) => {
                 src={URL.createObjectURL(image)}
                 alt=""
                 fill
-                className="w-full rounded-md object-cover"
+                className="w-full rounded-md object-contain"
               />
             </div>
           ))}

@@ -19,6 +19,7 @@ const config = {
   images: {
     domains: [
       "platform-lookaside.fbsbx.com",
+      "res.cloudinary.com",
       "lh3.googleusercontent.com",
       "images-api.printify.com",
     ],

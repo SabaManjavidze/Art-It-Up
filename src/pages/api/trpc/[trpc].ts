@@ -5,6 +5,13 @@ import { createTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 
 // export API handler
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "3mb",
+    },
+  },
+};
 export default createNextApiHandler({
   router: appRouter,
   createContext: createTRPCContext,

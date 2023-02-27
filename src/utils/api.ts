@@ -39,6 +39,7 @@ export const api = createTRPCNext<AppRouter>({
             retry(failureCount, error) {
               return false;
             },
+            refetchOnWindowFocus: false,
           },
         },
       },
