@@ -44,7 +44,7 @@ export default async function handler(
 
     sendEmail({
       from: "Online Shop",
-      to: "sabamanjavidze@gmail.com",
+      to: "ilusionsofsaba@gmail.com",
       subject: "Webhook Notification Online Shop",
       text: `${data.type}: ${product?.title || ""}`,
       html: `<img src=${product.images[0]?.src} width='400px' height='700px'/>`,
