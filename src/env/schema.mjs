@@ -25,6 +25,8 @@ export const serverSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   PRINTIFY_ACCESS_TOKEN: z.string(),
   PRINTIFY_WEBHOOK_SECRET: z.string(),
+  PUBLIC_EMAIL: z.string(),
+  EMAIL_PASSWORD: z.string(),
 });
 
 /**
@@ -33,14 +35,21 @@ export const serverSchema = z.object({
  * @type {{ [k in keyof z.input<typeof serverSchema>]: string | undefined }}
  */
 export const serverEnv = {
+  NODE_ENV: process.env.NODE_ENV,
   DATABASE_URL: process.env.DATABASE_URL,
+
   PRINTIFY_ACCESS_TOKEN: process.env.PRINTIFY_ACCESS_TOKEN,
   PRINTIFY_WEBHOOK_SECRET: process.env.PRINTIFY_WEBHOOK_SECRET,
-  NODE_ENV: process.env.NODE_ENV,
+
+  PUBLIC_EMAIL: process.env.PUBLIC_EMAIL,
+  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+
   FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
   FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 };

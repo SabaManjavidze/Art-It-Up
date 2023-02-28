@@ -53,7 +53,7 @@ export default async function handler(
 
     await sendEmail({
       from: "Online Shop",
-      to: "ilusionsofsaba@gmail.com",
+      to: "saba.manjavidze@gmail.com",
       subject: "Webhook Notification Online Shop",
       text,
       html,

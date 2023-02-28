@@ -1,7 +1,7 @@
 import NodeMailer from "nodemailer";
 
 type messageType = {
-  from: string;
+  from?: string;
   to: string;
   subject?: string;
   text?: string;
