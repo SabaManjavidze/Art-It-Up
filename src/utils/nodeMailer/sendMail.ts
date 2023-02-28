@@ -18,7 +18,7 @@ export async function sendEmail({ subject, text, html, to }: messageType) {
       pass: process.env.EMAIL_PASSWORD,
     },
   });
-  let message: messageType = {
+  const message: messageType = {
     from: "Dorten",
     to,
   };
