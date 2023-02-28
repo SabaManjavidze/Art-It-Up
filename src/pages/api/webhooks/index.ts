@@ -2,6 +2,13 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
+import {
+  PrintifyAxios,
+  PRINTIFY_SHOP_ID,
+} from "../../../server/api/routers/printifyRouter";
+import { sendEmail } from "../../../utils/nodeMailer/sendMail";
+import { getServerAuthSession } from "../../../server/auth";
+import { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
 
 export const config = {
   api: {
@@ -19,7 +26,6 @@ export default async function handler(
     const signature = req.headers["x-pfy-signature"] as string;
     const payload = JSON.stringify(req.body);
 
-    // console.log({ payload, signature, headers: req.headers });
     const computedSignature = crypto
       .createHmac("sha256", webhookSecret as string)
       .update(payload)
@@ -28,11 +34,20 @@ export default async function handler(
     if (signature !== "sha256=" + computedSignature) {
       return res.status(403).send("Invalid signature");
     }
-
-    const event = req.headers["x-printify-event"] as string;
     const data = req.body.data;
 
-    console.log({ event, data });
+    // get published/deleted printify product
+    const url = `/shops/${PRINTIFY_SHOP_ID}/products/${data.payload.id}.json`;
+    const { data: productData } = await PrintifyAxios.get(url);
+    const product = productData as PrintifyGetProductResponse;
+
+    sendEmail({
+      from: "Online Shop",
+      to: "sabamanjavidze@gmail.com",
+      subject: "Webhook Notification Online Shop",
+      text: `${data.payload.type}: ${product.title}`,
+      html: `<img src=${product.images[0]?.src} width='400px' height='700px'/>`,
+    });
   }
   res.status(200).end();
 }

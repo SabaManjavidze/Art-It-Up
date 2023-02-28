@@ -6,13 +6,13 @@ import type {
   PrintifyGetShopProductsResponse,
 } from "../../../utils/printify/printifyTypes";
 
-const PrintifyAxios = axios.create({
+export const PrintifyAxios = axios.create({
   baseURL: "https://api.printify.com/v1",
   headers: {
     Authorization: `Bearer ${process.env.PRINTIFY_ACCESS_TOKEN}`,
   },
 });
-const PRINTIFY_SHOP_ID = "5702174";
+export const PRINTIFY_SHOP_ID = "5702174";
 
 export const printifyRouter = createTRPCRouter({
   getPrintifyProduct: publicProcedure
