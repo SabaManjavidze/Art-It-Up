@@ -37,7 +37,7 @@ export default async function handler(
     const data = req.body.data;
 
     // get published/deleted printify product
-    const url = `/shops/${PRINTIFY_SHOP_ID}/products/${data.payload.id}.json`;
+    const url = `/shops/${PRINTIFY_SHOP_ID}/products/${data.id}.json`;
     const { data: productData } = await PrintifyAxios.get(url);
     const product = productData as PrintifyGetProductResponse;
 
@@ -45,7 +45,7 @@ export default async function handler(
       from: "Online Shop",
       to: "sabamanjavidze@gmail.com",
       subject: "Webhook Notification Online Shop",
-      text: `${data.payload.type}: ${product.title}`,
+      text: `${data.type}: ${product.title}`,
       html: `<img src=${product.images[0]?.src} width='400px' height='700px'/>`,
     });
   }
