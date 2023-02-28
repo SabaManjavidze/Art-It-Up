@@ -34,7 +34,7 @@ export default async function handler(
     if (signature !== "sha256=" + computedSignature) {
       return res.status(403).send("Invalid signature");
     }
-    const data = req.body.data;
+    const data = req.body;
 
     // get published/deleted printify product
     const url = `/shops/${PRINTIFY_SHOP_ID}/products/${data.id}.json`;
