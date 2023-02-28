@@ -38,16 +38,25 @@ export default async function handler(
 
     console.log({ req });
     // get published/deleted printify product
-    const url = `/shops/${PRINTIFY_SHOP_ID}/products/${data.resource.id}.json`;
-    const { data: productData } = await PrintifyAxios.get(url);
-    const product = productData as PrintifyGetProductResponse;
+    let text = "";
+    let html = "";
+    if (req.body.type === "product:publish:started") {
+      const url = `/shops/${PRINTIFY_SHOP_ID}/products/${data.resource.id}.json`;
+      const { data: productData } = await PrintifyAxios.get(url);
+      const product = productData as PrintifyGetProductResponse;
+      text = `${data.type}: ${product?.title || ""}`;
+      html = `<img src=${product.images[0]?.src} width='400px' height='700px'/>`;
+    } else {
+      text = "product deleted";
+      html = "<h1>Sorry</h1>";
+    }
 
-    sendEmail({
+    await sendEmail({
       from: "Online Shop",
       to: "ilusionsofsaba@gmail.com",
       subject: "Webhook Notification Online Shop",
-      text: `${data.type}: ${product?.title || ""}`,
-      html: `<img src=${product.images[0]?.src} width='400px' height='700px'/>`,
+      text,
+      html,
     });
   }
   res.status(200).end();

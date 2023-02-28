@@ -19,7 +19,7 @@ export async function sendEmail({ subject, text, html, to }: messageType) {
     },
   });
   const message: messageType = {
-    from: "Dorten",
+    from: "Online Shop",
     to,
   };
   if (text) {
