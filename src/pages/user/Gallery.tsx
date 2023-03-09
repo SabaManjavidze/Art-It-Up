@@ -13,17 +13,16 @@ const Gallery = () => {
       utils.services.getUserImages.invalidate();
     },
   });
+  const handleImageUpload = async (imgs: File[]) => {
+    imgs.forEach(async (image) => {
+      const img = (await toBase64(image)) as string;
+      await mutateAsync({ picture: img });
+    });
+  };
   return (
     <div className="min-h-screen w-full bg-skin-main text-skin-base">
       <div className="px-12 pt-20">
-        <ImageInput
-          onImagesSelected={async (imgs) => {
-            imgs.forEach(async (image) => {
-              const img = (await toBase64(image)) as string;
-              await mutateAsync({ picture: img });
-            });
-          }}
-        />
+        <ImageInput onImagesSelected={handleImageUpload} />
         <section className="mt-24 pb-32">
           <h2 className="border-b-2 border-white px-6 pb-12 text-4xl text-white">
             My Pictures
