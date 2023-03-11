@@ -18,13 +18,9 @@ export const printifyRouter = createTRPCRouter({
   getPrintifyProduct: publicProcedure
     .input(z.object({ id: z.string().min(1) }))
     .query(async ({ input: { id } }) => {
-      try {
-        const url = `/shops/${PRINTIFY_SHOP_ID}/products/${id}.json`;
-        const { data } = await PrintifyAxios.get(url);
-        return data as PrintifyGetProductResponse;
-      } catch (err) {
-        console.log({ err });
-      }
+      const url = `/shops/${PRINTIFY_SHOP_ID}/products/${id}.json`;
+      const { data } = await PrintifyAxios.get(url);
+      return data as PrintifyGetProductResponse;
     }),
   getPrintifyShopProducts: publicProcedure.query(async () => {
     try {
