@@ -9,6 +9,10 @@
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  env: {
+    PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID + "",
+    PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET + "",
+  },
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you

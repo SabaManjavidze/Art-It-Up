@@ -4,7 +4,7 @@ import CategoryCard from "../../components/CategoryCard";
 import ImageInput from "../../components/ImageInput";
 import { api } from "../../utils/api";
 
-const Gallery = () => {
+const UserCart = () => {
   const { data, isLoading } = api.user.getCart.useQuery();
   if (isLoading) {
     return (
@@ -32,4 +32,4 @@ const Gallery = () => {
   );
 };
 
-export default Gallery;
+export default UserCart;

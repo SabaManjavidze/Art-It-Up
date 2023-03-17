@@ -4,7 +4,7 @@ import { api } from "../utils/api";
 import { loadScript, PayPalNamespace } from "@paypal/paypal-js";
 import { PrintifyGetProductResponse } from "../utils/printify/printifyTypes";
 
-const loadPaypal = async (id: string) => {
+const loadPaypal = async (id: string, price: number | string) => {
   let paypal: PayPalNamespace | null = null;
 
   try {
@@ -17,7 +17,21 @@ const loadPaypal = async (id: string) => {
 
   if (paypal) {
     try {
-      await paypal.Buttons?.().render(id);
+      await paypal
+        .Buttons?.({
+          createOrder: async function (data, actions) {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    value: price.toString(),
+                  },
+                },
+              ],
+            });
+          },
+        })
+        .render(id);
     } catch (error) {
       console.error("failed to render the PayPal Buttons", error);
     }
@@ -37,7 +51,10 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
   };
   useEffect(() => {
     if (paypalRef?.current && paypalRef.current.children.length <= 0) {
-      loadPaypal("#" + paypalRef.current.id);
+      loadPaypal(
+        "#" + paypalRef.current.id,
+        product.variants[0]?.price as number
+      );
     }
   }, [paypalRef]);
 
