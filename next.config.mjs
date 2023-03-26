@@ -10,8 +10,8 @@
 const config = {
   reactStrictMode: true,
   env: {
-    PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID.toString(),
-    PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET.toString(),
+    PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID?.toString() + "",
+    PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET?.toString() + "",
   },
 
   /**
