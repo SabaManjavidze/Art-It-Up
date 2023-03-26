@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import ProductPage from "../../components/wrappedPages/ProductDetailsPage";
 import { api } from "../../utils/api";
-import type { Product } from "@kastlabs/printify-client";
+import { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
 
 const ProductPageContainer = () => {
   const router = useRouter();
@@ -25,7 +25,7 @@ const ProductPageContainer = () => {
     if (productId) refetch();
   }, [productId]);
 
-  if (!isSuccess && error) {
+  if (!isSuccess && error && !product) {
     return <div>Failed to load product {error?.message}</div>;
   }
 
@@ -36,7 +36,7 @@ const ProductPageContainer = () => {
       </div>
     );
   }
-  return <ProductPage product={product as Product} />;
+  return <ProductPage product={product as PrintifyGetProductResponse} />;
 };
 
 export default ProductPageContainer;

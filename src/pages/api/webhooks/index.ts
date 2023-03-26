@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
 import { printify } from "../../../server/api/routers/printify.router";
 import { sendEmail } from "../../../utils/nodeMailer/sendMail";
+import { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
 
 export const config = {
   api: {
@@ -33,7 +34,9 @@ export default async function handler(
     let text = "";
     let html = "";
     if (req.body.type === "product:publish:started") {
-      const product = await printify.getProduct(data.resource.id);
+      const product = (await printify.getProduct(
+        data.resource.id
+      )) as unknown as PrintifyGetProductResponse;
       if (product) {
         text = `${data.type}: ${product?.title || ""}`;
         html = `<img src=${product?.images[0]?.src} width='400px' height='700px'/>`;

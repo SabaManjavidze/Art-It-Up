@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { createOrderItemSchema } from "../../../utils/printify/printifyTypes";
+import {
+  createOrderItemSchema,
+  PrintifyGetProductResponse,
+} from "../../../utils/printify/printifyTypes";
 import PrintifyClient from "@kastlabs/printify-client";
 import { prisma } from "../../db";
 import { User } from "@prisma/client";
@@ -55,7 +58,7 @@ export const printifyRouter = createTRPCRouter({
     .input(z.object({ id: z.string().min(1) }))
     .query(async ({ input: { id } }) => {
       const product = await printify.getProduct(id);
-      if (product) return product;
+      if (product) return product as unknown as PrintifyGetProductResponse;
     }),
   getPrintifyShopProducts: publicProcedure.query(async () => {
     const products = await printify.getProducts();
