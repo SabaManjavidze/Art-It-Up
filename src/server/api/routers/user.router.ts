@@ -37,13 +37,13 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  deletePersonalDetails: protectedProcedure.mutation(
-    async ({ ctx: { session } }) => {
+  deletePersonalDetails: protectedProcedure
+    .input(z.object({ addressId: z.string() }))
+    .mutation(async ({ ctx: { session }, input: { addressId } }) => {
       await prisma.userAddress.delete({
-        where: { userId: session.user.id },
+        where: { id: addressId },
       });
-    }
-  ),
+    }),
   getUserDetails: protectedProcedure.query(async ({ ctx: { session } }) => {
     const addresses = await prisma.userAddress.findMany({
       where: { userId: session.user.id },

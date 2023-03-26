@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { api } from "../../utils/api";
-import { Product } from "@kastlabs/printify-client";
+import type { Product } from "@kastlabs/printify-client";
 
 type ProductPagePropTypes = {
   product: Product;

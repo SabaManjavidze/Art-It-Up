@@ -146,13 +146,13 @@ export type PDSchemaType = z.infer<typeof personalDetailsSchema>;
 
 export const createOrderItemSchema = z.object({
   // external_id: z.string(),
-  line_items: z.tuple([
+  line_items: z.array(
     z.object({
       product_id: z.string(),
       variant_id: z.string(),
       quantity: z.number(),
-    }),
-  ]),
+    })
+  ),
   // shipping_method: z.number(),
   // send_shipping_notification: z.boolean(),
 });

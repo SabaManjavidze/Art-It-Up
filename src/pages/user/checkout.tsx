@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import { api } from "../../utils/api";
-import { useRouter } from "next/router";
-import { Product, UserCartProducts } from "@prisma/client";
 import { loadPaypal } from "../../components/paypalButtons";
 import { formatLineItems } from "../../utils/formatLineItems";
 
@@ -41,9 +39,10 @@ export default function CheckoutPage() {
         async () => {
           if (products.length < 1 || selected.length < 1) return;
           const line_items = await formatLineItems(products, selected);
-          await createOrder({
-            line_items,
-          });
+          if (line_items && line_items.length > 1)
+            await createOrder({
+              line_items: line_items,
+            });
         },
         async (data, actions) => {
           return getUserDetails().then((res) => {

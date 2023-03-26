@@ -44,7 +44,7 @@ export const printifyRouter = createTRPCRouter({
           region: address.region,
           country: address.country,
         },
-        line_items: input.line_items,
+        line_items: input.line_items as [(typeof input.line_items)[number]],
         send_shipping_notification: false,
         shipping_method: 1,
       });

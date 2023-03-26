@@ -5,7 +5,7 @@ import ImageInput from "../../components/ImageInput";
 import { api } from "../../utils/api";
 
 const UserCart = () => {
-  const { data, isLoading } = api.user.getCart.useQuery();
+  const { data, isLoading } = api.cart.getCart.useQuery();
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-skin-main">
