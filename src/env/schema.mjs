@@ -23,8 +23,8 @@ export const serverSchema = z.object({
   FACEBOOK_CLIENT_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  PAYPAL_CLIENT_ID: z.string(),
-  PAYPAL_CLIENT_SECRET: z.string(),
+  // PAYPAL_CLIENT_ID: z.string(),
+  // PAYPAL_CLIENT_SECRET: z.string(),
   PRINTIFY_ACCESS_TOKEN: z.string(),
   PRINTIFY_WEBHOOK_SECRET: z.string(),
   PUBLIC_EMAIL: z.string(),
@@ -55,8 +55,8 @@ export const serverEnv = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 
-  PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
-  PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
+  // PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID,
+  // PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET,
 };
 
 /**

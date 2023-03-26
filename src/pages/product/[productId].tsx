@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import ProductPage from "../../components/ProductDetailsPage";
 import { api } from "../../utils/api";
+import type { Product } from "@kastlabs/printify-client";
 
 const ProductPageContainer = () => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const ProductPageContainer = () => {
       </div>
     );
   }
-  return <ProductPage product={product} />;
+  return <ProductPage product={product as Product} />;
 };
 
 export default ProductPageContainer;

@@ -1,69 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { api } from "../utils/api";
-import { loadScript, PayPalNamespace } from "@paypal/paypal-js";
 import { PrintifyGetProductResponse } from "../utils/printify/printifyTypes";
-
-const loadPaypal = async (id: string, price: number | string) => {
-  let paypal: PayPalNamespace | null = null;
-
-  try {
-    paypal = await loadScript({
-      "client-id": process.env.PAYPAL_CLIENT_ID as string,
-    });
-  } catch (error) {
-    console.error("failed to load the PayPal JS SDK script", error);
-  }
-
-  if (paypal) {
-    try {
-      await paypal
-        .Buttons?.({
-          createOrder: async function (data, actions) {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  amount: {
-                    value: price.toString(),
-                  },
-                },
-              ],
-            });
-          },
-        })
-        .render(id);
-    } catch (error) {
-      console.error("failed to render the PayPal Buttons", error);
-    }
-  }
-};
+import { loadPaypal } from "./paypalButtons";
+import { Product } from "@kastlabs/printify-client";
 
 type ProductPagePropTypes = {
-  product: PrintifyGetProductResponse;
+  product: Product;
 };
 const ProductPage = ({ product }: ProductPagePropTypes) => {
-  const { mutateAsync: addToCart } = api.user.addProductToCart.useMutation();
-  const [quantity, setQuantity] = useState(1);
-  const paypalRef = useRef<HTMLDivElement>(null);
-
+  const { mutateAsync: addToCart, isSuccess } =
+    api.cart.addProductToCart.useMutation();
+  const [options, setOptions] = useState<{
+    quantity: number;
+    size: number;
+    variantId: number;
+  }>({
+    quantity: 1,
+    size: product.options[1]?.values[0]?.id as number,
+    variantId: product.variants[0]?.id as number,
+  });
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuantity(parseInt(event.target.value));
+    setOptions({ ...options, quantity: parseInt(event.target.value) });
   };
-  useEffect(() => {
-    if (paypalRef?.current && paypalRef.current.children.length <= 0) {
-      loadPaypal(
-        "#" + paypalRef.current.id,
-        product.variants[0]?.price as number
-      );
-    }
-  }, [paypalRef]);
-
   const handleAddToCart = async () => {
     await addToCart({
       productId: product.id,
       description: product.description,
       title: product.title,
       picture: product.images[0]?.src as string,
+      ...options,
+      size: product.options[1]?.values?.find((item) => item.id == options.size)
+        ?.title as string,
     });
   };
   return (
@@ -89,26 +57,54 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
             </p>
             <div className="mt-6 flex items-center">
               <span className="text-2xl font-bold">
-                ${product.sales_channel_properties[0]}
+                ${(product.variants[0]?.cost as number) / 100}
               </span>
               <span className="ml-4 text-gray-500">In stock</span>
             </div>
-            <div className="mt-6">
-              <label
-                htmlFor="quantity"
-                className="block text-lg font-medium text-gray-700"
-              >
-                Quantity:
-              </label>
-              <input
-                type="number"
-                name="quantity"
-                id="quantity"
-                value={quantity}
-                onChange={handleQuantityChange}
-                className="mt-2 h-10 w-16 rounded-md border-gray-300 bg-skin-secondary px-2 text-white 
+            <div className="mt-6 flex">
+              <div className="flex flex-col">
+                <label
+                  htmlFor="quantity"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Quantity:
+                </label>
+                <input
+                  type="number"
+                  name="quantity"
+                  id="quantity"
+                  value={options.quantity}
+                  onChange={handleQuantityChange}
+                  className="mt-2 h-10 w-16 rounded-md border-gray-300 bg-skin-secondary px-2 text-white 
                 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
+                />
+              </div>
+              <div className="ml-5 flex flex-col justify-between">
+                <label
+                  htmlFor="colors"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Sizes:
+                </label>
+                <div className="mt-2 grid grid-cols-4 grid-rows-2 gap-y-4 md:grid-cols-7 lg:grid-cols-2 xl:grid-cols-6">
+                  {product.options[1]?.values.map((option) => (
+                    <button
+                      key={option.id}
+                      className={`ml-2 flex h-10 w-10 ${
+                        options.size == option.id
+                          ? "border-2  border-white"
+                          : null
+                      }
+                    items-center justify-center overflow-hidden rounded-full bg-skin-secondary `}
+                      onClick={() =>
+                        setOptions({ ...options, size: option.id })
+                      }
+                    >
+                      <p className="text-lg">{option.title}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
             <button
               className="mt-6 rounded-md bg-black py-3 px-4 text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
@@ -116,13 +112,7 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
             >
               Add to cart
             </button>
-            <div className="flex w-full items-center justify-center">
-              <div
-                id="paypal-section"
-                className="mt-5 w-1/2"
-                ref={paypalRef}
-              ></div>
-            </div>
+            <div className="flex w-full items-center justify-center"></div>
           </div>
         </div>
       </div>

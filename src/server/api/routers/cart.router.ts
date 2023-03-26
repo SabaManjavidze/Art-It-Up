@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { personalDetailsSchema } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-export const userRouter = createTRPCRouter({
+export const cartRouter = createTRPCRouter({
   getCart: protectedProcedure.query(async ({ ctx: { session } }) => {
     const products = await prisma.userCartProducts.findMany({
       where: { userId: session.user.id },
@@ -20,11 +21,22 @@ export const userRouter = createTRPCRouter({
         title: z.string(),
         picture: z.string(),
         description: z.string(),
+        variantId: z.number(),
+        quantity: z.number(),
+        size: z.string(),
       })
     )
     .mutation(
       async ({
-        input: { productId, picture, title, description },
+        input: {
+          productId,
+          picture,
+          title,
+          description,
+          quantity,
+          size,
+          variantId,
+        },
         ctx: { session },
       }) => {
         await prisma.userCartProducts.create({
@@ -37,16 +49,17 @@ export const userRouter = createTRPCRouter({
                   title,
                   picture,
                   description,
-                  price: 0,
-                  size: "hello",
                 },
               },
-            },
-            user: {
               connect: {
-                id: session.user.id,
+                id: productId,
               },
             },
+            variantId,
+            quantity,
+            price: 0,
+            user: { connect: { id: session.user.id } },
+            size,
           },
         });
       }

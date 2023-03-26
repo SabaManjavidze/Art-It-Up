@@ -5,7 +5,7 @@ import ImageInput from "../../components/ImageInput";
 import { api } from "../../utils/api";
 import { toBase64 } from "../../utils/convertToBase64";
 
-const Gallery = () => {
+const GalleryPage = () => {
   const { data, isFetching } = api.services.getUserImages.useQuery();
   const utils = api.useContext();
   const { mutateAsync, isLoading } = api.services.uploadImage.useMutation({
@@ -51,4 +51,4 @@ const Gallery = () => {
   );
 };
 
-export default Gallery;
+export default GalleryPage;

@@ -70,7 +70,7 @@ const UserProfileButton = ({
         src={userPicture}
         width={50}
         height={50}
-        className="rounded-full"
+        className="h-auto w-auto rounded-full"
         alt="user profile image"
       />
       <h3 className="text-lg text-skin-base">{username}</h3>

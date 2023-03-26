@@ -1,19 +1,11 @@
-// Partial of ./pages/api/webhooks/index.ts
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import {
-  PrintifyAxios,
-  PRINTIFY_SHOP_ID,
-} from "../../../server/api/routers/printifyRouter";
+import { printify } from "../../../server/api/routers/printify.router";
 import { sendEmail } from "../../../utils/nodeMailer/sendMail";
-import { getServerAuthSession } from "../../../server/auth";
-import { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
 
 export const config = {
   api: {
     bodyParser: true,
-    // sizeLimit: "1mb",
   },
 };
 
@@ -41,11 +33,14 @@ export default async function handler(
     let text = "";
     let html = "";
     if (req.body.type === "product:publish:started") {
-      const url = `/shops/${PRINTIFY_SHOP_ID}/products/${data.resource.id}.json`;
-      const { data: productData } = await PrintifyAxios.get(url);
-      const product = productData as PrintifyGetProductResponse;
-      text = `${data.type}: ${product?.title || ""}`;
-      html = `<img src=${product.images[0]?.src} width='400px' height='700px'/>`;
+      const product = await printify.getProduct(data.resource.id);
+      if (product) {
+        text = `${data.type}: ${product?.title || ""}`;
+        html = `<img src=${product?.images[0]?.src} width='400px' height='700px'/>`;
+      } else {
+        text = `Product Not Found`;
+        html = "";
+      }
     } else {
       text = "product deleted";
       html = "<h1>Sorry</h1>";

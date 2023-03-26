@@ -72,7 +72,7 @@ const Home: NextPage = () => {
                 {data.data.map((product) => (
                   <Link href={`/product/${product.id}`} key={product.id}>
                     <Image
-                      src={product.images[1]?.src as string}
+                      src={product.images[0]?.src as string}
                       alt={product.title}
                       className="w-full object-cover"
                       width={1920}

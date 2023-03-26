@@ -8,7 +8,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 model Review {
-    review_id   String   @id @default(cuid())
+    reviewId   String   @id @default(cuid())
     title     String 
     description String @db.Text() 
     score Decimal
@@ -16,29 +16,32 @@ model Review {
     id String 
     product Product     @relation(fields: [id], references: [id])
 
-    creator_id String 
-    creator User     @relation(fields: [creator_id], references: [id])
+    creatorId String 
+    creator User     @relation(fields: [creatorId], references: [id])
 
     @@index([id])
-    @@index([creator_id])
+    @@index([creatorId])
 }
+
 model Product {
     id        String   @id @default(cuid())
     title     String 
     description String @db.Text()
-    price Int
     picture String
-    size String
     reviews Review[]
     cartHolder UserCartProducts[]
 }
 
 model UserCartProducts {
   product   Product  @relation(fields:[productId],references: [id])
-  productId String  
+  productId String 
   user   User @relation(fields: [userId], references: [id])
   userId String 
   assignedAt DateTime @default(now())
+  quantity Int 
+  variantId Int
+  price Int
+  size String
 
   @@id([userId, productId])
   @@index([productId])
@@ -54,9 +57,25 @@ model UserImage {
     createdAt  DateTime @default(now())
     @@index(userId)
 }
+model UserAddress {
+    id        String   @id @default(cuid())
+    user   User @relation(fields: [userId],references: [id]) 
+    userId String @unique
+    country String
+    region String
+    address1 String
+    address2 String
+    city String
+    zip Int
+    title String
+  @@unique([userId, title], name: "addressIdentifier")
+}
 model User {
     id            String    @id @default(cuid())
-    name          String?   @unique
+    name          String?   
+    firstName     String?   
+    lastName      String?   
+    phone         Int?   
     email         String?   @unique
     emailVerified DateTime?
     image         String?
@@ -65,6 +84,7 @@ model User {
     gallery      UserImage[]
     cart          UserCartProducts[]   
     reviews       Review[]    
+    address        UserAddress?
     driveLink      String?
     createdAt  DateTime @default(now())
 }

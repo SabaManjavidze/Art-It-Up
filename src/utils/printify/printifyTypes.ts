@@ -1,3 +1,4 @@
+import { z } from "zod";
 export interface PrintifyGetShopProductsResponse {
   current_page: number;
   data: PrintifyProductType[];
@@ -46,6 +47,7 @@ export interface Value {
   id: number;
   title: string;
   colors?: string[];
+  sizes?: string[];
 }
 
 export interface Variant {
@@ -120,3 +122,37 @@ export interface PrintifyGetProductResponse {
   print_areas: PrintArea[];
   sales_channel_properties: any[];
 }
+
+export const addressToSchema = z.object({
+  country: z.string(),
+  region: z.string(),
+  address1: z.string(),
+  address2: z.string(),
+  city: z.string(),
+  zip: z.string(),
+  title: z.string(),
+});
+const AddressObjEnum = addressToSchema.keyof().Enum;
+type AddressObjKeys = keyof typeof AddressObjEnum;
+export const AddressObjectKeys = Object.keys(
+  AddressObjEnum
+) as AddressObjKeys[];
+
+export const personalDetailsSchema = z.object({
+  address: addressToSchema,
+  phone: z.string(),
+});
+export type PDSchemaType = z.infer<typeof personalDetailsSchema>;
+
+export const createOrderItemSchema = z.object({
+  // external_id: z.string(),
+  line_items: z.tuple([
+    z.object({
+      product_id: z.string(),
+      variant_id: z.string(),
+      quantity: z.number(),
+    }),
+  ]),
+  // shipping_method: z.number(),
+  // send_shipping_notification: z.boolean(),
+});
