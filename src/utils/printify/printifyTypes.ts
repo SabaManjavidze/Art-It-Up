@@ -124,13 +124,13 @@ export interface PrintifyGetProductResponse {
 }
 
 export const addressToSchema = z.object({
-  country: z.string(),
-  region: z.string(),
+  title: z.string(),
   address1: z.string(),
   address2: z.string(),
+  country: z.string(),
   city: z.string(),
-  zip: z.string(),
-  title: z.string(),
+  region: z.string(),
+  zip: z.string().max(4),
 });
 const AddressObjEnum = addressToSchema.keyof().Enum;
 type AddressObjKeys = keyof typeof AddressObjEnum;

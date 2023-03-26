@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { api } from "../utils/api";
-import { PrintifyGetProductResponse } from "../utils/printify/printifyTypes";
-import { loadPaypal } from "./paypalButtons";
+import { api } from "../../utils/api";
 import { Product } from "@kastlabs/printify-client";
 
 type ProductPagePropTypes = {

@@ -14,11 +14,16 @@ module.exports = {
       animation: {
         wiggle: "wiggle 0.4s ease-in-out",
         scale: "scale 0.7s ease-in-out",
+        fadein: "fadein 0.35s ease-in-out",
       },
       keyframes: {
         wiggle: {
           "0%, 100%": { transform: "rotate(-9deg)" },
           "50%": { transform: "rotate(9deg)" },
+        },
+        fadein: {
+          "0%": { opacity: "0%" },
+          "100%": { opacity: "100%" },
         },
         scale: {
           "0%": { transform: "scale(1.1)" },

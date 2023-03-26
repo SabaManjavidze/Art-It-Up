@@ -61,39 +61,45 @@ export default function CheckoutPage() {
       <Head>
         <title>Checkout</title>
       </Head>
-      <div>
-        <h1>Checkout</h1>
-        <form onSubmit={handleCheckout}>
-          <label>Billing Address</label>
-          <input
-            type="text"
-            value={billingAddress}
-            onChange={(e) => setBillingAddress(e.target.value)}
-          />
+      <div className="flex">
+        <div>
+          <h1>Checkout</h1>
+          <form onSubmit={handleCheckout}>
+            <label>Billing Address</label>
+            <input
+              type="text"
+              value={billingAddress}
+              onChange={(e) => setBillingAddress(e.target.value)}
+            />
 
-          <label>Shipping Address</label>
-          <input
-            type="text"
-            value={shippingAddress}
-            onChange={(e) => setShippingAddress(e.target.value)}
-          />
+            <label>Shipping Address</label>
+            <input
+              type="text"
+              value={shippingAddress}
+              onChange={(e) => setShippingAddress(e.target.value)}
+            />
 
-          <label>Payment Method</label>
-          <select
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          >
-            <option value="">Select a payment method</option>
-            <option value="credit-card">Credit Card</option>
-            <option value="paypal">Paypal</option>
-          </select>
+            <label>Payment Method</label>
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            >
+              <option value="">Select a payment method</option>
+              <option value="credit-card">Credit Card</option>
+              <option value="paypal">Paypal</option>
+            </select>
 
-          <div id="paypal-section" className="mt-5 w-1/2" ref={paypalRef}></div>
-          <button
-            type="submit"
-            disabled={!billingAddress || !shippingAddress || !paymentMethod}
-          ></button>
-        </form>
+            <div
+              id="paypal-section"
+              className="mt-5 w-1/2"
+              ref={paypalRef}
+            ></div>
+            <button
+              type="submit"
+              disabled={!billingAddress || !shippingAddress || !paymentMethod}
+            ></button>
+          </form>
+        </div>
       </div>
     </>
   );

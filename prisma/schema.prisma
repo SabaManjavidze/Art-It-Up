@@ -60,7 +60,7 @@ model UserImage {
 model UserAddress {
     id        String   @id @default(cuid())
     user   User @relation(fields: [userId],references: [id]) 
-    userId String @unique
+    userId String 
     country String
     region String
     address1 String
@@ -68,7 +68,7 @@ model UserAddress {
     city String
     zip Int
     title String
-  @@unique([userId, title], name: "addressIdentifier")
+    @@unique([userId, title], name: "addressIdentifier")
 }
 model User {
     id            String    @id @default(cuid())
@@ -84,7 +84,7 @@ model User {
     gallery      UserImage[]
     cart          UserCartProducts[]   
     reviews       Review[]    
-    address        UserAddress?
+    address        UserAddress[]
     driveLink      String?
     createdAt  DateTime @default(now())
 }

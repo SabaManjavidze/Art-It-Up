@@ -20,7 +20,8 @@ export const printifyRouter = createTRPCRouter({
         include: { address: true },
       });
 
-      if (!user?.address)
+      const address = user?.address[0];
+      if (!address)
         return {
           success: false,
           errors: {
@@ -36,12 +37,12 @@ export const printifyRouter = createTRPCRouter({
           phone: (user.phone + "") as string,
           first_name: user?.firstName as string,
           last_name: user?.lastName as string,
-          address1: user.address.address1,
-          address2: user.address.address2 + "",
-          zip: user.address.zip + "",
-          city: user.address.city,
-          region: user.address.region,
-          country: user.address.country,
+          address1: address.address1,
+          address2: address.address2 + "",
+          zip: address.zip + "",
+          city: address.city,
+          region: address.region,
+          country: address.country,
         },
         line_items: input.line_items,
         send_shipping_notification: false,
