@@ -34,12 +34,12 @@ export const printifyRouter = createTRPCRouter({
       await printify.createOrder({
         address_to: {
           email: session.user.email as string,
-          phone: (user.phone + "") as string,
+          phone: user.phone?.toString() as string,
           first_name: user?.firstName as string,
           last_name: user?.lastName as string,
           address1: address.address1,
-          address2: address.address2 + "",
-          zip: address.zip + "",
+          address2: address.address2.toString(),
+          zip: address.zip.toString(),
           city: address.city,
           region: address.region,
           country: address.country,

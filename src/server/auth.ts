@@ -67,15 +67,7 @@ export const authOptions: NextAuthOptions = {
         "https://www.facebook.com/v11.0/dialog/oauth?scope=email,public_profile",
       userinfo: {
         url: "https://graph.facebook.com/me",
-        // https://developers.facebook.com/docs/graph-api/reference/user/#fields
         params: { fields: "first_name,last_name,id,name,email,picture" },
-        async request({ tokens, client, provider }) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          return await client.userinfo(tokens.access_token!, {
-            // @ts-expect-error
-            params: provider.userinfo?.params,
-          });
-        },
       },
       profile(profile: FacebookProfile, tokens) {
         console.log({ profile, tokens });

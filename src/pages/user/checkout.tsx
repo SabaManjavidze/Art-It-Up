@@ -21,7 +21,9 @@ export default function CheckoutPage() {
 
   const paypalRef = useRef<HTMLDivElement>(null);
 
-  const handleCheckout = () => {};
+  const handleCheckout = () => {
+    console.log("hello");
+  };
   useEffect(() => {
     if (
       paypalRef?.current &&
@@ -30,9 +32,9 @@ export default function CheckoutPage() {
       products
     ) {
       const priceInDollars =
-        (products?.reduce((prev, curr) => {
+        products?.reduce((prev, curr) => {
           return prev + curr.price;
-        }, 0) as number) / 100;
+        }, 0) / 100;
       loadPaypal(
         "#" + paypalRef.current.id,
         priceInDollars,
