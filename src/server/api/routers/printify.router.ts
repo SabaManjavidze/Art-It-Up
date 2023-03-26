@@ -41,12 +41,13 @@ export const printifyRouter = createTRPCRouter({
           address2: address.address2.toString(),
           zip: address.zip.toString(),
           city: address.city,
-          region: address.region,
+          region: address.region as "",
           country: address.country,
         },
         line_items: input.line_items as [(typeof input.line_items)[number]],
         send_shipping_notification: false,
         shipping_method: 1,
+        external_id: "",
       });
       return { errors: null, success: true };
     }),

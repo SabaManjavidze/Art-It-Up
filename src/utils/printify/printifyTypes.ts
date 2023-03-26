@@ -149,7 +149,7 @@ export const createOrderItemSchema = z.object({
   line_items: z.array(
     z.object({
       product_id: z.string(),
-      variant_id: z.string(),
+      variant_id: z.number(),
       quantity: z.number(),
     })
   ),

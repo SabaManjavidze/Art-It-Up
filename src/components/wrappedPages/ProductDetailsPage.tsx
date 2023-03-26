@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import { api } from "../../utils/api";
-import type { Product } from "@kastlabs/printify-client";
+import { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
 
 type ProductPagePropTypes = {
-  product: Product;
+  product: PrintifyGetProductResponse;
 };
 const ProductPage = ({ product }: ProductPagePropTypes) => {
   const { mutateAsync: addToCart, isSuccess } =

@@ -20,7 +20,7 @@ export const formatLineItems = async (
     return {
       quantity: product.quantity,
       product_id: product.productId,
-      variant_id: product.variantId.toString(),
+      variant_id: product.variantId,
     };
   });
   return line_items;
