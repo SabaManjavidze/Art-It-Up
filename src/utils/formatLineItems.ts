@@ -1,4 +1,4 @@
-import { Product, UserCartProducts } from "@prisma/client";
+import type { Product, UserCartProducts } from "@prisma/client";
 
 export const formatLineItems = async (
   products: (UserCartProducts & {

@@ -1,7 +1,8 @@
-import {
-  loadScript,
+import type {
   PayPalNamespace,
-  PayPalButtonsComponentOptions,
+  PayPalButtonsComponentOptions} from "@paypal/paypal-js";
+import {
+  loadScript
 } from "@paypal/paypal-js";
 import { clientEnv } from "../env/schema.mjs";
 import { printify } from "../server/api/routers/printify.router";

@@ -1,7 +1,8 @@
 import { z, ZodArray } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
+import type { UploadApiResponse} from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import { prisma } from "../../db";
 import { sendEmail } from "../../../utils/nodeMailer/sendMail";
 

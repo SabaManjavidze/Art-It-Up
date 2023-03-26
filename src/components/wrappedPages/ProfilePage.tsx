@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserAddress } from "@prisma/client";
+import type { UserAddress } from "@prisma/client";
 import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import {
@@ -12,14 +12,15 @@ import {
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import { countriesArr, countriesObj } from "../../utils/countriesArray";
+import type {
+  PDSchemaType} from "../../utils/printify/printifyTypes";
 import {
   AddressObjectKeys,
-  PDSchemaType,
   personalDetailsSchema,
 } from "../../utils/printify/printifyTypes";
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
 import SelectSearch from "react-select-search";
-import { SelectSearchProps } from "react-select-search/src/index";
+import type { SelectSearchProps } from "react-select-search/src/index";
 import "react-select-search/style.css";
 import "react-accessible-accordion/dist/fancy-example.css";
 
