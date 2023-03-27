@@ -12,8 +12,7 @@ import {
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import { countriesArr, countriesObj } from "../../utils/countriesArray";
-import type {
-  PDSchemaType} from "../../utils/printify/printifyTypes";
+import type { PDSchemaType } from "../../utils/printify/printifyTypes";
 import {
   AddressObjectKeys,
   personalDetailsSchema,
@@ -21,7 +20,6 @@ import {
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
 import SelectSearch from "react-select-search";
 import type { SelectSearchProps } from "react-select-search/src/index";
-import "react-select-search/style.css";
 import "react-accessible-accordion/dist/fancy-example.css";
 
 type ProfilePagePropTypes = {
@@ -136,23 +134,24 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
 
         <div className="flex justify-center pt-7 pb-4">
           <SelectSearch
-            className="select-search"
             options={countriesArr}
+            renderOption={(domProps, option, snapshot, className) => {
+              return (
+                <button
+                  {...(domProps as any)}
+                  className="font-xl relative block w-full bg-skin-secondary px-10 py-4
+            text-left leading-loose text-neutral-200 duration-150 hover:bg-skin-light-secondary
+            hover:text-white"
+                >
+                  {option.name}
+                </button>
+              );
+            }}
             autoComplete="on"
             closeOnSelect
             search
             placeholder="Country"
           />
-          {/* <select
-            className="overflow-y-scroll rounded-sm bg-skin-secondary px-8 py-2 text-lg text-white"
-            {...PDForm(`address.country`)}
-          >
-            {Object.keys(countries).map((country) => (
-              <option className="z-10" key={country}>
-                {country}
-              </option>
-            ))}
-          </select> */}
         </div>
         <h2>{formState?.errors["address"]?.message}</h2>
         {AddressObjectKeys.map((key) => {

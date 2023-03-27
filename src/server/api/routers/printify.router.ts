@@ -6,7 +6,6 @@ import {
 } from "../../../utils/printify/printifyTypes";
 import PrintifyClient from "@kastlabs/printify-client";
 import { prisma } from "../../db";
-import { User } from "@prisma/client";
 
 export const PRINTIFY_SHOP_ID = "5702174";
 export const printify = new PrintifyClient({
