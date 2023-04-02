@@ -1,14 +1,16 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import {
+  addressToSchema,
   createOrderItemSchema,
+  lineItemsZodType,
   PrintifyGetProductResponse,
 } from "../../../utils/printify/printifyTypes";
-import PrintifyClient from "@kastlabs/printify-client";
 import { prisma } from "../../db";
+import { Printify } from "../../PrintifyClient";
 
 export const PRINTIFY_SHOP_ID = "5702174";
-export const printify = new PrintifyClient({
+export const printify = new Printify({
   apiKey: process.env.PRINTIFY_ACCESS_TOKEN as string,
   shopId: PRINTIFY_SHOP_ID,
 });
@@ -53,6 +55,28 @@ export const printifyRouter = createTRPCRouter({
       });
       return { errors: null, success: true };
     }),
+  calculateOrderShipping: protectedProcedure
+    .input(
+      z.object({
+        address_to: addressToSchema.omit({ title: true }),
+        line_items: lineItemsZodType,
+      })
+    )
+    .mutation(
+      async ({ input: { address_to, line_items }, ctx: { session } }) => {
+        // const product = await
+        const user = await prisma.user.findFirst({
+          where: { id: session.user.id },
+        });
+        if (!user) throw new Error("no user");
+        return await printify.calculateShipping(address_to, line_items, {
+          email: user.email as string,
+          first_name: user.firstName as string,
+          last_name: user.lastName as string,
+          phone: (user.phone + "") as string,
+        });
+      }
+    ),
   getPrintifyProduct: publicProcedure
     .input(z.object({ id: z.string().min(1) }))
     .query(async ({ input: { id } }) => {

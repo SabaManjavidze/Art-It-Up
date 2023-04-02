@@ -1,11 +1,10 @@
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
 import { FiShoppingCart, FiHeart, FiLogIn } from "react-icons/fi";
 import { TfiGallery } from "react-icons/tfi";
 import { ClipLoader } from "react-spinners";
 import UserProfileButton from "./UserProfileButton";
+import { ToastContainer } from "react-toastify";
 
 const buttons = [
   {

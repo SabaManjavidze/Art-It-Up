@@ -24,6 +24,7 @@ export const cartRouter = createTRPCRouter({
         variantId: z.number(),
         quantity: z.number(),
         size: z.string(),
+        price: z.number(),
       })
     )
     .mutation(
@@ -36,6 +37,7 @@ export const cartRouter = createTRPCRouter({
           quantity,
           size,
           variantId,
+          price,
         },
         ctx: { session },
       }) => {
@@ -51,13 +53,10 @@ export const cartRouter = createTRPCRouter({
                   description,
                 },
               },
-              connect: {
-                id: productId,
-              },
             },
             variantId,
             quantity,
-            price: 0,
+            price,
             user: { connect: { id: session.user.id } },
             size,
           },

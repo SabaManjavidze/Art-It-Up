@@ -3,8 +3,14 @@ import { personalDetailsSchema } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { User } from "@prisma/client";
 
 export const userRouter = createTRPCRouter({
+  me: protectedProcedure.query(async ({ ctx: { session } }) => {
+    return (await prisma.user.findFirst({
+      where: { id: session.user.id },
+    })) as User;
+  }),
   addPersonalDetails: protectedProcedure
     .input(personalDetailsSchema)
     .mutation(async ({ input, ctx: { session } }) => {

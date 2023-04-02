@@ -54,8 +54,10 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
   ) => {
     return (
       <button
-        {...option}
-        className="mt-2 ml-3 cursor-pointer py-1 duration-150 hover:opacity-80"
+        {...(domProps as any)}
+        className="font-xl relative block w-full bg-skin-secondary px-10 py-4
+            text-left leading-loose text-neutral-200 duration-150 hover:bg-skin-light-secondary
+            hover:text-white"
       >
         {option.name}
       </button>
@@ -135,18 +137,7 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
         <div className="flex justify-center pt-7 pb-4">
           <SelectSearch
             options={countriesArr}
-            renderOption={(domProps, option, snapshot, className) => {
-              return (
-                <button
-                  {...(domProps as any)}
-                  className="font-xl relative block w-full bg-skin-secondary px-10 py-4
-            text-left leading-loose text-neutral-200 duration-150 hover:bg-skin-light-secondary
-            hover:text-white"
-                >
-                  {option.name}
-                </button>
-              );
-            }}
+            renderOption={renderOption}
             autoComplete="on"
             closeOnSelect
             search

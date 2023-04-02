@@ -144,15 +144,16 @@ export const personalDetailsSchema = z.object({
 });
 export type PDSchemaType = z.infer<typeof personalDetailsSchema>;
 
+export const lineItemsZodType = z.array(
+  z.object({
+    product_id: z.string(),
+    variant_id: z.number(),
+    quantity: z.number(),
+  })
+);
 export const createOrderItemSchema = z.object({
   // external_id: z.string(),
-  line_items: z.array(
-    z.object({
-      product_id: z.string(),
-      variant_id: z.number(),
-      quantity: z.number(),
-    })
-  ),
+  line_items: lineItemsZodType,
   // shipping_method: z.number(),
   // send_shipping_notification: z.boolean(),
 });
