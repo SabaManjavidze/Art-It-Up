@@ -4,9 +4,7 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import type {
-  FacebookProfile,
-} from "next-auth/providers/facebook";
+import type { FacebookProfile } from "next-auth/providers/facebook";
 import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";

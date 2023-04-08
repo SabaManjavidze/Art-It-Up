@@ -65,7 +65,7 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
   };
   const onSubmit = async (data: PDSchemaType) => {
     await AddPersonalDetails({
-      ...data,
+      phone: data.phone,
       address: {
         ...data.address,
         country:

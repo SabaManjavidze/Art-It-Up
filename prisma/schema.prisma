@@ -49,14 +49,6 @@ model UserCartProducts {
 }
 
 
-model UserImage {
-    id            String    @id 
-    userId        String
-    url           String    
-    user          User  @relation( fields: [userId],references: [id])
-    createdAt  DateTime @default(now())
-    @@index(userId)
-}
 model UserAddress {
     id        String   @id @default(cuid())
     user   User @relation(fields: [userId],references: [id]) 
@@ -70,23 +62,63 @@ model UserAddress {
     title String
     @@unique([userId, title], name: "addressIdentifier")
 }
+model Entity {
+id String @id @default(cuid())
+ownerId String?
+owner User? @relation(name:"connectedEntities",references:[id],fields:[ownerId])
+ownerEntityId String?
+creatorId String 
+creator User @relation(name:"createdEntities",references:[id],fields:[creatorId])
+name String
+picture String
+gallery UserImage[] 
+@@index([ownerId])
+@@index([creatorId])
+@@unique([ownerEntityId,ownerId,creatorId])
+
+}
+model UserImage {
+    id            String    @id @default(cuid())
+    url           String    
+    entityId        String @unique
+    user          Entity  @relation(fields: [entityId], references: [id])
+    createdAt  DateTime @default(now())
+    @@index(entityId)
+    @@index(id)
+}
+model Friends {
+  id        String      @id @default(cuid())
+  user_id   String
+  friend_id String
+  user      User    @relation(name: "users", fields: [user_id], references: [id])
+  friend    User    @relation(name: "friend_users", fields: [friend_id], references: [id])
+  status    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([user_id, friend_id])
+  @@index([friend_id])
+}
+
 model User {
     id            String    @id @default(cuid())
-    name          String?   
+    name           String
     firstName     String?   
     lastName      String?   
     phone         Int?   
-    email         String?   @unique
+    email         String?   
     emailVerified DateTime?
     image         String?
+    connectedEntities 	  Entity[] @relation(name:"connectedEntities")
+    createdEntities 	  Entity[]@relation(name:"createdEntities")
+    userFriends       Friends[] @relation(name: "users")
+    friendUserFriends Friends[] @relation(name: "friend_users")
     accounts      Account[]
     sessions      Session[]
-    gallery      UserImage[]
     cart          UserCartProducts[]   
     reviews       Review[]    
-    address        UserAddress[]
-    driveLink      String?
-    createdAt  DateTime @default(now())
+    address       UserAddress[]
+    createdAt     DateTime @default(now())
+    @@index([id])
 }
 // Necessary for Next auth
 model Account {
@@ -123,4 +155,9 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+enum ProfileType{
+    Person
+    Pet
 }

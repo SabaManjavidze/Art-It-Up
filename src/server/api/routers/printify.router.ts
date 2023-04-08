@@ -73,7 +73,7 @@ export const printifyRouter = createTRPCRouter({
           email: user.email as string,
           first_name: user.firstName as string,
           last_name: user.lastName as string,
-          phone: (user.phone + "") as string,
+          phone: user.phone?.toString() as string,
         });
       }
     ),

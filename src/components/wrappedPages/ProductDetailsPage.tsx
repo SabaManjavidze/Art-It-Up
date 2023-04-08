@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { api } from "../../utils/api";
 import { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import Layout from "../Layout";
 
 type ProductPagePropTypes = {
@@ -55,7 +55,7 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
       size: options.size.toString(),
       variantId: options.variantId,
       quantity: options.quantity,
-      price: options.cost,
+      price: options.cost / options.quantity,
     });
     toast.success("A product has been added to your cart");
   };

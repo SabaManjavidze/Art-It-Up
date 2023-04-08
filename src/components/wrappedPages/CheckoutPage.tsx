@@ -11,6 +11,7 @@ import Image from "next/image";
 import Layout from "../Layout";
 import CheckoutWizard from "../CheckoutWizard";
 import { UserAddress } from "@prisma/client";
+import { CreateOrderActions, CreateOrderData, Payer } from "@paypal/paypal-js";
 
 type CheckoutPagePropType = {
   user: RouterOutputs["user"]["me"];
@@ -33,7 +34,7 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
       const { id, userId, title, ...address_to } =
         userDetails?.[0] as UserAddress;
       calculateShippingCost({
-        address_to: { ...address_to, zip: address_to.zip + "" },
+        address_to: { ...address_to, zip: address_to.zip.toString() },
         line_items: products.map((product) => {
           return {
             product_id: product.productId,
@@ -83,7 +84,33 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
         return prev + curr.price;
       }, 0) / 100;
     console.log({ products });
+    let payer: Payer | undefined;
+    if (address && user) {
+      payer = {
+        address: {
+          address_line_1: address?.address1,
+          address_line_2: address?.address2,
+          country_code: address?.country as string,
+          admin_area_1: address?.region as string,
+          admin_area_2: address?.city as string,
+          postal_code: address?.zip?.toString() as string,
+        },
+        birth_date: "",
+        email_address: user.email as string,
+        name: {
+          given_name: user.firstName as string,
+          surname: user.lastName as string,
+        },
+        phone: {
+          phone_number: { national_number: user.phone?.toString() as string },
+        },
+        payer_id: "",
+        tax_info: { tax_id: "", tax_id_type: "" },
+        tenant: "",
+      };
+    }
     return actions.order.create({
+      payer: payer,
       purchase_units: [
         {
           amount: {
@@ -145,7 +172,9 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
                         </Link>
                       </td>
                       <td className=" p-5 text-right">{cartItem.quantity}</td>
-                      <td className="p-5 text-right">${cartItem.price}</td>
+                      <td className="p-5 text-right">
+                        ${cartItem.price / 100}
+                      </td>
                       <td className="p-5 text-right">
                         ${cartItem.quantity * cartItem.price}
                       </td>
@@ -209,7 +238,11 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
                     }}
                   >
                     <PayPalButtons
-                      style={{ label: "checkout" }}
+                      style={{
+                        label: "checkout",
+                        tagline: false,
+                        shape: "pill",
+                      }}
                       onApprove={handleOnApprove}
                       onClick={handleOnClick}
                       createOrder={handleCreateOrder}
