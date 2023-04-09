@@ -3,9 +3,22 @@ import { personalDetailsSchema } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 export const userRouter = createTRPCRouter({
+  
+  searchUsers: protectedProcedure.input(
+	  z.object({
+		  name:z.string()
+	  })
+  ).mutation(async ({input:{name} }) => {
+   const users = await prisma.user.findMany({
+	   where:{
+		   name:{contains:name}},
+		   select:{id:true,name:true,image:true}
+   }) 
+   return users
+  }),
   me: protectedProcedure.query(async ({ ctx: { session } }) => {
     return (await prisma.user.findFirst({
       where: { id: session.user.id },

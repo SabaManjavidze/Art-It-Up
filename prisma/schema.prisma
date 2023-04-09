@@ -64,17 +64,13 @@ model UserAddress {
 }
 model Entity {
 id String @id @default(cuid())
-ownerId String?
-owner User? @relation(name:"connectedEntities",references:[id],fields:[ownerId])
-ownerEntityId String?
 creatorId String 
 creator User @relation(name:"createdEntities",references:[id],fields:[creatorId])
 name String
 picture String
 gallery UserImage[] 
-@@index([ownerId])
 @@index([creatorId])
-@@unique([ownerEntityId,ownerId,creatorId])
+@@unique([creatorId])
 
 }
 model UserImage {
@@ -105,10 +101,9 @@ model User {
     firstName     String?   
     lastName      String?   
     phone         Int?   
-    email         String?   
+    email         String?   @unique
     emailVerified DateTime?
     image         String?
-    connectedEntities 	  Entity[] @relation(name:"connectedEntities")
     createdEntities 	  Entity[]@relation(name:"createdEntities")
     userFriends       Friends[] @relation(name: "users")
     friendUserFriends Friends[] @relation(name: "friend_users")

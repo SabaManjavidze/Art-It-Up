@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
 import { printify } from "../../../server/api/routers/printify.router";
 import { sendEmail } from "../../../utils/nodeMailer/sendMail";
-import { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
+import type { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
 
 export const config = {
   api: {

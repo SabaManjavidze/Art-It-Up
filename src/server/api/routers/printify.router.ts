@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import type {
+  PrintifyGetProductResponse} from "../../../utils/printify/printifyTypes";
 import {
   addressToSchema,
   createOrderItemSchema,
-  lineItemsZodType,
-  PrintifyGetProductResponse,
+  lineItemsZodType
 } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 import { Printify } from "../../PrintifyClient";

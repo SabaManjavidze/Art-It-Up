@@ -9,32 +9,18 @@ export const friendsRouter = createTRPCRouter({
 	  const requests=await prisma.friends.findMany({where:{friend_id:session.user.id}})
 	  return requests
   }),
-  getFriendsEntity: protectedProcedure
-    .input(
-      z.object({
-        entityId: z.string(),
-        friendId: z.string(),
-      })
-    )
-    .mutation(async({input:{entityId,friendId},ctx:{session}})=>{
-
+  getFriends: protectedProcedure
+    // .input(
+    //   z.object({
+    //     entityId: z.string(),
+    //     friendId: z.string(),
+    //   })
+    // )
+    .mutation(async({ctx:{session}})=>{
+const friends = await prisma.user.findFirst({where:{id:session.user.id},include:{userFriends:true}})
+console.log({friends})
 	    return ""
     }),
-  selectEntityToUse: protectedProcedure
-    .input(
-      z.object({
-        entityId: z.string(),
-      })
-    )
-    .mutation(
-      async ({ input: {entityId}, ctx: { session } }) => {
-        const entityRecord = await prisma.entity.findFirst({
-          where: {
-		  id:entityId,
-          },
-        });
-      }
-    ),
   sendFriendRequest: protectedProcedure
     .input(
       z.object({

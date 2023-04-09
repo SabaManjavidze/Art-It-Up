@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { api } from "../../utils/api";
-import { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
+import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
 import { toast } from "react-toastify";
 import Layout from "../Layout";
 

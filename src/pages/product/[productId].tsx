@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import ProductPage from "../../components/wrappedPages/ProductDetailsPage";
 import { api } from "../../utils/api";
-import { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
+import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
 
 const ProductPageContainer = () => {
   const router = useRouter();

@@ -1,17 +1,20 @@
+import type {
+  PayPalButtonsComponentProps} from "@paypal/react-paypal-js";
 import {
   PayPalButtons,
-  PayPalButtonsComponentProps,
   PayPalScriptProvider,
 } from "@paypal/react-paypal-js";
 import { useEffect, useState } from "react";
-import { RouterOutputs, api } from "../../utils/api";
+import type { RouterOutputs} from "../../utils/api";
+import { api } from "../../utils/api";
 import { formatLineItems } from "../../utils/formatLineItems";
 import Link from "next/link";
 import Image from "next/image";
 import Layout from "../Layout";
 import CheckoutWizard from "../CheckoutWizard";
-import { UserAddress } from "@prisma/client";
-import { CreateOrderActions, CreateOrderData, Payer } from "@paypal/paypal-js";
+import type { UserAddress } from "@prisma/client";
+import type { Payer } from "@paypal/paypal-js";
+import { CreateOrderActions, CreateOrderData } from "@paypal/paypal-js";
 
 type CheckoutPagePropType = {
   user: RouterOutputs["user"]["me"];

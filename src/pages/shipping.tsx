@@ -4,9 +4,10 @@ import CheckoutWizard from "../components/CheckoutWizard";
 import Layout from "../components/Layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type {
+  PDSchemaType} from "../utils/printify/printifyTypes";
 import {
   AddressObjectKeys,
-  PDSchemaType,
   personalDetailsSchema,
 } from "../utils/printify/printifyTypes";
 import { nanoid } from "nanoid";

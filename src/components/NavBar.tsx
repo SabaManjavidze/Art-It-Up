@@ -1,9 +1,10 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { FiShoppingCart, FiHeart, FiLogIn } from "react-icons/fi";
+import { FiShoppingCart, FiHeart, FiLogIn ,FiSearch} from "react-icons/fi";
 import { TfiGallery } from "react-icons/tfi";
 import { ClipLoader } from "react-spinners";
 import UserProfileButton from "./UserProfileButton";
+import SearchBar from "./SearchBar"
 import { ToastContainer } from "react-toastify";
 
 const buttons = [
@@ -35,8 +36,9 @@ const Navbar = () => {
         <div
           className={`${
             session?.user ? "mr-12" : ""
-          } flex w-32 items-center justify-around`}
+          } flex w-full items-center justify-around`}
         >
+	<SearchBar />
           {buttons.map((button) => (
             <a
               href={button.href}
