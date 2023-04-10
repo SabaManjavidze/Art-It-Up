@@ -1,11 +1,13 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import {useState} from "react"
 import { FiShoppingCart, FiHeart, FiLogIn ,FiSearch} from "react-icons/fi";
+import { IoPersonAddOutline} from "react-icons/io5";
 import { TfiGallery } from "react-icons/tfi";
 import { ClipLoader } from "react-spinners";
 import UserProfileButton from "./UserProfileButton";
 import SearchBar from "./SearchBar"
-import { ToastContainer } from "react-toastify";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const buttons = [
   {
@@ -20,9 +22,16 @@ const buttons = [
     href: "/user/cart",
     icon: <FiShoppingCart size={20} />,
   },
+  {
+    href: "/user/friends",
+    icon: <IoPersonAddOutline size={20} />,
+  },
 ];
 const Navbar = () => {
   const { data: session, status } = useSession();
+  const [showSearchBar,setShowSearchBar] = useState(false)
+  const [divRef] = useAutoAnimate<HTMLDivElement>()
+
 
   return (
     <nav className="flex items-center justify-between bg-skin-secondary p-4 text-white">
@@ -32,14 +41,24 @@ const Navbar = () => {
       </Link>
 
       {/* Buttons */}
-      <div className="flex min-w-[5vh] items-center justify-around">
+      <div className="flex min-w-[5vh] w-3/5 items-center justify-around">
         <div
+	ref={divRef}
           className={`${
             session?.user ? "mr-12" : ""
           } flex w-full items-center justify-around`}
         >
+	{showSearchBar?
 	<SearchBar />
-          {buttons.map((button) => (
+	:null}
+
+            <button
+              className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
+	      onClick={()=>setShowSearchBar(!showSearchBar)}
+            >
+	    <FiSearch size={20} />
+            </button>
+          {showSearchBar?null:buttons.map((button) => (
             <a
               href={button.href}
               className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"

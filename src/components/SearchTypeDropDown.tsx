@@ -16,7 +16,7 @@ type SearchTypeDropDownPropType={
 export default function SearchTypeDropDown({searchType,setSearchType}:SearchTypeDropDownPropType) {
 
   return (
-    <Menu as="div" className="relative inline-block border-[1px] border-gray-400 rounded-md text-left h-full bg-skin-light-secondary text-white" >
+    <Menu as="div" className="relative inline-block border-[1px] border-gray-400 rounded-r-none rounded-md text-left h-full bg-skin-light-secondary text-white" >
       <div className="flex h-full">
 
         <Menu.Button className="flex w-full justify-center items-center gap-x-1.5 rounded-md px-3 h-full text-sm font-semibold shadow-sm 
