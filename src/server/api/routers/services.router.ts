@@ -17,7 +17,7 @@ export const servicesRouter = createTRPCRouter({
     }),
   getUserImages: protectedProcedure.query(async ({ ctx: { session } }) => {
     const images = await prisma.userImage.findMany({
-      where: { userId: session.user.id },
+      where: { entityId: session.user.id },
     });
     return images;
   }),
@@ -35,7 +35,7 @@ export const servicesRouter = createTRPCRouter({
       await prisma.userImage.create({
         data: {
           id: result.public_id,
-          userId: session.user.id,
+          entityId: session.user.id,
           url: result.url,
         },
       });
