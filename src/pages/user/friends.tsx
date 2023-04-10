@@ -18,12 +18,14 @@ function UserFriendsPage() {
     api.friends.getSentRequests.useQuery();
   const { data: friends, isLoading: friendsLoading } =
     api.friends.getFriends.useQuery();
-    const trpc = api.useContext()
+  const trpc = api.useContext();
   const { mutateAsync: acceptRequest } =
-    api.friends.acceptFriendRequest.useMutation({onSuccess() {
-       trpc.friends.getRecievedRequests.invalidate() 
-       trpc.friends.getFriends.invalidate() 
-    }});
+    api.friends.acceptFriendRequest.useMutation({
+      onSuccess() {
+        trpc.friends.getRecievedRequests.invalidate();
+        trpc.friends.getFriends.invalidate();
+      },
+    });
 
   const session = useSession();
   const [reqLoading, setReqLoading] = useState<"decline" | "accept" | "static">(
@@ -35,12 +37,12 @@ function UserFriendsPage() {
     userName: string,
     status: "ACCEPTED" | "REJECTED"
   ) => {
-    setReqLoading(status=="ACCEPTED"?"accept":"decline")
+    setReqLoading(status == "ACCEPTED" ? "accept" : "decline");
     await acceptRequest({ requestId, status });
-    setReqLoading("static")
+    setReqLoading("static");
     if (status == "ACCEPTED") {
       toast.success(`added ${userName} to friends`);
-      return
+      return;
     }
     toast.success(`declined ${userName}'s request`);
   };
@@ -56,10 +58,17 @@ function UserFriendsPage() {
           defaultIndex={activeTab}
         >
           <Tab.List className="flex w-full justify-center rounded-lg bg-skin-light-secondary p-2">
-	  {Tabs.map((tab,i)=>(
-            <Tab className={`mr-2 px-3 py-4 font-medium text-sm rounded-md flex-1 bg-skin-secondary hover:bg-skin-main focus:outline-none ${i==activeTab?"ring-2 ring-indigo-400":null} 
-	    duration-150`}>{tab}</Tab>
-	    ))}
+            {Tabs.map((tab, i) => (
+              <Tab
+                key={nanoid()}
+                className={`mr-2 flex-1 rounded-md bg-skin-secondary px-3 py-4 text-sm font-medium hover:bg-skin-main focus:outline-none ${
+                  i == activeTab ? "ring-2 ring-indigo-400" : null
+                } 
+	    duration-150`}
+              >
+                {tab}
+              </Tab>
+            ))}
           </Tab.List>
           <Tab.Panel className="w-full pb-4">
             <div className="flex items-center justify-around pb-12">
