@@ -1,3 +1,4 @@
+import { Status } from "@prisma/client";
 import { z } from "zod";
 import { prisma } from "../../db";
 
@@ -5,16 +6,25 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const friendsRouter = createTRPCRouter({
   acceptFriendRequest: protectedProcedure
-    .input(z.object({ requestId: z.string() }))
-    .mutation(async ({ input: { requestId }, ctx: { session } }) => {
+    .input(
+      z.object({
+        requestId: z.string(),
+        status: z.enum(["ACCEPTED", "REJECTED"]),
+      })
+    )
+    .mutation(async ({ input: { requestId, status }, ctx: { session } }) => {
+      if (status == Status.REJECTED) {
+        await prisma.friends.delete({ where: { id: requestId } });
+        return;
+      }
       await prisma.friends.update({
         where: { id: requestId },
-        data: { status: true },
+        data: { status: status },
       });
     }),
   getSentRequests: protectedProcedure.query(async ({ ctx: { session } }) => {
     const requests = await prisma.friends.findMany({
-      where: { user_id: session.user.id, status: false },
+      where: { user_id: session.user.id, status: Status.PENDING },
       include: { friend: { select: { name: true, image: true, id: true } } },
     });
     return requests;
@@ -22,7 +32,7 @@ export const friendsRouter = createTRPCRouter({
   getRecievedRequests: protectedProcedure.query(
     async ({ input, ctx: { session } }) => {
       const requests = await prisma.friends.findMany({
-        where: { friend_id: session.user.id, status: false },
+        where: { friend_id: session.user.id, status: Status.PENDING },
         include: { user: { select: { name: true, image: true, id: true } } },
       });
       return requests;
@@ -32,9 +42,12 @@ export const friendsRouter = createTRPCRouter({
     const friends = await prisma.friends.findMany({
       where: {
         OR: [{ friend_id: session.user.id }, { user_id: session.user.id }],
-        status: true,
+        status: Status.ACCEPTED,
       },
-      include: { friend: { select: { name: true, image: true, id: true } } },
+      include: {
+        friend: { select: { name: true, image: true, id: true } },
+        user: { select: { name: true, image: true, id: true } },
+      },
     });
     return friends;
   }),

@@ -14,10 +14,10 @@ const UserGalleryPage = () => {
     },
   });
   const handleImageUpload = async (imgs: File[]) => {
-  if(imgs.length>=40){
-alert("can't upload more than 40 images")
-return
-  }
+    if (imgs.length >= 40) {
+      alert("can't upload more than 40 images");
+      return;
+    }
     imgs.forEach(async (image) => {
       const img = (await toBase64(image)) as string;
       await mutateAsync({ picture: img });

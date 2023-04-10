@@ -6,19 +6,47 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import type { User } from "@prisma/client";
 
 export const userRouter = createTRPCRouter({
-  
-  searchUsers: protectedProcedure.input(
-	  z.object({
-		  name:z.string()
-	  })
-  ).mutation(async ({input:{name} }) => {
-   const users = await prisma.user.findMany({
-	   where:{
-		   name:{contains:name}},
-		   select:{id:true,name:true,image:true}
-   }) 
-   return users
-  }),
+  searchUsers: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ input: { name }, ctx: { session } }) => {
+      const userId = session.user.id;
+      const userFriends = await prisma.friends.findMany({
+        where: { OR: [{ user_id: userId }, { friend_id: userId }] },
+      });
+      const xprisma = prisma.$extends({
+        result: {
+          user: {
+            isFriend: {
+              needs: { id: true },
+              compute(user) {
+                let isFriend = false;
+                for (let i = 0; i < userFriends.length; i++) {
+                  const userFriend = userFriends[i];
+                  if (
+                    user.id == userFriend?.user_id ||
+                    user.id == userFriend?.friend_id
+                  ) {
+                    isFriend = true;
+                  }
+                }
+                return isFriend;
+              },
+            },
+          },
+        },
+      });
+      const users = await xprisma.user.findMany({
+        where: {
+          name: { contains: name },
+        },
+        select: { id: true, name: true, image: true, isFriend: true },
+      });
+      return users;
+    }),
   me: protectedProcedure.query(async ({ ctx: { session } }) => {
     return (await prisma.user.findFirst({
       where: { id: session.user.id },

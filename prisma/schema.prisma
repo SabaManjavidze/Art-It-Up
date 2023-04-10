@@ -1,5 +1,6 @@
 generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["clientExtensions"]
 }
 
 datasource db {
@@ -82,13 +83,18 @@ model UserImage {
     @@index(entityId)
     @@index(id)
 }
+enum Status {
+	PENDING
+	ACCEPTED
+	REJECTED
+}
 model Friends {
   id        String      @id @default(cuid())
   user_id   String
   friend_id String
   user      User    @relation(name: "users", fields: [user_id], references: [id])
   friend    User    @relation(name: "friend_users", fields: [friend_id], references: [id])
-  status    Boolean  @default(false)
+  status    Status  @default(PENDING)
   createdAt DateTime @default(now())
 
   @@unique([user_id, friend_id])

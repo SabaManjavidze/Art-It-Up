@@ -7,6 +7,7 @@ import { api } from "../utils/api";
 import "../styles/globals.css";
 import "../styles/selectSearch.css";
 import Navbar from "../components/NavBar";
+import { ToastContainer } from "react-toastify";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -16,6 +17,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <div className="">
         <Navbar />
+	<ToastContainer limit={1} position="bottom-center" />
         <Component {...pageProps} />
       </div>
     </SessionProvider>
