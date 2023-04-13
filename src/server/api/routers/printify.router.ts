@@ -1,11 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import type {
-  PrintifyGetProductResponse} from "../../../utils/printify/printifyTypes";
+import type { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
 import {
   addressToSchema,
   createOrderItemSchema,
-  lineItemsZodType
+  lineItemsZodType,
 } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 import { Printify } from "../../PrintifyClient";
@@ -17,6 +16,25 @@ export const printify = new Printify({
 });
 
 export const printifyRouter = createTRPCRouter({
+  searchProducts: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        tags: z.array(z.string()).nullish(),
+      })
+    )
+    .query(async ({ input: { name, tags }, ctx: { session } }) => {
+      const products = await prisma.product.findMany({
+        where: {
+          title: { contains: name },
+          tags:
+            tags && tags.length > 0
+              ? { some: { tag: { name: { in: tags } } } }
+              : undefined,
+        },
+      });
+      return products;
+    }),
   createPrintifyOrder: protectedProcedure
     .input(createOrderItemSchema)
     .mutation(async ({ input, ctx: { session } }) => {

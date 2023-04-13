@@ -1,9 +1,10 @@
-import { createTRPCRouter } from "./trpc";
+import { createTRPCRouter, publicProcedure } from "./trpc";
 import { servicesRouter } from "./routers/services.router";
 import { printifyRouter } from "./routers/printify.router";
 import { userRouter } from "./routers/user.router";
 import { cartRouter } from "./routers/cart.router";
 import { friendsRouter } from "./routers/friends.router";
+import { prisma } from "../db";
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,9 @@ export const appRouter = createTRPCRouter({
   user: userRouter,
   cart: cartRouter,
   friends: friendsRouter,
+  getTags: publicProcedure.query(async () => {
+    return await prisma.tags.findMany();
+  }),
 });
 
 // export type definition of API

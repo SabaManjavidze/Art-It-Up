@@ -1,24 +1,38 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { api } from "../utils/api";
 import SearchTypeDropDown from "./SearchTypeDropDown";
 import { ClipLoader } from "react-spinners";
 import SearchResults from "./SearchResults";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { MultipleSelect } from "./MultipleSelect";
+import { Tags } from "@prisma/client";
 
 export type SearchTypeType = "users" | "products";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState<SearchTypeType>("users");
+  const [selectedTags, setSelectedTags] = useState<Tags[]>([]);
+  const { data: tags, isLoading: tagsLoading } = api.getTags.useQuery();
   const {
     data: users,
     mutateAsync: searchUsers,
-    isLoading,
+    isLoading: usersLoading,
   } = api.user.searchUsers.useMutation();
+  const router = useRouter();
 
-  const handleSearch = async () => {
-    const users = await searchUsers({ name: searchTerm });
-    console.log({ users });
+  const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchType == "users") {
+      await searchUsers({ name: searchTerm });
+    } else {
+      router.push(
+        `/search-results/${searchTerm}?tags=${selectedTags
+          .map((item) => item.name)
+          .join(", ")}`
+      );
+    }
   };
   return (
     <div className="relative flex h-10">
@@ -26,7 +40,7 @@ const SearchBar = () => {
         searchType={searchType}
         setSearchType={setSearchType}
       />
-      <form className="flex" onSubmit={handleSearch}>
+      <form className="flex" onSubmit={(e) => handleSearch(e)}>
         <input
           type="text"
           placeholder="Search..."
@@ -35,14 +49,18 @@ const SearchBar = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button
-          className="rounded-l-none bg-blue-500 px-3 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onClick={handleSearch}
-        >
+        <button className="rounded-l-none bg-blue-500 px-3 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
           Search
         </button>
+        {tags ? (
+          <MultipleSelect
+            tags={tags}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
+        ) : null}
       </form>
-      {isLoading ? (
+      {usersLoading ? (
         <ClipLoader size={20} />
       ) : users ? (
         <div className="absolute z-10 w-full translate-y-full bg-skin-light-secondary">

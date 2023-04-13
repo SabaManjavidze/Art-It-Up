@@ -8,7 +8,6 @@ import type { FacebookProfile } from "next-auth/providers/facebook";
 import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { env } from "../env/server.mjs";
 import { prisma } from "./db";
 import type { GoogleProfile } from "next-auth/providers/google";
 
@@ -43,8 +42,8 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID?.toString() as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET?.toString() as string,
       allowDangerousEmailAccountLinking: true,
       profile(prof: GoogleProfile, tokens) {
         return {
@@ -59,8 +58,8 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     FacebookProvider({
-      clientId: env.FACEBOOK_CLIENT_ID,
-      clientSecret: env.FACEBOOK_CLIENT_SECRET,
+      clientId: process.env.FACEBOOK_CLIENT_ID?.toString() as string,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET?.toString() as string,
       allowDangerousEmailAccountLinking: true,
       authorization:
         "https://www.facebook.com/v11.0/dialog/oauth?scope=email,public_profile",
