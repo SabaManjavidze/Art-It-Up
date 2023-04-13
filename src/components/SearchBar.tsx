@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import type { FormEvent} from "react";
+import { useState } from "react";
 import { api } from "../utils/api";
 import SearchTypeDropDown from "./SearchTypeDropDown";
 import { ClipLoader } from "react-spinners";
@@ -6,7 +7,7 @@ import SearchResults from "./SearchResults";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { MultipleSelect } from "./MultipleSelect";
-import { Tags } from "@prisma/client";
+import type { Tags } from "@prisma/client";
 
 export type SearchTypeType = "users" | "products";
 

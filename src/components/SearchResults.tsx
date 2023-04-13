@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import { RouterOutputs, api } from "../utils/api";
+import type { RouterOutputs} from "../utils/api";
+import { api } from "../utils/api";
 import { ClipLoader } from "react-spinners";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";

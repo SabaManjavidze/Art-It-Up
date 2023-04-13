@@ -1,7 +1,8 @@
-import React, { Dispatch } from "react";
+import type { Dispatch } from "react";
+import React from "react";
 import { useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { Tags } from "@prisma/client";
+import type { Tags } from "@prisma/client";
 import { AiOutlineCheck } from "react-icons/ai";
 
 type MultipleSelectPropType = {
