@@ -30,7 +30,9 @@ export default async function handler(
     }
     const data = req.body;
 
-    if (req.body.type === "product:publish:started") {
+    if (req.body.type === "product:deleted") {
+      await prisma.product.delete({ where: { id: data.resource.id } });
+    } else if (req.body.type === "product:publish:started") {
       const product = (await printify.getProduct(
         data.resource.id
       )) as unknown as PrintifyGetProductResponse;
@@ -51,14 +53,14 @@ export default async function handler(
         tags.map((tag) => tag.name),
         product.tags
       );
-      if (diff) {
+      if (diff && diff.length > 0) {
         const newTags = diff.map((tag) => {
           return { name: tag, id: crypto.randomUUID() };
         });
         await prisma.tags.createMany({
           data: newTags,
         });
-        tags = tags.concat(newTags);
+        tags = [...tags, ...newTags];
       }
       await prisma.productTags.createMany({
         data: tags.map((tag) => {

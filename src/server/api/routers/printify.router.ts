@@ -9,10 +9,9 @@ import {
 import { prisma } from "../../db";
 import { Printify } from "../../PrintifyClient";
 
-export const PRINTIFY_SHOP_ID = "5702174";
 export const printify = new Printify({
   apiKey: process.env.PRINTIFY_ACCESS_TOKEN as string,
-  shopId: PRINTIFY_SHOP_ID,
+  shopId: process.env.PRINTIFY_SHOP_ID,
 });
 
 export const printifyRouter = createTRPCRouter({

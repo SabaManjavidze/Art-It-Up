@@ -1,6 +1,7 @@
 import { printify } from "../src/server/api/routers/printify.router";
 import { prisma } from "../src/server/db";
 import { PrintifyGetProductResponse } from "../src/utils/printify/printifyTypes";
+import lodash from "lodash";
 import crypto from "crypto";
 
 const seedProducts = async () => {
@@ -10,7 +11,24 @@ const seedProducts = async () => {
   const tags: { [key: string]: string } = {};
   const productTags: { productId: string; tagId: string }[] = [];
 
-  const formatedProducts = printifyProducts.data.map((product) => {
+  const printifyProdIds = printifyProducts.data.map((product) => product.id);
+  const foundProducts = await prisma.product.findMany({
+    where: { id: { in: printifyProdIds } },
+  });
+  const foundProdIds = foundProducts.map((product) => product.id);
+  const diff = lodash.difference(printifyProdIds, foundProdIds);
+
+  let prodsToAdd: PrintifyGetProductResponse[];
+  if (!diff) {
+    prodsToAdd = printifyProducts.data;
+  } else {
+    prodsToAdd = printifyProducts.data.filter((item) => {
+      const exists = diff.find((id) => id == item.id);
+      return !!exists;
+    });
+  }
+
+  const formatedProducts = prodsToAdd.map((product) => {
     product.tags.forEach((tag) => {
       const id = crypto.randomUUID();
       if (!tags[tag]) {
@@ -33,6 +51,7 @@ const seedProducts = async () => {
     data: tagKeys.map(([name, id]) => {
       return { name, id };
     }),
+    skipDuplicates: true,
   });
   await prisma.productTags.createMany({
     data: productTags,
