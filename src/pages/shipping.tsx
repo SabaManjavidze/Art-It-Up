@@ -1,22 +1,27 @@
-import React from "react";
-
+import React, { useState } from "react";
 import CheckoutWizard from "../components/CheckoutWizard";
 import Layout from "../components/Layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type {
-  PDSchemaType} from "../utils/printify/printifyTypes";
 import {
-  AddressObjectKeys,
+  PDSchemaType,
   personalDetailsSchema,
 } from "../utils/printify/printifyTypes";
+import { AddressObjectKeys } from "../utils/printify/printifyTypes";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import { api } from "../utils/api";
+import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
+import { PublicKeys } from "../components/wrappedPages/ProfilePage";
+import { UserAddress } from "@prisma/client";
 import { countriesObj } from "../utils/countriesArray";
+import { DetailsSection } from "../components/shipping/DetailsSection";
 
 export default function Shipping() {
+  const [expanded, setExpanded] = useState<string>("");
   const trpc = api.useContext();
+  const { data: personalDetails } = api.user.getUserDetails.useQuery();
+
   const { mutateAsync: AddPersonalDetails } =
     api.user.addPersonalDetails.useMutation({
       onSuccess(data, variables, context) {
@@ -40,17 +45,29 @@ export default function Shipping() {
           countriesObj[data.address.country as keyof typeof countriesObj],
       },
     });
-    toast.success("Shipping address added");
   };
 
+  const handleItemExpand = (detailsId: string) => {
+    const id = expanded ? "" : detailsId;
+    return setExpanded(id);
+  };
   return (
     <Layout title="Shipping Address">
       <CheckoutWizard activeStep={1} />
+      {personalDetails && personalDetails.length > 0 ? (
+        <DetailsSection
+          expanded={expanded}
+          personalDetails={personalDetails}
+          handleItemExpand={handleItemExpand}
+        />
+      ) : (
+        <div></div>
+      )}
       <form
         className="mx-auto max-w-screen-md"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="mb-4 text-xl">Shipping Address</h1>
+        <h1 className="mb-4 text-xl">Add New Shipping Address</h1>
         {AddressObjectKeys.map((key) => {
           if (key !== "country")
             return (

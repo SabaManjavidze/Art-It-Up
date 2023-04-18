@@ -10,7 +10,7 @@ export default function Layout({
   children,
 }: {
   title: string;
-  children: React.ReactElement | React.ReactElement[];
+  children: React.ReactElement | React.ReactElement[] | null;
 }) {
   return (
     <>

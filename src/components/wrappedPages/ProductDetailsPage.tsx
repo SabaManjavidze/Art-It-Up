@@ -4,24 +4,28 @@ import { api } from "../../utils/api";
 import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
 import { toast } from "react-toastify";
 import Layout from "../Layout";
+import { nanoid } from "nanoid";
 
 type ProductPagePropTypes = {
   product: PrintifyGetProductResponse;
 };
+type OptionType = {
+  quantity: number;
+  size: number;
+  variantId: number;
+  cost: number;
+};
 const ProductPage = ({ product }: ProductPagePropTypes) => {
   const { mutateAsync: addToCart, isSuccess } =
     api.cart.addProductToCart.useMutation();
-  const [options, setOptions] = useState<{
-    quantity: number;
-    size: number;
-    variantId: number;
-    cost: number;
-  }>({
+
+  const [options, setOptions] = useState<OptionType>({
     quantity: 1,
     size: product.options[1]?.values[0]?.id as number,
     variantId: product.variants[0]?.id as number,
     cost: product.variants[0]?.cost as number,
   });
+
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = parseInt(event.target.value);
     const originalCost = product.variants.find(
@@ -33,6 +37,7 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
       cost: originalCost * quantity,
     });
   };
+
   const handleSizeChange = (id: number) => {
     const variant = product.variants.find(
       (variant) =>
@@ -106,7 +111,7 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
                 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                   />
                 </div>
-                <div className="ml-5 flex flex-col justify-between">
+                <div className="ml-5 flex flex-col ">
                   <label
                     htmlFor="colors"
                     className="block text-lg font-medium text-gray-700"
@@ -129,6 +134,19 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
                       </button>
                     ))}
                   </div>
+                </div>
+                <div className="ml-5 flex flex-col justify-between">
+                  <label
+                    htmlFor="colors"
+                    className="block text-lg font-medium text-gray-700"
+                  >
+                    Tags:
+                  </label>
+                  {product.tags.map((tag) => (
+                    <h2 key={nanoid()} className="text-gray-600">
+                      {tag}
+                    </h2>
+                  ))}
                 </div>
               </div>
               <button

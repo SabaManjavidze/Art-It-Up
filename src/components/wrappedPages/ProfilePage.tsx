@@ -25,7 +25,7 @@ import "react-accessible-accordion/dist/fancy-example.css";
 type ProfilePagePropTypes = {
   personalDetails: UserAddress[];
 };
-const PublicKeys = {
+export const PublicKeys = {
   "country": "1",
   "region": "2",
   "address1": "3",

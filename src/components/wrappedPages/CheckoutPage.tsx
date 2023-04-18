@@ -1,11 +1,7 @@
-import type {
-  PayPalButtonsComponentProps} from "@paypal/react-paypal-js";
-import {
-  PayPalButtons,
-  PayPalScriptProvider,
-} from "@paypal/react-paypal-js";
+import type { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useEffect, useState } from "react";
-import type { RouterOutputs} from "../../utils/api";
+import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import { formatLineItems } from "../../utils/formatLineItems";
 import Link from "next/link";
@@ -34,8 +30,9 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
 
   useEffect(() => {
     if (!detailsLoading) {
+      if (!userDetails?.[0]) return;
       const { id, userId, title, ...address_to } =
-        userDetails?.[0] as UserAddress;
+        userDetails[0] as UserAddress;
       calculateShippingCost({
         address_to: { ...address_to, zip: address_to.zip.toString() },
         line_items: products.map((product) => {
@@ -70,7 +67,6 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
     data,
     actions
   ) => {
-    // if (!products) return actions.reject();
     if (userDetails && userDetails.length <= 0) {
       alert("please add your personal details before the purchase");
       return actions.reject();
@@ -81,39 +77,11 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
     data,
     actions
   ) => {
-    const address = userDetails?.[0];
     const price =
       products.reduce((prev, curr) => {
         return prev + curr.price;
       }, 0) / 100;
-    console.log({ products });
-    let payer: Payer | undefined;
-    if (address && user) {
-      payer = {
-        address: {
-          address_line_1: address?.address1,
-          address_line_2: address?.address2,
-          country_code: address?.country as string,
-          admin_area_1: address?.region as string,
-          admin_area_2: address?.city as string,
-          postal_code: address?.zip?.toString() as string,
-        },
-        birth_date: "",
-        email_address: user.email as string,
-        name: {
-          given_name: user.firstName as string,
-          surname: user.lastName as string,
-        },
-        phone: {
-          phone_number: { national_number: user.phone?.toString() as string },
-        },
-        payer_id: "",
-        tax_info: { tax_id: "", tax_id_type: "" },
-        tenant: "",
-      };
-    }
     return actions.order.create({
-      payer: payer,
       purchase_units: [
         {
           amount: {
