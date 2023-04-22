@@ -1,7 +1,7 @@
 import { z, ZodArray } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import type { UploadApiResponse} from "cloudinary";
+import type { UploadApiResponse } from "cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 import { prisma } from "../../db";
 import { sendEmail } from "../../../utils/nodeMailer/sendMail";
@@ -22,8 +22,8 @@ export const servicesRouter = createTRPCRouter({
     return images;
   }),
   uploadImage: protectedProcedure
-    .input(z.object({ picture: z.string() }))
-    .mutation(async ({ input: { picture }, ctx: { session } }) => {
+    .input(z.object({ picture: z.string(), entityId: z.string().optional() }))
+    .mutation(async ({ input: { picture, entityId }, ctx: { session } }) => {
       const result: UploadApiResponse = await cloudinary.uploader.upload(
         picture,
         {
@@ -31,13 +31,15 @@ export const servicesRouter = createTRPCRouter({
           image_metadata: true,
         }
       );
-
-      await prisma.userImage.create({
-        data: {
-          id: result.public_id,
-          entityId: session.user.id,
-          url: result.url,
-        },
-      });
+      if (entityId) {
+        return await prisma.userImage.create({
+          data: {
+            id: result.public_id,
+            entityId: entityId,
+            url: result.url,
+          },
+        });
+      }
+      return result;
     }),
 });

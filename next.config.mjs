@@ -26,6 +26,7 @@ const config = {
       "res.cloudinary.com",
       "lh3.googleusercontent.com",
       "images-api.printify.com",
+      "cdn.pixabay.com",
     ],
   },
   i18n: {

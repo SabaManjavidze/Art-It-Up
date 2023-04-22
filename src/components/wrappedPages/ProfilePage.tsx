@@ -18,9 +18,8 @@ import {
   personalDetailsSchema,
 } from "../../utils/printify/printifyTypes";
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
-import SelectSearch from "react-select-search";
-import type { SelectSearchProps } from "react-select-search/src/index";
 import "react-accessible-accordion/dist/fancy-example.css";
+import AutoCompleteSearch from "../UI/AutoCompleteSearch";
 
 type ProfilePagePropTypes = {
   personalDetails: UserAddress[];
@@ -48,21 +47,7 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
         trpc.user.getUserDetails.invalidate();
       },
     });
-  const renderOption: SelectSearchProps["renderOption"] = (
-    domProps,
-    option
-  ) => {
-    return (
-      <button
-        {...(domProps as any)}
-        className="font-xl relative block w-full bg-skin-secondary px-10 py-4
-            text-left leading-loose text-neutral-200 duration-150 hover:bg-skin-light-secondary
-            hover:text-white"
-      >
-        {option.name}
-      </button>
-    );
-  };
+
   const onSubmit = async (data: PDSchemaType) => {
     await AddPersonalDetails({
       phone: data.phone,
@@ -120,44 +105,43 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
       </section>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col justify-center pb-20"
+        className="flex flex-col items-center justify-center pb-20"
       >
-        <div className="flex flex-col items-center pt-7 pb-4">
-          <h2 className="pb-5 text-lg text-white">
-            {formState?.errors["phone"]?.message}
-          </h2>
-          <input
-            className="rounded-sm bg-skin-secondary px-8 py-2 text-lg text-white"
-            placeholder="phone"
-            type="number"
-            {...PDForm("phone")}
-          />
-        </div>
+        <div className="w-72">
+          <div className="flex w-full flex-col items-center pt-7 pb-4">
+            <h2 className="pb-5 text-lg text-white">
+              {formState?.errors["phone"]?.message}
+            </h2>
+            <input
+              className="w-full rounded-sm bg-skin-secondary py-2 text-lg text-white"
+              placeholder="phone"
+              type="number"
+              {...PDForm("phone")}
+            />
+          </div>
 
-        <div className="flex justify-center pt-7 pb-4">
-          <SelectSearch
-            options={countriesArr}
-            renderOption={renderOption}
-            autoComplete="on"
-            closeOnSelect
-            search
-            placeholder="Country"
-          />
+          <div className="flex w-full justify-center pt-4 pb-2 ">
+            <AutoCompleteSearch arr={countriesArr} placeholder="country" />
+          </div>
+          <h2>{formState?.errors["address"]?.message}</h2>
+
+          {AddressObjectKeys.map((key) => {
+            if (key !== "country")
+              return (
+                <div
+                  className="flex w-full justify-center pt-7 pb-4"
+                  key={nanoid()}
+                >
+                  <input
+                    className="w-full rounded-sm bg-skin-secondary py-2 text-lg text-white"
+                    placeholder={key}
+                    type="text"
+                    {...PDForm(`address.${key}`)}
+                  />
+                </div>
+              );
+          })}
         </div>
-        <h2>{formState?.errors["address"]?.message}</h2>
-        {AddressObjectKeys.map((key) => {
-          if (key !== "country")
-            return (
-              <div className="flex justify-center pt-7 pb-4" key={nanoid()}>
-                <input
-                  className="rounded-sm bg-skin-secondary px-8 py-2 text-lg text-white"
-                  placeholder={key}
-                  type="text"
-                  {...PDForm(`address.${key}`)}
-                />
-              </div>
-            );
-        })}
         <div className="flex justify-center">
           <button
             className="w-32 bg-skin-secondary px-10 py-4 text-lg

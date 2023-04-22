@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useCallback, useId, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { useDropzone, Accept } from "react-dropzone";
 import { AiFillPlusCircle as PlusCircleIcon } from "react-icons/ai";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -8,18 +8,30 @@ import { api } from "../utils/api";
 
 interface Props {
   onImagesSelected: (images: File[]) => void;
+  images: File[];
+  setImages: Dispatch<SetStateAction<File[]>>;
+  multiple?: boolean;
+  showButton?: boolean;
 }
 
-const ImageInput: React.FC<Props> = ({ onImagesSelected }) => {
-  const [images, setImages] = useState<File[]>([]);
+const ImageInput: React.FC<Props> = ({
+  onImagesSelected,
+  images,
+  setImages,
+  multiple = true,
+  showButton = true,
+}) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setImages((prevImages) => [...prevImages, ...acceptedFiles]);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {},
-    multiple: true,
+    accept: {
+      "image/jpeg": [],
+      "image/png": [],
+    },
+    multiple,
   });
 
   const removeImage = (index: number) => {
@@ -60,7 +72,7 @@ const ImageInput: React.FC<Props> = ({ onImagesSelected }) => {
         </button>
       </div>
       {images.length > 0 && (
-        <div className="mt-4 grid grid-cols-4 gap-4" ref={divRef}>
+        <div className="mt-4 grid grid-cols-4 gap-4">
           {images.map((image, index) => (
             <div key={nanoid()} className="relative h-64 w-48">
               <button
@@ -79,7 +91,7 @@ const ImageInput: React.FC<Props> = ({ onImagesSelected }) => {
           ))}
         </div>
       )}
-      {images.length > 0 && (
+      {showButton && images.length > 0 && (
         <button
           className="mt-4 rounded-md bg-black py-2 px-4 text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
           onClick={handleImagesSelected}

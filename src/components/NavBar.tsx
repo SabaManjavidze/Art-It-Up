@@ -1,17 +1,17 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import {useState} from "react"
-import { FiShoppingCart, FiHeart, FiLogIn ,FiSearch} from "react-icons/fi";
-import { IoPersonAddOutline} from "react-icons/io5";
+import { useState } from "react";
+import { FiShoppingCart, FiHeart, FiLogIn, FiSearch } from "react-icons/fi";
+import { IoPersonAddOutline } from "react-icons/io5";
 import { TfiGallery } from "react-icons/tfi";
 import { ClipLoader } from "react-spinners";
 import UserProfileButton from "./UserProfileButton";
-import SearchBar from "./SearchBar"
+import SearchBar from "./SearchBar";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const buttons = [
   {
-    href: "/user/gallery",
+    href: "/user/entities",
     icon: <TfiGallery size={20} />,
   },
   {
@@ -29,9 +29,8 @@ const buttons = [
 ];
 const Navbar = () => {
   const { data: session, status } = useSession();
-  const [showSearchBar,setShowSearchBar] = useState(false)
-  const [divRef] = useAutoAnimate<HTMLDivElement>()
-
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [divRef] = useAutoAnimate<HTMLDivElement>();
 
   return (
     <nav className="flex items-center justify-between bg-skin-secondary p-4 text-white">
@@ -41,32 +40,32 @@ const Navbar = () => {
       </Link>
 
       {/* Buttons */}
-      <div className="flex min-w-[5vh] w-3/5 items-center justify-around">
+      <div className="flex w-3/5 min-w-[5vh] items-center justify-around">
         <div
-	ref={divRef}
+          ref={divRef}
           className={`${
             session?.user ? "mr-12" : ""
           } flex w-full items-center justify-around`}
         >
-	{showSearchBar?
-	<SearchBar />
-	:null}
+          {showSearchBar ? <SearchBar /> : null}
 
-            <button
-              className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
-	      onClick={()=>setShowSearchBar(!showSearchBar)}
-            >
-	    <FiSearch size={20} />
-            </button>
-          {showSearchBar?null:buttons.map((button) => (
-            <a
-              href={button.href}
-              className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
-              key={button.href}
-            >
-              {button.icon}
-            </a>
-          ))}
+          <button
+            className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
+            onClick={() => setShowSearchBar(!showSearchBar)}
+          >
+            <FiSearch size={20} />
+          </button>
+          {showSearchBar
+            ? null
+            : buttons.map((button) => (
+                <a
+                  href={button.href}
+                  className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
+                  key={button.href}
+                >
+                  {button.icon}
+                </a>
+              ))}
         </div>
         <div className="flex w-32 flex-col items-center">
           {status === "loading" ? (

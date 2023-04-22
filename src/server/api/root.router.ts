@@ -2,6 +2,7 @@ import { createTRPCRouter, publicProcedure } from "./trpc";
 import { servicesRouter } from "./routers/services.router";
 import { printifyRouter } from "./routers/printify.router";
 import { userRouter } from "./routers/user.router";
+import { entityRouter } from "./routers/entity.router";
 import { cartRouter } from "./routers/cart.router";
 import { friendsRouter } from "./routers/friends.router";
 import { prisma } from "../db";
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   services: servicesRouter,
   printify: printifyRouter,
   user: userRouter,
+  entity: entityRouter,
   cart: cartRouter,
   friends: friendsRouter,
   getTags: publicProcedure.query(async () => {

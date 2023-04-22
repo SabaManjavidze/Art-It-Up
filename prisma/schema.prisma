@@ -80,21 +80,21 @@ model UserAddress {
     title String
     @@unique([userId, title], name: "addressIdentifier")
 }
+
 model Entity {
 id String @id @default(cuid())
 creatorId String 
-creator User @relation(name:"createdEntities",references:[id],fields:[creatorId])
+creator User @relation(references:[id],fields:[creatorId])
 name String
-picture String
+picture String?
 gallery UserImage[] 
 @@index([creatorId])
-@@unique([creatorId])
 
 }
 model UserImage {
     id            String    @id @default(cuid())
     url           String    
-    entityId        String @unique
+    entityId        String 
     user          Entity  @relation(fields: [entityId], references: [id])
     createdAt  DateTime @default(now())
     @@index(entityId)
@@ -127,7 +127,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    createdEntities 	  Entity[]@relation(name:"createdEntities")
+    entities 	  Entity[]
     userFriends       Friends[] @relation(name: "users")
     friendUserFriends Friends[] @relation(name: "friend_users")
     accounts      Account[]

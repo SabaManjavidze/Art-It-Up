@@ -45,23 +45,9 @@ export default async function handler(
           created_at: new Date(product.created_at),
         },
       });
-      let tags = await prisma.tags.findMany({
-        where: { name: { in: product.tags } },
-      });
-
-      const diff = lodash.difference(
-        tags.map((tag) => tag.name),
-        product.tags
+      const tags = await prisma.$transaction(
+        product.tags.map((tag) => prisma.tags.create({ data: { name: tag } }))
       );
-      if (diff && diff.length > 0) {
-        const newTags = diff.map((tag) => {
-          return { name: tag, id: crypto.randomUUID() };
-        });
-        await prisma.tags.createMany({
-          data: newTags,
-        });
-        tags = [...tags, ...newTags];
-      }
       await prisma.productTags.createMany({
         data: tags.map((tag) => {
           return { tagId: tag.id, productId: product.id };

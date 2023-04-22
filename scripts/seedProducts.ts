@@ -34,7 +34,7 @@ const seedProducts = async () => {
       if (!tags[tag]) {
         tags[tag] = id;
       }
-      productTags.push({ tagId: id, productId: product.id });
+      productTags.push({ tagId: tags[tag] as string, productId: product.id });
     });
     return {
       id: product.id,

@@ -1,6 +1,6 @@
 import type { Dispatch } from "react";
 import { useState, Fragment } from "react";
-import type { SearchTypeType } from "./SearchBar";
+import type { SearchTypeType } from "../SearchBar";
 import { HiChevronUpDown as UpDownIcon } from "react-icons/hi2";
 import { Menu, Transition } from "@headlessui/react";
 import { nanoid } from "nanoid";
