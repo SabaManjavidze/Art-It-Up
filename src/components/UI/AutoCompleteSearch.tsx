@@ -9,7 +9,7 @@ export default function AutoCompleteSearch({
   placeholder,
 }: {
   placeholder: string;
-  arr: Array<any>;
+  arr: Array<{ name: string }>;
 }) {
   const [selected, setSelected] = useState<{ name: string }>();
   const [query, setQuery] = useState("");
@@ -33,7 +33,7 @@ export default function AutoCompleteSearch({
           <Combobox.Input
             className="w-full rounded-sm border-none bg-skin-secondary 
               pl-3 pr-10 text-lg leading-5 focus:ring-0"
-            displayValue={(item) => (item as any).name}
+            displayValue={(item) => (item as { name: string }).name}
             placeholder={placeholder}
             onChange={(event) => setQuery(event.target.value)}
           />

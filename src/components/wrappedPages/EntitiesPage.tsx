@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { api } from "../../utils/api";
-import { ClipLoader } from "react-spinners";
+import React from "react";
 import Image from "next/image";
-import { AiFillPlusSquare, AiOutlinePlusSquare } from "react-icons/ai";
-import { RouterOutputs } from "../../utils/api";
-import { useEntities, EntityProvider } from "../../hooks/useEntitiesHook";
+import { AiOutlinePlusSquare } from "react-icons/ai";
+import type { RouterOutputs } from "../../utils/api";
+import { useEntities } from "../../hooks/useEntitiesHook";
 import Modal from "../UI/Modal";
 import ImageInput from "../ImageInput";
 import GallerySection from "../entities/GallerySection";
+import { BLANK_PROFILE_URL } from "../../pages/_app";
 
 interface EntitiesPagePropType {
   entities?: RouterOutputs["entity"]["getEntities"];
@@ -83,12 +82,12 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
         )}
       </div>
       {entities?.map((entity) => (
-        <div>
+        <div key={entity.id}>
           <Image
             alt="Entity Picture"
             width={40}
             height={40}
-            src={entity?.picture + ""}
+            src={entity?.picture || BLANK_PROFILE_URL}
           />
           <h3>{entity.name}</h3>
         </div>

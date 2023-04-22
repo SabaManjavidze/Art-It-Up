@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import type { Dispatch, SetStateAction} from "react";
+import { useCallback, useState } from "react";
 import { useDropzone, Accept } from "react-dropzone";
 import { AiFillPlusCircle as PlusCircleIcon } from "react-icons/ai";
 import { useAutoAnimate } from "@formkit/auto-animate/react";

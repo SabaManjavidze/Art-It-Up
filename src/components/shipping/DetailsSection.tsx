@@ -1,4 +1,4 @@
-import { UserAddress } from "@prisma/client";
+import type { UserAddress } from "@prisma/client";
 import React from "react";
 import {
   Accordion,

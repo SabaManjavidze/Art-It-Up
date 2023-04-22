@@ -3,17 +3,11 @@ import CheckoutWizard from "../components/CheckoutWizard";
 import Layout from "../components/Layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  PDSchemaType,
-  personalDetailsSchema,
-} from "../utils/printify/printifyTypes";
+import type { PDSchemaType } from "../utils/printify/printifyTypes";
+import { personalDetailsSchema } from "../utils/printify/printifyTypes";
 import { AddressObjectKeys } from "../utils/printify/printifyTypes";
 import { nanoid } from "nanoid";
-import { toast } from "react-toastify";
 import { api } from "../utils/api";
-import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
-import { PublicKeys } from "../components/wrappedPages/ProfilePage";
-import { UserAddress } from "@prisma/client";
 import { countriesObj } from "../utils/countriesArray";
 import { DetailsSection } from "../components/shipping/DetailsSection";
 

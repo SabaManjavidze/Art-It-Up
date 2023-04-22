@@ -8,9 +8,8 @@ import ImageInput from "../../components/ImageInput";
 import { api } from "../../utils/api";
 import { toBase64 } from "../../utils/convertToBase64";
 import { useEntities } from "../../hooks/useEntitiesHook";
+import { BLANK_PROFILE_URL } from "../../pages/_app";
 
-const BLANK_PROFILE_URL =
-  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 const GallerySection = () => {
   const {
     images,

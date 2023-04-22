@@ -1,4 +1,5 @@
-import React, { Fragment, ReactNode, useState } from "react";
+import type { ReactNode} from "react";
+import React, { Fragment, useState } from "react";
 import { Transition, Dialog } from "@headlessui/react";
 
 interface ModalPropType {

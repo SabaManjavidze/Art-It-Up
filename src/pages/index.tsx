@@ -63,8 +63,8 @@ const Home: NextPage = () => {
                 }}
                 autoPlay
                 infiniteLoop
-                onClickItem={(i, product) => {
-                  const prod = product as any;
+                onClickItem={(_, product) => {
+                  const prod = product as { props: { href: string } };
                   router.push(prod.props.href);
                 }}
                 emulateTouch

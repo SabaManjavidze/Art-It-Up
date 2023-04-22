@@ -32,8 +32,8 @@ export interface PrintifyProductType {
   shop_id: number;
   print_provider_id: number;
   print_areas: PrintArea[];
-  print_details: any;
-  sales_channel_properties: any[];
+  print_details: { print_on_side: "regular" | "mirror" | "off" };
+  sales_channel_properties: [] | null;
   twodaydelivery_enabled: boolean;
 }
 
@@ -120,7 +120,7 @@ export interface PrintifyGetProductResponse {
   shop_id: number;
   print_provider_id: number;
   print_areas: PrintArea[];
-  sales_channel_properties: any[];
+  sales_channel_properties: [] | null;
 }
 
 export const addressToSchema = z.object({

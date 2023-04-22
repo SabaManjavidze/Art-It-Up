@@ -9,6 +9,8 @@ import "../styles/selectSearch.css";
 import Navbar from "../components/NavBar";
 import { ToastContainer } from "react-toastify";
 
+export const BLANK_PROFILE_URL =
+  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -17,7 +19,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <div className="">
         <Navbar />
-	<ToastContainer limit={1} position="bottom-center" />
+        <ToastContainer limit={1} position="bottom-center" />
         <Component {...pageProps} />
       </div>
     </SessionProvider>
