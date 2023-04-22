@@ -17,7 +17,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <div className="">
+      <div>
         <Navbar />
         <ToastContainer limit={1} position="bottom-center" />
         <Component {...pageProps} />

@@ -1,6 +1,0 @@
-{
-  "url": "http://localhost:3000/api/webhooks",
-  "headers": {
-    "x-pfy-signature": "sha256=4260d30ec4ee2a17181ae5072c846d8dfcb5ceb195e24de055fd9a21d8c6648f"
-  }
-}

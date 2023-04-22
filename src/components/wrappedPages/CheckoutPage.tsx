@@ -100,7 +100,7 @@ export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
           Cart is empty. <Link href="/">Go shopping</Link>
         </div>
       ) : (
-        <div className="grid bg-skin-main md:grid-cols-4 md:gap-5">
+        <div className="bloc bg-skin-main md:grid-rows-none md:gap-0 lg:grid lg:grid-cols-4 lg:gap-5">
           <div className="overflow-x-auto md:col-span-3">
             <div className="card  p-5">
               <h2 className="mb-2 text-lg">Shipping Address</h2>

@@ -1,10 +1,10 @@
 import React from "react";
-import { api } from "../../utils/api";
+import { api } from "../../../utils/api";
 import { ClipLoader } from "react-spinners";
 import Image from "next/image";
 import { AiFillPlusSquare, AiOutlinePlusSquare } from "react-icons/ai";
-import { EntityProvider } from "../../hooks/useEntitiesHook";
-import EntitiesPage from "../../components/wrappedPages/EntitiesPage";
+import { EntityProvider } from "../../../hooks/useEntitiesHook";
+import EntitiesPage from "../../../components/wrappedPages/EntitiesPage";
 
 export default function EntitiesPageContainer() {
   const { data: entities, isLoading: entitiesLoading } =
@@ -16,10 +16,8 @@ export default function EntitiesPageContainer() {
       </div>
     );
   return (
-    <div className="absolute min-h-screen w-full bg-skin-main text-skin-base ">
-      <EntityProvider>
-        <EntitiesPage entities={entities} />
-      </EntityProvider>
-    </div>
+    <EntityProvider>
+      <EntitiesPage entities={entities} />
+    </EntityProvider>
   );
 }

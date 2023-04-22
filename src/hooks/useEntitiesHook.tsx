@@ -1,12 +1,5 @@
-import type {
-  Dispatch,
-  ReactNode,
-  SetStateAction} from "react";
-import React, {
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { api } from "../utils/api";
 import { toBase64 } from "../utils/convertToBase64";
 import { v2 as cloudinary } from "cloudinary";
@@ -51,6 +44,7 @@ const MIN_IMG_COUNT = 1;
 export const EntityProvider = ({ children }: { children: ReactNode }) => {
   const [entityImg, setEntityImg] = useState<File[]>([]);
   const [showGalleryUpload, setShowGalleryUpload] = useState(false);
+  const [galleryUploadLoading, setGalleryUploadLoading] = useState(false);
   const [name, setName] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -59,15 +53,13 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
     setIsOpen(false);
   };
 
-  const { mutateAsync: createEntity, isLoading: createEntityLoading } =
-    api.entity.createEntity.useMutation();
+  const { mutateAsync: createEntity } = api.entity.createEntity.useMutation();
   const utils = api.useContext();
-  const { mutateAsync, isLoading: galleryUploadLoading } =
-    api.services.uploadImage.useMutation({
-      onSuccess() {
-        utils.services.getUserImages.invalidate();
-      },
-    });
+  const { mutateAsync } = api.services.uploadImage.useMutation({
+    onSuccess() {
+      utils.services.getUserImages.invalidate();
+    },
+  });
 
   const handleCreateEntitySubmit = async () => {
     setShowGalleryUpload(!!name);
@@ -82,6 +74,7 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
       alert(`can't upload more than ${MAX_IMG_COUNT} images`);
       return;
     }
+    setGalleryUploadLoading(true);
     let entityImgUrl: string | undefined;
     if (entityImg[0]) {
       const res = await mutateAsync({
@@ -97,6 +90,8 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
       const img = (await toBase64(image)) as string;
       await mutateAsync({ picture: img, entityId: entity.id });
     });
+    setGalleryUploadLoading(false);
+    setShowGalleryUpload(false);
   };
   const handleAddEntityClick = async () => {
     setIsOpen(true);

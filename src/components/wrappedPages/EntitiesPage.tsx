@@ -7,6 +7,7 @@ import Modal from "../UI/Modal";
 import ImageInput from "../ImageInput";
 import GallerySection from "../entities/GallerySection";
 import { BLANK_PROFILE_URL } from "../../pages/_app";
+import { BarLoader, PacmanLoader } from "react-spinners";
 
 interface EntitiesPagePropType {
   entities?: RouterOutputs["entity"]["getEntities"];
@@ -22,10 +23,21 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
     setName,
     name,
     showGalleryUpload,
+    galleryUploadLoading,
   } = useEntities();
   return (
-    <div className="absolute min-h-screen w-full bg-skin-main text-skin-base ">
-      <div className="m-20">
+    <div
+      className={`min-h-screen w-full overflow-y-hidden bg-skin-main text-skin-base ${
+        isOpen && "overflow-y-hidden"
+      } `}
+    >
+      {galleryUploadLoading && (
+        <div className="fixed inset-0 z-20 flex flex-col items-center justify-center bg-black/30 backdrop-blur-sm">
+          <h3 className="text-6xl">Uploading Images</h3>
+          <PacmanLoader size={50} color={"white"} className="mt-16" />
+        </div>
+      )}
+      <div className="ml-20 pt-20">
         <Modal
           title={showGalleryUpload ? "Edit Entity" : "Create a new Entity"}
           isOpen={isOpen}
@@ -80,18 +92,34 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
             <h2 className="text-lg text-white">Add New Entity</h2>
           </button>
         )}
+        {!showGalleryUpload && entities && (
+          <section className="mt-16 w-1/2">
+            <label className="text-3xl">Entities</label>
+            <div className="mt-16 ml-5 grid grid-cols-1 gap-y-5 md:grid-cols-3 ">
+              {entities?.map((entity) => (
+                <a
+                  key={entity.id}
+                  href={`/user/entities/${entity.id}`}
+                  className="box-content flex w-36 cursor-pointer items-center rounded-md
+                  border-2 py-1 pl-5 pr-8 duration-150 hover:bg-white/20"
+                >
+                  <div className="relative h-16 w-16 rounded-full ">
+                    <Image
+                      alt="Entity Picture"
+                      className="rounded-full object-cover"
+                      fill
+                      src={entity?.picture || BLANK_PROFILE_URL}
+                    />
+                  </div>
+                  <h3 className="ml-5 whitespace-nowrap text-xl">
+                    {entity.name}
+                  </h3>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
-      {entities?.map((entity) => (
-        <div key={entity.id}>
-          <Image
-            alt="Entity Picture"
-            width={40}
-            height={40}
-            src={entity?.picture || BLANK_PROFILE_URL}
-          />
-          <h3>{entity.name}</h3>
-        </div>
-      ))}
     </div>
   );
 }
