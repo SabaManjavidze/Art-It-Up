@@ -11,9 +11,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const categories = [
-  { title: "Hoodies", href: "/category/hoodies" },
-  { title: "T-Shirts", href: "/category/t-shirts" },
-  { title: "Jeans", href: "/category/jeans" },
+  { title: "Hoodies", href: "/search-results/_?tags=hoodies" },
+  { title: "Blankets", href: "/search-results/_?tags=Blankets" },
+  { title: "Puzzles", href: "/search-results/_tags=Puzzles" },
 ];
 const Home: NextPage = () => {
   const [selectedItem, setSelectedItem] = useState(0);

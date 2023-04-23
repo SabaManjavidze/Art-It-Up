@@ -9,86 +9,20 @@ import Image from "next/image";
 import Layout from "../Layout";
 import CheckoutWizard from "../CheckoutWizard";
 import type { UserAddress } from "@prisma/client";
+import { useCheckout } from "../../hooks/useCheckoutHooks";
 
 type CheckoutPagePropType = {
   user: RouterOutputs["user"]["me"];
   products: RouterOutputs["cart"]["getCart"];
 };
 export default function CheckoutPage({ user, products }: CheckoutPagePropType) {
-  const [selected, setSelected] = useState<number[]>([]);
-  const { mutateAsync: createOrder, isLoading: orderLoading } =
-    api.printify.createPrintifyOrder.useMutation();
-  const { data: userDetails, isLoading: detailsLoading } =
-    api.user.getUserDetails.useQuery();
   const {
-    data: shippingCost,
-    mutateAsync: calculateShippingCost,
-    isLoading: shippingLoading,
-  } = api.printify.calculateOrderShipping.useMutation();
-
-  useEffect(() => {
-    if (!detailsLoading) {
-      if (!userDetails?.[0]) return;
-      const { id, userId, title, ...address_to } =
-        userDetails[0] as UserAddress;
-      calculateShippingCost({
-        address_to: { ...address_to, zip: address_to.zip.toString() },
-        line_items: products.map((product) => {
-          return {
-            product_id: product.productId,
-            variant_id: product.variantId,
-            quantity: product.quantity,
-          };
-        }),
-      });
-    }
-  }, [detailsLoading]);
-
-  const handleOnApprove: PayPalButtonsComponentProps["onApprove"] = async (
-    data,
-    actions
-  ) => {
-    const line_items = await formatLineItems(
-      products as NonNullable<typeof products>,
-      selected
-    );
-    if (line_items && line_items.length > 1)
-      await createOrder({
-        line_items: line_items,
-      });
-    return actions?.order?.capture().then((details) => {
-      const name = details?.payer?.name?.given_name;
-      console.log(`Transaction completed by ${name}`);
-    });
-  };
-  const handleOnClick: PayPalButtonsComponentProps["onClick"] = async (
-    data,
-    actions
-  ) => {
-    if (userDetails && userDetails.length <= 0) {
-      alert("please add your personal details before the purchase");
-      return actions.reject();
-    }
-    return actions.resolve();
-  };
-  const handleCreateOrder: PayPalButtonsComponentProps["createOrder"] = async (
-    data,
-    actions
-  ) => {
-    const price =
-      products.reduce((prev, curr) => {
-        return prev + curr.price;
-      }, 0) / 100;
-    return actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            value: price.toString(),
-          },
-        },
-      ],
-    });
-  };
+    userDetails,
+    handleOnClick,
+    shippingCost,
+    handleCreateOrder,
+    handleOnApprove,
+  } = useCheckout();
   return (
     <Layout title="Place Order">
       <CheckoutWizard activeStep={3} />

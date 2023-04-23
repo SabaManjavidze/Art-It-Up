@@ -19,7 +19,7 @@ export const SearchResultsPage = ({
             <a
               key={product.id}
               href={`/product/${product.id}`}
-              className="m-16 flex flex-col items-center rounded-lg border border-gray-200 
+              className="my-16 mx-48  flex flex-col items-center rounded-lg border border-gray-200 
               bg-white shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800
               dark:hover:bg-gray-700 md:flex-row"
             >

@@ -41,11 +41,16 @@ import { appRouter } from "../../../server/api/root.router";
 import { createContextInner } from "../../../server/api/trpc";
 import superjson from "superjson";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { getServerAuthSession } from "../../../server/auth";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerAuthSession({
+    req: context.req,
+    res: context.res,
+  });
   const ssg = createProxySSGHelpers({
     router: appRouter,
-    ctx: await createContextInner(),
+    ctx: await createContextInner({ session }),
     transformer: superjson,
   });
 

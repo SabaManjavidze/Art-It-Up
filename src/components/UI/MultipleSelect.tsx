@@ -21,7 +21,7 @@ export const MultipleSelect = ({
       onChange={setSelectedTags}
       as="div"
       multiple
-      className="relative z-30 inline-block h-full rounded-md rounded-r-none border-[1px] border-gray-400 
+      className="relative z-30 inline-block h-full rounded-md rounded-l-none border-[1px] border-gray-400 
     bg-skin-light-secondary text-left text-white"
     >
       <Listbox.Button

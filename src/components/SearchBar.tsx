@@ -53,7 +53,7 @@ const SearchBar = () => {
         <button className="rounded-l-none bg-blue-500 px-3 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
           Search
         </button>
-        {tags ? (
+        {searchType == "products" && tags ? (
           <MultipleSelect
             tags={tags}
             selectedTags={selectedTags}
@@ -64,7 +64,7 @@ const SearchBar = () => {
       {usersLoading ? (
         <ClipLoader size={20} />
       ) : users ? (
-        <div className="absolute z-10 w-full translate-y-full bg-skin-light-secondary">
+        <div className="absolute top-0 z-10 w-full translate-y-full bg-skin-light-secondary">
           <SearchResults users={users} />
         </div>
       ) : null}

@@ -89,6 +89,7 @@ name String
 picture String?
 gallery UserImage[] 
 @@index([creatorId])
+@@unique([creatorId,name])
 
 }
 model UserImage {
