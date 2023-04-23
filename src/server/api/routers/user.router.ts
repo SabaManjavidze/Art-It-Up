@@ -50,6 +50,13 @@ export const userRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx: { session } }) => {
     return (await prisma.user.findFirst({
       where: { id: session.user.id },
+      select: {
+        firstName: true,
+        lastName: true,
+        name: true,
+        image: true,
+        id: true,
+      },
     })) as User;
   }),
   addPersonalDetails: protectedProcedure

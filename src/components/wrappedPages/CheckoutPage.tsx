@@ -9,8 +9,6 @@ import Image from "next/image";
 import Layout from "../Layout";
 import CheckoutWizard from "../CheckoutWizard";
 import type { UserAddress } from "@prisma/client";
-import type { Payer } from "@paypal/paypal-js";
-import { CreateOrderActions, CreateOrderData } from "@paypal/paypal-js";
 
 type CheckoutPagePropType = {
   user: RouterOutputs["user"]["me"];

@@ -95,7 +95,7 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
         {!showGalleryUpload && entities && (
           <section className="mt-16 w-1/2">
             <label className="text-3xl">Entities</label>
-            <div className="mt-16 ml-5 grid grid-cols-1 gap-y-5 md:grid-cols-3 ">
+            <div className="mt-16 ml-5 grid grid-cols-1 gap-y-5 2xl:grid-cols-3 ">
               {entities?.map((entity) => (
                 <a
                   key={entity.id}

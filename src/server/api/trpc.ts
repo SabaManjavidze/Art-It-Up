@@ -21,113 +21,60 @@ import type { Session } from "next-auth";
 import { getServerAuthSession } from "../auth";
 import { prisma } from "../db";
 
-type CreateContextOptions = {
+interface CreateInnerContextOptions extends Partial<CreateNextContextOptions> {
   session: Session | null;
-  req: NextApiRequest;
-  res: NextApiResponse;
-};
+}
 
-/**
- * This helper generates the "internals" for a tRPC context. If you need to use
- * it, you can export it from here.
- *
- * Examples of things you may need it for:
- * - testing, so we don't have to mock Next.js' req/res
- * - tRPC's `createSSGHelpers`, where we don't have req/res
- *
- * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
- */
-const createInnerTRPCContext = (opts: CreateContextOptions) => {
+export async function createContextInner(opts?: CreateInnerContextOptions) {
   return {
-    session: opts.session,
     prisma,
+    session: opts?.session,
+  };
+}
+
+export const createContext = async (opts: CreateNextContextOptions) => {
+  const { req, res } = opts;
+
+  const session = await getServerAuthSession({ req, res });
+
+  const innerContext = await createContextInner({
+    session,
+  });
+  return {
+    ...innerContext,
     req: opts.req,
     res: opts.res,
   };
 };
 
-/**
- * This is the actual context you will use in your router. It will be used to
- * process every request that goes through your tRPC endpoint.
- *
- * @see https://trpc.io/docs/context
- */
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
-  const { req, res } = opts;
-
-  // Get the session from the server using the getServerSession wrapper function
-  const session = await getServerAuthSession({ req, res });
-
-  return createInnerTRPCContext({
-    session,
-    req,
-    res,
-  });
-};
-
-/**
- * 2. INITIALIZATION
- *
- * This is where the tRPC API is initialized, connecting the context and
- * transformer.
- */
-import { initTRPC, TRPCError } from "@trpc/server";
+import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import type { NextApiRequest, NextApiResponse } from "next";
 
-const t = initTRPC.context<typeof createTRPCContext>().create({
+export type Context = inferAsyncReturnType<typeof createContextInner>;
+
+const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape }) {
     return shape;
   },
 });
 
-/**
- * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
- *
- * These are the pieces you use to build your tRPC API. You should import these
- * a lot in the "/src/server/api/routers" directory.
- */
-
-/**
- * This is how you create new routers and sub-routers in your tRPC API.
- *
- * @see https://trpc.io/docs/router
- */
 export const createTRPCRouter = t.router;
 
-/**
- * Public (unauthenticated) procedure
- *
- * This is the base piece you use to build new queries and mutations on your
- * tRPC API. It does not guarantee that a user querying is authorized, but you
- * can still access user session data if they are logged in.
- */
 export const publicProcedure = t.procedure;
 
-/**
- * Reusable middleware that enforces users are logged in before running the
- * procedure.
- */
-const isAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+const isAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.session?.user?.email) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+    });
   }
   return next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      // Infers the `session` as non-nullable
+      session: ctx.session,
     },
   });
 });
 
-/**
- * Protected (authenticated) procedure
- *
- * If you want a query or mutation to ONLY be accessible to logged in users, use
- * this. It verifies the session is valid and guarantees `ctx.session.user` is
- * not null.
- *
- * @see https://trpc.io/docs/procedures
- */
 export const protectedProcedure = t.procedure.use(isAuthed);
