@@ -87,7 +87,7 @@ function UserFriendsPage() {
               ) : receivedRequests && receivedRequests.length > 0 ? (
                 receivedRequests.map((receivedReq) => (
                   <div
-                    key={receivedReq.friend_id}
+                    key={receivedReq.friendId}
                     className="flex items-center justify-around"
                   >
                     <div className="flex flex-1 justify-center">
@@ -164,7 +164,7 @@ function UserFriendsPage() {
               ) : sentRequests && sentRequests.length > 0 ? (
                 sentRequests.map((sentReq) => (
                   <div
-                    key={sentReq.friend_id}
+                    key={sentReq.friendId}
                     className="flex items-center justify-around"
                   >
                     <div className="flex flex-1 justify-center">
@@ -200,7 +200,7 @@ function UserFriendsPage() {
               ) : friends && friends.length > 0 ? (
                 friends.map((user) => {
                   const person =
-                    user.friend_id == session?.data?.user.id
+                    user.friendId == session?.data?.user.id
                       ? user.user
                       : user.friend;
                   return (

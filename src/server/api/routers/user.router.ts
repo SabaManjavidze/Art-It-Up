@@ -15,7 +15,7 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ input: { name }, ctx: { session } }) => {
       const userId = session.user.id;
       const userFriends = await prisma.friends.findMany({
-        where: { OR: [{ user_id: userId }, { friend_id: userId }] },
+        where: { OR: [{ userId: userId }, { friendId: userId }] },
       });
       const xprisma = prisma.$extends({
         result: {
@@ -27,8 +27,8 @@ export const userRouter = createTRPCRouter({
                 for (let i = 0; i < userFriends.length; i++) {
                   const userFriend = userFriends[i];
                   if (
-                    user.id == userFriend?.user_id ||
-                    user.id == userFriend?.friend_id
+                    user.id == userFriend?.userId ||
+                    user.id == userFriend?.friendId
                   ) {
                     isFriend = true;
                   }

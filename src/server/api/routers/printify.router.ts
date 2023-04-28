@@ -8,6 +8,7 @@ import {
 } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 import { Printify } from "../../PrintifyClient";
+import { TRPCError } from "@trpc/server";
 
 export const printify = new Printify({
   apiKey: process.env.PRINTIFY_ACCESS_TOKEN as string,
@@ -39,9 +40,15 @@ export const printifyRouter = createTRPCRouter({
     .mutation(async ({ input, ctx: { session } }) => {
       const user = await prisma.user.findFirst({
         where: { id: session.user.id },
-        include: { address: true },
+        select: { address: true, firstName: true, lastName: true, phone: true },
       });
 
+      if (!user) throw new TRPCError({ code: "BAD_REQUEST" });
+      if (!user?.firstName || !user?.lastName)
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "User has not entered their first/last name",
+        });
       const address = user?.address[0];
       if (!address)
         return {
@@ -57,8 +64,8 @@ export const printifyRouter = createTRPCRouter({
         address_to: {
           email: session.user.email as string,
           phone: user.phone?.toString() as string,
-          first_name: user?.firstName as string,
-          last_name: user?.lastName as string,
+          first_name: user.firstName as string,
+          last_name: user.lastName as string,
           address1: address.address1,
           address2: address.address2.toString(),
           zip: address.zip.toString(),
@@ -69,7 +76,7 @@ export const printifyRouter = createTRPCRouter({
         line_items: input.line_items as [(typeof input.line_items)[number]],
         send_shipping_notification: false,
         shipping_method: 1,
-        external_id: "",
+        external_id: input?.entityId ?? "",
       });
       return { errors: null, success: true };
     }),
@@ -86,7 +93,7 @@ export const printifyRouter = createTRPCRouter({
         const user = await prisma.user.findFirst({
           where: { id: session.user.id },
         });
-        if (!user) throw new Error("no user");
+        if (!user) throw new TRPCError({ code: "BAD_REQUEST" });
         return await printify.calculateShipping(address_to, line_items, {
           email: user.email as string,
           first_name: user.firstName as string,

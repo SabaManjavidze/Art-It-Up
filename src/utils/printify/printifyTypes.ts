@@ -154,6 +154,7 @@ export const lineItemsZodType = z.array(
 export const createOrderItemSchema = z.object({
   // external_id: z.string(),
   line_items: lineItemsZodType,
+  entityId: z.string().optional(),
   // shipping_method: z.number(),
   // send_shipping_notification: z.boolean(),
 });

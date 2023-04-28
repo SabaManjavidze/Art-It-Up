@@ -1,17 +1,8 @@
-import type {
-  ReactNode} from "react";
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import type { RouterInputs, RouterOutputs} from "../utils/api";
+import type { ReactNode } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { RouterInputs, RouterOutputs } from "../utils/api";
 import { api } from "../utils/api";
 import type { UserAddress } from "@prisma/client";
-import { Product } from "@prisma/client";
 import type { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
 import { formatLineItems } from "../utils/formatLineItems";
 

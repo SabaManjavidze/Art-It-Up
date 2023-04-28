@@ -2,6 +2,7 @@ import { z } from "zod";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 export const entityRouter = createTRPCRouter({
   getEntity: protectedProcedure
@@ -34,7 +35,10 @@ export const entityRouter = createTRPCRouter({
         where: { creatorId: session.user.id },
       });
       if (entities.length >= 5)
-        throw new Error("cannot create more than 5 entities");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "cannot create more than 5 entities",
+        });
       return await prisma.entity.create({
         data: {
           name,

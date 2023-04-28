@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 export const friendsRouter = createTRPCRouter({
   acceptFriendRequest: protectedProcedure
@@ -24,7 +25,7 @@ export const friendsRouter = createTRPCRouter({
     }),
   getSentRequests: protectedProcedure.query(async ({ ctx: { session } }) => {
     const requests = await prisma.friends.findMany({
-      where: { user_id: session.user.id, status: Status.PENDING },
+      where: { userId: session.user.id, status: Status.PENDING },
       include: { friend: { select: { name: true, image: true, id: true } } },
     });
     return requests;
@@ -32,7 +33,7 @@ export const friendsRouter = createTRPCRouter({
   getRecievedRequests: protectedProcedure.query(
     async ({ input, ctx: { session } }) => {
       const requests = await prisma.friends.findMany({
-        where: { friend_id: session.user.id, status: Status.PENDING },
+        where: { friendId: session.user.id, status: Status.PENDING },
         include: { user: { select: { name: true, image: true, id: true } } },
       });
       return requests;
@@ -41,7 +42,7 @@ export const friendsRouter = createTRPCRouter({
   getFriends: protectedProcedure.query(async ({ ctx: { session } }) => {
     const friends = await prisma.friends.findMany({
       where: {
-        OR: [{ friend_id: session.user.id }, { user_id: session.user.id }],
+        OR: [{ friendId: session.user.id }, { userId: session.user.id }],
         status: Status.ACCEPTED,
       },
       include: {
@@ -63,20 +64,21 @@ export const friendsRouter = createTRPCRouter({
       });
       const friendShipRecord = await prisma.friends.findFirst({
         where: {
-          AND: { user_id: session.user.id, friend_id: addressantId },
+          AND: { userId: session.user.id, friendId: addressantId },
         },
       });
       if (friendShipRecord) {
-        throw new Error(
-          friendShipRecord.status
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: friendShipRecord.status
             ? `You are already friends with ${addressant?.name}`
-            : "The friend request has already been sent"
-        );
+            : "The friend request has already been sent",
+        });
       }
       await prisma.friends.create({
         data: {
-          user_id: session.user.id,
-          friend_id: addressantId,
+          userId: session.user.id,
+          friendId: addressantId,
         },
       });
     }),

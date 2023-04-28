@@ -47,6 +47,7 @@ model Product {
     created_at DateTime @default(now())
     reviews Review[]
     tags ProductTags[]
+    orders LineItems[]
     cartHolder UserCartProducts[]
 }
 
@@ -78,6 +79,7 @@ model UserAddress {
     city String
     zip Int
     title String
+    orders Order[]
     @@unique([userId, title], name: "addressIdentifier")
 }
 
@@ -88,6 +90,7 @@ creator User @relation(references:[id],fields:[creatorId])
 name String
 picture String?
 gallery UserImage[] 
+presents Order[]
 @@index([creatorId])
 @@unique([creatorId,name])
 
@@ -108,15 +111,53 @@ enum Status {
 }
 model Friends {
   id        String      @id @default(cuid())
-  user_id   String
-  friend_id String
-  user      User    @relation(name: "users", fields: [user_id], references: [id])
-  friend    User    @relation(name: "friend_users", fields: [friend_id], references: [id])
+  userId   String 
+  friendId String 
+  user      User    @relation(name: "users", fields: [userId], references: [id])
+  friend    User    @relation(name: "friendUsers", fields: [friendId], references: [id])
   status    Status  @default(PENDING)
   createdAt DateTime @default(now())
 
-  @@unique([user_id, friend_id])
-  @@index([friend_id])
+  @@unique([userId, friendId])
+  @@index([friendId])
+}
+
+model LineItems{
+
+  id        String      @id @default(cuid())
+  orderId   String 
+  order Order @relation(fields: [orderId],references: [id])
+  productId String
+  product Product @relation(fields: [productId],references: [id])
+  cost    Int  
+  shippingCost Int
+  quantity Int
+
+  @@index([orderId])
+  @@index([productId])
+}
+model Order{
+    id            String    @id @default(cuid())
+
+    creatorId String 
+    creator User @relation(references:[id],fields:[creatorId])
+
+    entityId String?
+    entity Entity? @relation(references: [id],fields: [entityId])
+
+    addressId String
+    addressTo UserAddress @relation(references: [id],fields: [addressId])
+    
+    line_items LineItems[]
+
+    totalPrice Int
+    totalShipping Int
+    createdAt DateTime @default(now())
+
+
+    @@index([creatorId])
+    @@index([entityId])
+    @@index([addressId])
 }
 
 model User {
@@ -130,11 +171,12 @@ model User {
     image         String?
     entities 	  Entity[]
     userFriends       Friends[] @relation(name: "users")
-    friendUserFriends Friends[] @relation(name: "friend_users")
+    friendUserFriends Friends[] @relation(name: "friendUsers")
     accounts      Account[]
     sessions      Session[]
     cart          UserCartProducts[]   
     reviews       Review[]    
+    orders       Order[]    
     address       UserAddress[]
     createdAt     DateTime @default(now())
     @@index([id])
