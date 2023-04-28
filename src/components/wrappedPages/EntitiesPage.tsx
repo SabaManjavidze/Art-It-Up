@@ -1,4 +1,5 @@
-import React from "react";
+import type { ChangeEvent} from "react";
+import React, { useCallback } from "react";
 import Image from "next/image";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 import type { RouterOutputs } from "../../utils/api";
@@ -8,6 +9,7 @@ import ImageInput from "../ImageInput";
 import GallerySection from "../entities/GallerySection";
 import { BLANK_PROFILE_URL } from "../../pages/_app";
 import { BarLoader, PacmanLoader } from "react-spinners";
+import { debounce } from "lodash";
 
 interface EntitiesPagePropType {
   entities?: RouterOutputs["entity"]["getEntities"];
@@ -25,6 +27,10 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
     showGalleryUpload,
     galleryUploadLoading,
   } = useEntities();
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    setName(value);
+  };
   return (
     <div
       className={`min-h-screen w-full overflow-y-hidden bg-skin-main text-skin-base ${
@@ -50,10 +56,7 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
                  text-white duration-150 focus:ring-2 focus:ring-white"
                 placeholder={"Entity Name"}
                 value={name}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setName(e.currentTarget.value);
-                }}
+                onChange={handleNameChange}
                 type="text"
               />
               <div className={"mt-3 text-white"}>
@@ -96,7 +99,7 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
           <section className="mt-16 w-1/2">
             <label className="text-3xl">Entities</label>
             <div className="mt-16 ml-5 grid grid-cols-1 gap-y-5 2xl:grid-cols-3 ">
-              {entities?.map((entity) => (
+              {entities.map((entity) => (
                 <a
                   key={entity.id}
                   href={`/user/entities/${entity.id}`}

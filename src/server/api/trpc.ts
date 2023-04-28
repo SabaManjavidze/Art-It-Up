@@ -47,7 +47,8 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   };
 };
 
-import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
+import type { inferAsyncReturnType} from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 export type Context = inferAsyncReturnType<typeof createContextInner>;

@@ -1,11 +1,9 @@
 import Image from "next/image";
-import type { Dispatch, SetStateAction} from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useState } from "react";
 import { useDropzone, Accept } from "react-dropzone";
 import { AiFillPlusCircle as PlusCircleIcon } from "react-icons/ai";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { nanoid } from "nanoid";
-import { api } from "../utils/api";
 
 interface Props {
   onImagesSelected: (images: File[]) => void;
@@ -45,7 +43,6 @@ const ImageInput: React.FC<Props> = ({
   const handleClearClick = async () => {
     setImages([]);
   };
-  const [divRef] = useAutoAnimate<HTMLDivElement>();
 
   return (
     <div>

@@ -29,6 +29,12 @@ export const entityRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input: { name, picture }, ctx: { session } }) => {
+      const entities = await prisma.entity.findMany({
+        select: {},
+        where: { creatorId: session.user.id },
+      });
+      if (entities.length >= 5)
+        throw new Error("cannot create more than 5 entities");
       return await prisma.entity.create({
         data: {
           name,

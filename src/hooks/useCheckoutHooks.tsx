@@ -1,15 +1,18 @@
+import type {
+  ReactNode} from "react";
 import {
   Dispatch,
-  ReactNode,
   SetStateAction,
   createContext,
   useContext,
   useEffect,
   useState,
 } from "react";
-import { RouterInputs, RouterOutputs, api } from "../utils/api";
-import { Product, UserAddress } from "@prisma/client";
-import { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
+import type { RouterInputs, RouterOutputs} from "../utils/api";
+import { api } from "../utils/api";
+import type { UserAddress } from "@prisma/client";
+import { Product } from "@prisma/client";
+import type { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
 import { formatLineItems } from "../utils/formatLineItems";
 
 type CheckoutContextProps = {

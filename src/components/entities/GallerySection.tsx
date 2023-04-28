@@ -9,45 +9,21 @@ import { api } from "../../utils/api";
 import { toBase64 } from "../../utils/convertToBase64";
 import { useEntities } from "../../hooks/useEntitiesHook";
 import { BLANK_PROFILE_URL } from "../../pages/_app";
+import EditEntitySection from "./EditEntitySection";
 
 const GallerySection = () => {
-  const {
-    images,
-    setImages,
-    handleImageUpload,
-    galleryUploadLoading,
-    name,
-    entityImg,
-    handleAddEntityClick,
-  } = useEntities();
+  const [images, setImages] = useState<File[]>([]);
+  const { handleImageUpload, handleCancelEntityClick, galleryUploadLoading } =
+    useEntities();
   const { data, isFetching } = api.services.getUserImages.useQuery();
   return (
     <div className="min-h-screen w-full bg-skin-main px-12 text-skin-base">
-      <section>
-        <div className="flex items-center ">
-          <div className="flex max-h-24 items-center rounded-md border-2 border-white pr-5 ">
-            <Image
-              alt="Entity Image"
-              src={
-                entityImg[0]
-                  ? URL.createObjectURL(entityImg[0])
-                  : BLANK_PROFILE_URL
-              }
-              width={40}
-              height={40}
-              className="rounded-sm object-cover"
-            />
-            <h3 className="ml-4 text-lg">{name}</h3>
-          </div>
-          <button
-            className="ml-4 rounded-md bg-black py-2 px-4 text-white hover:bg-gray-800 
-          focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
-            onClick={handleAddEntityClick}
-          >
-            Edit
-          </button>
-        </div>
-      </section>
+      <EditEntitySection
+        handleCancelEntity={() => {
+          handleCancelEntityClick();
+          setImages([]);
+        }}
+      />
       <div className="pt-20">
         <ImageInput
           images={images}

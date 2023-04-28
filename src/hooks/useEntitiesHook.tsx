@@ -5,8 +5,6 @@ import { toBase64 } from "../utils/convertToBase64";
 import { v2 as cloudinary } from "cloudinary";
 
 type EntityContextProps = {
-  images: File[];
-  setImages: Dispatch<SetStateAction<File[]>>;
   isOpen: boolean;
   galleryUploadLoading: boolean;
   // setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -16,14 +14,13 @@ type EntityContextProps = {
   setEntityImg: Dispatch<SetStateAction<File[]>>;
   handleAddEntityClick: () => void;
   handleCreateEntitySubmit: () => void;
+  handleCancelEntityClick: () => void;
   handleImageUpload: (imgs: File[]) => Promise<void>;
   closeModal: () => void;
 
   showGalleryUpload: boolean;
 };
 export const EntityContext = createContext<EntityContextProps>({
-  images: [],
-  setImages: () => {},
   isOpen: false,
   galleryUploadLoading: false,
   showGalleryUpload: false,
@@ -33,6 +30,7 @@ export const EntityContext = createContext<EntityContextProps>({
   entityImg: [],
   setEntityImg: () => {},
   handleAddEntityClick: () => {},
+  handleCancelEntityClick: () => {},
   handleCreateEntitySubmit: () => {},
   handleImageUpload: async (imgs) => {},
   closeModal: () => {},
@@ -41,12 +39,12 @@ export const useEntities = () => useContext(EntityContext);
 
 const MAX_IMG_COUNT = 40;
 const MIN_IMG_COUNT = 1;
+
 export const EntityProvider = ({ children }: { children: ReactNode }) => {
   const [entityImg, setEntityImg] = useState<File[]>([]);
   const [showGalleryUpload, setShowGalleryUpload] = useState(false);
   const [galleryUploadLoading, setGalleryUploadLoading] = useState(false);
   const [name, setName] = useState("");
-  const [images, setImages] = useState<File[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   const closeModal = () => {
@@ -61,6 +59,12 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
+  const handleCancelEntityClick = async () => {
+    setName("");
+    setEntityImg([]);
+    setShowGalleryUpload(false);
+    setIsOpen(false);
+  };
   const handleCreateEntitySubmit = async () => {
     setShowGalleryUpload(!!name);
     setIsOpen(false);
@@ -104,12 +108,11 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
         setEntityImg,
         showGalleryUpload,
         galleryUploadLoading,
-        images,
-        setImages,
         name,
         setName,
         handleAddEntityClick,
         handleCreateEntitySubmit,
+        handleCancelEntityClick,
         handleImageUpload,
         isOpen,
       }}

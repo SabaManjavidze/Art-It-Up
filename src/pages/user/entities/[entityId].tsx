@@ -36,7 +36,7 @@ export default function EntityDetailsPage({
     </div>
   );
 }
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { appRouter } from "../../../server/api/root.router";
 import { createContextInner } from "../../../server/api/trpc";
 import superjson from "superjson";
