@@ -33,9 +33,12 @@ export default function CartPage() {
   } = api.user.searchFriends.useMutation();
   const {
     data: entities,
-    mutateAsync: getEntities,
+    refetch: getEntities,
     isLoading: entitiesLoading,
-  } = api.entity.getEntities.useMutation();
+  } = api.entity.getEntities.useQuery(
+    { userId: showEntities },
+    { enabled: false }
+  );
   const debouncedSearchUsers = useCallback(
     debounce((value) => {
       searchUsers({ name: value });
@@ -79,8 +82,7 @@ export default function CartPage() {
                 onClick={async () => {
                   if (showEntities.length < 1) {
                     setShowEntities(user.id);
-                    if (entities?.length == 0 || !entities)
-                      await getEntities({ userId: user.id });
+                    if (entities?.length == 0 || !entities) await getEntities();
                   } else {
                     setShowEntities("");
                   }

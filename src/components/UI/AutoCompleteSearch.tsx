@@ -1,9 +1,10 @@
-import React, { Fragment, InputHTMLAttributes, useMemo, useState } from "react";
+import type { InputHTMLAttributes} from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { nanoid } from "nanoid";
 import { AiOutlineCheck } from "react-icons/ai";
 import { HiChevronUpDown } from "react-icons/hi2";
-import { RefCallBack } from "react-hook-form";
+import type { RefCallBack } from "react-hook-form";
 
 interface AutoCompleteSearchPropType
   extends InputHTMLAttributes<HTMLInputElement> {

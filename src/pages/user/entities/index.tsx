@@ -10,7 +10,7 @@ export default function EntitiesPageContainer() {
     data: entities,
     isLoading: entitiesLoading,
     error: entityError,
-  } = api.entity.getEntities.useQuery();
+  } = api.entity.getEntities.useQuery({});
   const router = useRouter();
   if (entitiesLoading)
     return (

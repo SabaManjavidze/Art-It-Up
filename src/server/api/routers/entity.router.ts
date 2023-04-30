@@ -17,7 +17,7 @@ export const entityRouter = createTRPCRouter({
     }),
   getEntities: protectedProcedure
     .input(z.object({ userId: z.string().optional() }))
-    .mutation(async ({ input: { userId }, ctx: { session } }) => {
+    .query(async ({ input: { userId }, ctx: { session } }) => {
       return await prisma.entity.findMany({
         where: {
           creatorId: userId ?? session.user.id,
