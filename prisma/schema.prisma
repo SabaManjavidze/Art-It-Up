@@ -77,7 +77,7 @@ model UserAddress {
     address1 String
     address2 String
     city String
-    zip Int
+    zip String
     title String
     orders Order[]
     @@unique([userId, title], name: "addressIdentifier")

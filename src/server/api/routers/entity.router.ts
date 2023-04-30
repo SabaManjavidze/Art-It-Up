@@ -15,13 +15,15 @@ export const entityRouter = createTRPCRouter({
         include: { gallery: true },
       });
     }),
-  getEntities: protectedProcedure.query(async ({ ctx: { session } }) => {
-    return await prisma.entity.findMany({
-      where: {
-        creatorId: session.user.id,
-      },
-    });
-  }),
+  getEntities: protectedProcedure
+    .input(z.object({ userId: z.string().optional() }))
+    .mutation(async ({ input: { userId }, ctx: { session } }) => {
+      return await prisma.entity.findMany({
+        where: {
+          creatorId: userId ?? session.user.id,
+        },
+      });
+    }),
   createEntity: protectedProcedure
     .input(
       z.object({
@@ -31,7 +33,6 @@ export const entityRouter = createTRPCRouter({
     )
     .mutation(async ({ input: { name, picture }, ctx: { session } }) => {
       const entities = await prisma.entity.findMany({
-        select: {},
         where: { creatorId: session.user.id },
       });
       if (entities.length >= 5)

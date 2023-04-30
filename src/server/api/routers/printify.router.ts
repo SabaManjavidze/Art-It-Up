@@ -40,7 +40,12 @@ export const printifyRouter = createTRPCRouter({
     .mutation(async ({ input, ctx: { session } }) => {
       const user = await prisma.user.findFirst({
         where: { id: session.user.id },
-        select: { address: true, firstName: true, lastName: true, phone: true },
+        select: {
+          address: { where: { id: input.addressId } },
+          firstName: true,
+          lastName: true,
+          phone: true,
+        },
       });
 
       if (!user) throw new TRPCError({ code: "BAD_REQUEST" });
@@ -51,15 +56,23 @@ export const printifyRouter = createTRPCRouter({
         });
       const address = user?.address[0];
       if (!address)
-        return {
-          success: false,
-          errors: {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          cause: {
             message: "user has not added personal details",
             description:
               "You can add your personal details your the profile page",
           },
-        };
-
+        });
+      await prisma.order.create({
+        data: {
+          addressId: input.addressId,
+          creatorId: session.user.id,
+          entityId: input.entityId,
+          totalPrice: input.totalPrice,
+          totalShipping: input.totalShipping,
+        },
+      });
       await printify.createOrder({
         address_to: {
           email: session.user.email as string,
@@ -68,7 +81,7 @@ export const printifyRouter = createTRPCRouter({
           last_name: user.lastName as string,
           address1: address.address1,
           address2: address.address2.toString(),
-          zip: address.zip.toString(),
+          zip: address.zip,
           city: address.city,
           region: address.region as "",
           country: address.country,
@@ -78,7 +91,6 @@ export const printifyRouter = createTRPCRouter({
         shipping_method: 1,
         external_id: input?.entityId ?? "",
       });
-      return { errors: null, success: true };
     }),
   calculateOrderShipping: protectedProcedure
     .input(
@@ -89,7 +101,6 @@ export const printifyRouter = createTRPCRouter({
     )
     .mutation(
       async ({ input: { address_to, line_items }, ctx: { session } }) => {
-        // const product = await
         const user = await prisma.user.findFirst({
           where: { id: session.user.id },
         });

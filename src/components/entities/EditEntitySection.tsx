@@ -23,7 +23,7 @@ export default function EditEntitySection({
               }
               width={400}
               height={400}
-              className="absolute top-0 rounded-md object-cover"
+              className="absolute top-1/2 -translate-y-1/2 rounded-md object-contain"
             />
           </div>
           <div className="flex items-center">

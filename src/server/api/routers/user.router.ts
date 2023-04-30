@@ -3,9 +3,40 @@ import { personalDetailsSchema } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import type { User } from "@prisma/client";
+import type { Prisma, User } from "@prisma/client";
 
 export const userRouter = createTRPCRouter({
+  searchFriends: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ input: { name }, ctx: { session } }) => {
+      const userId = session.user.id;
+      const minimalUser = { name: true, image: true, id: true };
+      const userFriends = await prisma.friends.findMany({
+        include: {
+          friend: { select: minimalUser },
+          user: { select: minimalUser },
+        },
+        where: {
+          AND: [{ OR: [{ userId: userId }, { friendId: userId }] }],
+        },
+      });
+      const filteredFriends: { name: string; image: string; id: string }[] = [];
+      userFriends.forEach((fRecord) => {
+        const friendName = fRecord.friend.name as string;
+        const userName = fRecord.user.name as string;
+        if (friendName.toLowerCase().startsWith(name))
+          return filteredFriends.push(fRecord.friend);
+        if (userName.toLowerCase().startsWith(name))
+          return filteredFriends.push(fRecord.user);
+      });
+
+      return filteredFriends;
+    }),
+
   searchUsers: protectedProcedure
     .input(
       z.object({
@@ -65,7 +96,7 @@ export const userRouter = createTRPCRouter({
       await prisma.userAddress.create({
         data: {
           ...input.address,
-          zip: parseInt(input.address.zip),
+          zip: input.address.zip,
           userId: session.user.id,
         },
       });
@@ -81,7 +112,7 @@ export const userRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           ...input.address,
-          zip: parseInt(input.address.zip),
+          zip: input.address.zip,
           userId: session.user.id,
         },
       });

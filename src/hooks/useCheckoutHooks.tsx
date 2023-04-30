@@ -1,29 +1,38 @@
-import type { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { RouterInputs, RouterOutputs } from "../utils/api";
 import { api } from "../utils/api";
 import type { UserAddress } from "@prisma/client";
 import type { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
 import { formatLineItems } from "../utils/formatLineItems";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { string } from "zod";
 
+type MinimalEntityType = { id: string; picture: string | null; name: string };
 type CheckoutContextProps = {
   createOrder: (
     props: RouterInputs["printify"]["createPrintifyOrder"]
-  ) => Promise<RouterOutputs["printify"]["createPrintifyOrder"]>;
+  ) => Promise<void>;
   handleOnClick: PayPalButtonsComponentProps["onClick"];
   detailsLoading: boolean;
   userDetails?: RouterOutputs["user"]["getUserDetails"];
   shippingCost?: RouterOutputs["printify"]["calculateOrderShipping"];
   handleOnApprove: PayPalButtonsComponentProps["onApprove"];
   handleCreateOrder: PayPalButtonsComponentProps["createOrder"];
+  products: RouterOutputs["cart"]["getCart"];
+  totalPrice: number;
+
+  entity?: MinimalEntityType | undefined;
+  setEntity: Dispatch<SetStateAction<MinimalEntityType | undefined>>;
 };
 export const CheckoutContext = createContext<CheckoutContextProps>({
-  createOrder: async (props) => {
-    return { errors: null, success: true };
-  },
+  createOrder: async (props) => undefined,
   handleOnClick: async (data, actions) => {},
   detailsLoading: false,
-  userDetails: undefined,
+  products: [],
+  totalPrice: 0,
+  setEntity: () => {},
   handleOnApprove: async (data, actions) => {},
   handleCreateOrder: async (data, actions) => "",
 });
@@ -37,35 +46,48 @@ export const CheckoutProvider = ({
   children: ReactNode;
 }) => {
   const [selected, setSelected] = useState<number[]>([]);
+  const [entity, setEntity] = useState<MinimalEntityType | undefined>();
+  const router = useRouter();
   const { mutateAsync: createOrder, isLoading: orderLoading } =
     api.printify.createPrintifyOrder.useMutation();
 
-  const { data: userDetails, isLoading: detailsLoading } =
-    api.user.getUserDetails.useQuery();
-
+  const totalPrice = useMemo(
+    () =>
+      products.reduce((prev, curr) => {
+        return prev + curr.price;
+      }, 0),
+    [products]
+  );
   const {
-    data: shippingCost,
-    mutateAsync: calculateShippingCost,
-    isLoading: shippingLoading,
-  } = api.printify.calculateOrderShipping.useMutation();
+    data: userDetails,
+    isLoading: detailsLoading,
+    error: detailsError,
+  } = api.user.getUserDetails.useQuery();
+
+  const { data: shippingCost, mutateAsync: calculateShippingCost } =
+    api.printify.calculateOrderShipping.useMutation();
 
   useEffect(() => {
-    if (!detailsLoading) {
-      if (!userDetails?.[0]) return;
+    if (!detailsLoading && !detailsError) {
+      if (!userDetails?.[0]) {
+        return;
+      }
       const { id, userId, title, ...address_to } =
         userDetails[0] as UserAddress;
-      calculateShippingCost({
-        address_to: { ...address_to, zip: address_to.zip.toString() },
-        line_items: products.map((product) => {
-          return {
-            product_id: product.productId,
-            variant_id: product.variantId,
-            quantity: product.quantity,
-          };
-        }),
-      });
+      (async () => {
+        await calculateShippingCost({
+          address_to,
+          line_items: products.map((product) => {
+            return {
+              product_id: product.productId,
+              variant_id: product.variantId,
+              quantity: product.quantity,
+            };
+          }),
+        });
+      })();
     }
-  }, [detailsLoading]);
+  }, [detailsLoading, detailsError]);
 
   const handleCreateOrder: PayPalButtonsComponentProps["createOrder"] = async (
     data,
@@ -79,7 +101,10 @@ export const CheckoutProvider = ({
       purchase_units: [
         {
           amount: {
-            value: price.toString(),
+            value: (
+              price +
+              (shippingCost?.standard as number) / 100
+            ).toString(),
           },
         },
       ],
@@ -94,13 +119,17 @@ export const CheckoutProvider = ({
       products as NonNullable<typeof products>,
       selected
     );
-    if (line_items && line_items.length > 1)
+    if (line_items && line_items.length > 1 && userDetails?.[0] && entity)
       await createOrder({
         line_items: line_items,
+        entityId: entity.id,
+        addressId: userDetails[0].id as string,
+        totalPrice: totalPrice,
+        totalShipping: shippingCost?.standard as number,
       });
     return actions?.order?.capture().then((details) => {
       const name = details?.payer?.name?.given_name;
-      console.log(`Transaction completed by ${name}`);
+      toast.success(`Transaction completed by ${name}`);
     });
   };
   const handleOnClick: PayPalButtonsComponentProps["onClick"] = async (
@@ -119,6 +148,10 @@ export const CheckoutProvider = ({
         handleOnClick,
         handleOnApprove,
         handleCreateOrder,
+        entity,
+        setEntity,
+        totalPrice,
+        products,
         createOrder,
         shippingCost,
         userDetails,

@@ -1,20 +1,26 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, InputHTMLAttributes, useMemo, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { nanoid } from "nanoid";
 import { AiOutlineCheck } from "react-icons/ai";
 import { HiChevronUpDown } from "react-icons/hi2";
+import { RefCallBack } from "react-hook-form";
 
+interface AutoCompleteSearchPropType
+  extends InputHTMLAttributes<HTMLInputElement> {
+  placeholder: string;
+  arr: Array<{ name: string }>;
+  innerRef: RefCallBack;
+}
 export default function AutoCompleteSearch({
   arr,
   placeholder,
-}: {
-  placeholder: string;
-  arr: Array<{ name: string }>;
-}) {
-  const [selected, setSelected] = useState<{ name: string }>();
+  innerRef,
+  ...args
+}: AutoCompleteSearchPropType) {
+  const [selected, setSelected] = useState<{ name: string }>({ name: "" });
   const [query, setQuery] = useState("");
-  const filteredArr =
-    query === ""
+  const filteredArr = useMemo(() => {
+    return query === ""
       ? arr
       : arr.filter((item) =>
           item.name
@@ -22,6 +28,7 @@ export default function AutoCompleteSearch({
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, ""))
         );
+  }, [query]);
   return (
     <Combobox value={selected} onChange={setSelected}>
       <div className="relative w-full">
@@ -31,9 +38,11 @@ export default function AutoCompleteSearch({
         shadow-md focus:outline-none sm:text-sm"
         >
           <Combobox.Input
+            {...args}
+            ref={innerRef}
             className="w-full rounded-sm border-none bg-skin-secondary 
               pl-3 pr-10 text-lg leading-5 focus:ring-0"
-            displayValue={(item) => (item as { name: string }).name}
+            displayValue={(item) => (item as unknown as { name: string }).name}
             placeholder={placeholder}
             onChange={(event) => setQuery(event.target.value)}
           />

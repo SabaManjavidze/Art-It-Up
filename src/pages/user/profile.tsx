@@ -7,12 +7,11 @@ export default function ProfilePageContainer() {
   const {
     data: personalDetails,
     isLoading,
-    isSuccess,
     error,
   } = api.user.getUserDetails.useQuery();
 
-  if (!isSuccess && error) {
-    return <div>Failed to load product {error?.message}</div>;
+  if (error) {
+    return <div>Failed to load product {error.message}</div>;
   }
 
   if (isLoading) {

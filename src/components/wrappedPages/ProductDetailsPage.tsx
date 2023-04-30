@@ -16,8 +16,11 @@ type OptionType = {
   cost: number;
 };
 const ProductPage = ({ product }: ProductPagePropTypes) => {
-  const { mutateAsync: addToCart, isSuccess } =
-    api.cart.addProductToCart.useMutation();
+  const {
+    mutateAsync: addToCart,
+    isLoading,
+    isSuccess,
+  } = api.cart.addProductToCart.useMutation();
 
   const [options, setOptions] = useState<OptionType>({
     quantity: 1,
@@ -51,18 +54,26 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
       variantId: variant?.id as number,
     });
   };
+
   const handleAddToCart = async () => {
-    await addToCart({
-      productId: product.id,
-      description: product.description,
-      title: product.title,
-      picture: product.images[0]?.src as string,
-      size: options.size.toString(),
-      variantId: options.variantId,
-      quantity: options.quantity,
-      price: options.cost / options.quantity,
-    });
-    toast.success("A product has been added to your cart");
+    try {
+      await addToCart({
+        productId: product.id,
+        description: product.description,
+        title: product.title,
+        picture: product.images[0]?.src as string,
+        size: options.size.toString(),
+        variantId: options.variantId,
+        quantity: options.quantity,
+        price: options.cost / options.quantity,
+      });
+      toast.success("A product has been added to your cart");
+    } catch (error) {
+      toast.error(
+        "There was an erorr. Product has not been added to your cart"
+      );
+      console.log(error);
+    }
   };
 
   return (

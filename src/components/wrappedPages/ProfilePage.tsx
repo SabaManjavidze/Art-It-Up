@@ -32,6 +32,15 @@ export const PublicKeys = {
   "zip": "5",
 };
 export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
+  const [expanded, setExpanded] = useState<string>("");
+  const trpc = api.useContext();
+  const { mutateAsync: AddPersonalDetails } =
+    api.user.addPersonalDetails.useMutation({
+      onSuccess() {
+        trpc.user.getUserDetails.invalidate();
+      },
+    });
+
   const {
     register: PDForm,
     handleSubmit,
@@ -39,16 +48,9 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
   } = useForm<PDSchemaType>({
     resolver: zodResolver(personalDetailsSchema),
   });
-  const [expanded, setExpanded] = useState<string>("");
-  const trpc = api.useContext();
-  const { mutateAsync: AddPersonalDetails } =
-    api.user.addPersonalDetails.useMutation({
-      onSuccess(data, variables, context) {
-        trpc.user.getUserDetails.invalidate();
-      },
-    });
 
   const onSubmit = async (data: PDSchemaType) => {
+    if (!data) return;
     await AddPersonalDetails({
       phone: data.phone,
       address: {
@@ -62,13 +64,14 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
     const id = expanded ? "" : detailsId;
     return setExpanded(id);
   };
+  const { ref: innerRef, ...autoCompleteArgs } = PDForm("address.country");
   return (
-    <section className="min-h-screen bg-skin-main text-white">
+    <div className="min-h-screen bg-skin-main text-white">
       <section className="flex flex-col items-center border-b-2 border-white pb-10">
         <div className="w-1/2">
           <label className="block py-10 text-2xl">Your Addresses</label>
           <Accordion allowZeroExpanded>
-            {personalDetails.map((details) => (
+            {personalDetails?.map((details) => (
               <AccordionItem
                 key={details.id}
                 onClick={() => handleItemExpand(details.id)}
@@ -104,7 +107,9 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
         </div>
       </section>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, (err) => {
+          console.log(err);
+        })}
         className="flex flex-col items-center justify-center pb-20"
       >
         <div className="w-72">
@@ -121,15 +126,25 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
           </div>
 
           <div className="flex w-full justify-center pt-4 pb-2 ">
-            <AutoCompleteSearch arr={countriesArr} placeholder="country" />
+            <AutoCompleteSearch
+              arr={countriesArr}
+              placeholder="country"
+              innerRef={innerRef}
+              {...autoCompleteArgs}
+            />
           </div>
-          <h2>{formState?.errors["address"]?.message}</h2>
+          <h2 className="text-2xl text-white">
+            {formState?.errors["address"]?.message}
+          </h2>
+          <h2 className="text-2xl text-red-500">
+            {formState?.errors["phone"]?.message}
+          </h2>
 
           {AddressObjectKeys.map((key) => {
             if (key !== "country")
               return (
                 <div
-                  className="flex w-full justify-center pt-7 pb-4"
+                  className="mb-4 flex w-full justify-center pt-7"
                   key={nanoid()}
                 >
                   <input
@@ -144,14 +159,14 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
         </div>
         <div className="flex justify-center">
           <button
-            className="w-32 bg-skin-secondary px-10 py-4 text-lg
-             text-white duration-150 hover:bg-skin-light-secondary"
+            className="my-4 w-32 bg-skin-secondary px-10 text-lg
+             text-white duration-150 hover:bg-skin-light-secondary active:scale-105"
             type="submit"
           >
             Submit
           </button>
         </div>
       </form>
-    </section>
+    </div>
   );
 };

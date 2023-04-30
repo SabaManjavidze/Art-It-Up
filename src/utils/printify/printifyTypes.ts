@@ -130,7 +130,7 @@ export const addressToSchema = z.object({
   country: z.string(),
   city: z.string(),
   region: z.string(),
-  zip: z.string().max(4),
+  zip: z.string().min(4).max(4),
 });
 const AddressObjEnum = addressToSchema.keyof().Enum;
 type AddressObjKeys = keyof typeof AddressObjEnum;
@@ -155,6 +155,9 @@ export const createOrderItemSchema = z.object({
   // external_id: z.string(),
   line_items: lineItemsZodType,
   entityId: z.string().optional(),
+  addressId: z.string(),
+  totalShipping: z.number(),
+  totalPrice: z.number(),
   // shipping_method: z.number(),
   // send_shipping_notification: z.boolean(),
 });
