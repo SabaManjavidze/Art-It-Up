@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 
 export const entityRouter = createTRPCRouter({
   getEntity: protectedProcedure
-    .input(z.object({ entityId: z.string() }))
+    .input(z.object({ entityId: z.string().cuid() }))
     .query(async ({ input: { entityId }, ctx: { session } }) => {
       return await prisma.entity.findFirst({
         where: {
@@ -16,7 +16,7 @@ export const entityRouter = createTRPCRouter({
       });
     }),
   getEntities: protectedProcedure
-    .input(z.object({ userId: z.string().optional() }))
+    .input(z.object({ userId: z.string().cuid().optional() }))
     .query(async ({ input: { userId }, ctx: { session } }) => {
       return await prisma.entity.findMany({
         where: {

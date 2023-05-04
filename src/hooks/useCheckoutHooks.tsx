@@ -1,4 +1,4 @@
-import type { Dispatch, ReactNode, SetStateAction} from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useMemo } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { RouterInputs, RouterOutputs } from "../utils/api";
@@ -23,15 +23,24 @@ type CheckoutContextProps = {
   handleCreateOrder: PayPalButtonsComponentProps["createOrder"];
   products: RouterOutputs["cart"]["getCart"];
   totalPrice: number;
-
+  handleSelectProduct: (idx: number) => void;
+  handleRemoveCartProduct: (prodIdx: number) => void;
+  selected: number[];
+  setSelected: Dispatch<SetStateAction<number[]>>;
   entity?: MinimalEntityType | undefined;
   setEntity: Dispatch<SetStateAction<MinimalEntityType | undefined>>;
+  removeProductLoading: boolean;
 };
 export const CheckoutContext = createContext<CheckoutContextProps>({
   createOrder: async (props) => undefined,
   handleOnClick: async (data, actions) => {},
+  handleSelectProduct: (index) => {},
+  handleRemoveCartProduct: (productId) => {},
   detailsLoading: false,
   products: [],
+  selected: [],
+  removeProductLoading: false,
+  setSelected: () => {},
   totalPrice: 0,
   setEntity: () => {},
   handleOnApprove: async (data, actions) => {},
@@ -48,7 +57,14 @@ export const CheckoutProvider = ({
 }) => {
   const [selected, setSelected] = useState<number[]>([]);
   const [entity, setEntity] = useState<MinimalEntityType | undefined>();
-  const router = useRouter();
+  const context = api.useContext();
+  const { mutateAsync: removeCartProduct, isLoading: removeProductLoading } =
+    api.cart.removeProductFromCart.useMutation({
+      onSuccess() {
+        context.cart.getCart.invalidate();
+      },
+    });
+
   const { mutateAsync: createOrder, isLoading: orderLoading } =
     api.printify.createPrintifyOrder.useMutation();
 
@@ -68,6 +84,21 @@ export const CheckoutProvider = ({
   const { data: shippingCost, mutateAsync: calculateShippingCost } =
     api.printify.calculateOrderShipping.useMutation();
 
+  const handleSelectProduct = (prodIdx: number) => {
+    if (selected.find((id) => id == prodIdx) === undefined) {
+      setSelected([...selected, prodIdx]);
+    } else {
+      setSelected([...selected.filter((id) => id !== prodIdx)]);
+    }
+  };
+  const handleRemoveCartProduct = async (prodIdx: number) => {
+    const prod = products[prodIdx];
+    if (prod) {
+      await removeCartProduct({ productId: prod.productId });
+      setSelected([...selected.filter((id) => id !== prodIdx)]);
+    }
+  };
+
   useEffect(() => {
     if (!detailsLoading && !detailsError) {
       if (!userDetails?.[0]) {
@@ -75,8 +106,8 @@ export const CheckoutProvider = ({
       }
       const { id, userId, title, ...address_to } =
         userDetails[0] as UserAddress;
-      (async () => {
-        await calculateShippingCost({
+      if (products.length > 0) {
+        calculateShippingCost({
           address_to,
           line_items: products.map((product) => {
             return {
@@ -86,7 +117,7 @@ export const CheckoutProvider = ({
             };
           }),
         });
-      })();
+      }
     }
   }, [detailsLoading, detailsError]);
 
@@ -94,8 +125,12 @@ export const CheckoutProvider = ({
     data,
     actions
   ) => {
+    const isSelected = selected.length > 0;
+    const filteredProducts = isSelected
+      ? products.filter((_, prodIdx) => prodIdx == selected[prodIdx])
+      : products;
     const price =
-      products.reduce((prev, curr) => {
+      filteredProducts.reduce((prev, curr) => {
         return prev + curr.price;
       }, 0) / 100;
     return actions.order.create({
@@ -149,6 +184,8 @@ export const CheckoutProvider = ({
         handleOnClick,
         handleOnApprove,
         handleCreateOrder,
+        handleSelectProduct,
+        handleRemoveCartProduct,
         entity,
         setEntity,
         totalPrice,
@@ -157,6 +194,9 @@ export const CheckoutProvider = ({
         shippingCost,
         userDetails,
         detailsLoading,
+        removeProductLoading,
+        selected,
+        setSelected,
       }}
     >
       {children}

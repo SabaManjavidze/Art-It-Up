@@ -28,10 +28,17 @@ export const userRouter = createTRPCRouter({
       userFriends.forEach((fRecord) => {
         const friendName = fRecord.friend.name as string;
         const userName = fRecord.user.name as string;
-        if (friendName.toLowerCase().startsWith(name))
-          return filteredFriends.push(fRecord.friend);
-        if (userName.toLowerCase().startsWith(name))
-          return filteredFriends.push(fRecord.user);
+        if (
+          friendName.toLowerCase().startsWith(name) &&
+          fRecord.friendId !== userId
+        ) {
+          filteredFriends.push(fRecord.friend);
+        }
+        if (
+          userName.toLowerCase().startsWith(name) &&
+          fRecord.userId !== userId
+        )
+          filteredFriends.push(fRecord.user);
       });
 
       return filteredFriends;

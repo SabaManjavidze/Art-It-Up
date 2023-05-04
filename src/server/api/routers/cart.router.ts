@@ -1,8 +1,7 @@
 import { z } from "zod";
-import { personalDetailsSchema } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../db";
 
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const cartRouter = createTRPCRouter({
   getCart: protectedProcedure.query(async ({ ctx: { session } }) => {
@@ -14,6 +13,17 @@ export const cartRouter = createTRPCRouter({
     });
     return products;
   }),
+  removeProductFromCart: protectedProcedure
+    .input(
+      z.object({
+        productId: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input: { productId }, ctx: { session } }) => {
+      await prisma.userCartProducts.delete({
+        where: { userId_productId: { productId, userId: session.user.id } },
+      });
+    }),
   addProductToCart: protectedProcedure
     .input(
       z.object({

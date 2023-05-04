@@ -1,7 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { IoCloseCircle, IoCloseCircleOutline } from "react-icons/io5";
 
 type CategoryCardPropType = {
   href: string;
@@ -33,15 +31,7 @@ const CartProductCard = ({
         <div className="flex w-full items-center justify-between pt-1">
           <p className="text-xl font-black leading-none text-gray-800 dark:text-white">
             {title}
-          </p>{" "}
-          <div className="itemms-center flex">
-            <p
-              className="cursor-pointer pl-5 text-xs leading-3 text-red-500 underline"
-              title="Remove Product"
-            >
-              <IoCloseCircle size={30} className="text-red-500" />
-            </p>
-          </div>
+          </p>
         </div>
         <p className="py-4 text-lg leading-3 text-gray-600 dark:text-white">
           Size: Xl
