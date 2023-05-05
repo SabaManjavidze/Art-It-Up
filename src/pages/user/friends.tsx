@@ -95,7 +95,7 @@ function UserFriendsPage() {
                         src={receivedReq?.user?.image || ""}
                         width={50}
                         height={50}
-                        className="h-auto w-auto rounded-full"
+                        className=" rounded-full"
                         alt="user profile image"
                       />
                     </div>
@@ -172,7 +172,7 @@ function UserFriendsPage() {
                         src={sentReq.friend?.image || ""}
                         width={50}
                         height={50}
-                        className="h-auto w-auto rounded-full"
+                        className=" rounded-full"
                         alt="user profile image"
                       />
                     </div>
@@ -213,7 +213,7 @@ function UserFriendsPage() {
                           src={person?.image || ""}
                           width={50}
                           height={50}
-                          className="h-auto w-auto rounded-full"
+                          className="rounded-full"
                           alt="user profile image"
                         />
                       </div>

@@ -1,15 +1,15 @@
-import type { ChangeEvent} from "react";
+import type { ChangeEvent } from "react";
 import React, { useCallback } from "react";
 import Image from "next/image";
 import { AiOutlinePlusSquare } from "react-icons/ai";
-import type { RouterOutputs } from "../../utils/api";
+import type { RouterOutputs} from "../../utils/api";
+import { api } from "../../utils/api";
 import { useEntities } from "../../hooks/useEntitiesHook";
 import Modal from "../UI/Modal";
 import ImageInput from "../ImageInput";
 import GallerySection from "../entities/GallerySection";
-import { BLANK_PROFILE_URL } from "../../pages/_app";
-import { BarLoader, PacmanLoader } from "react-spinners";
-import { debounce } from "lodash";
+import { PacmanLoader } from "react-spinners";
+import EntityCard from "../EntitiesPage/EntityCard";
 
 interface EntitiesPagePropType {
   entities?: RouterOutputs["entity"]["getEntities"];
@@ -100,24 +100,7 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
             <label className="text-3xl">Entities</label>
             <div className="mt-16 ml-5 grid grid-cols-1 gap-y-5 2xl:grid-cols-3 ">
               {entities.map((entity) => (
-                <a
-                  key={entity.id}
-                  href={`/user/entities/${entity.id}`}
-                  className="box-content flex w-36 cursor-pointer items-center rounded-md
-                  border-2 py-1 pl-5 pr-8 duration-150 hover:bg-white/20"
-                >
-                  <div className="relative h-16 w-16 rounded-full ">
-                    <Image
-                      alt="Entity Picture"
-                      className="rounded-full object-cover"
-                      fill
-                      src={entity?.picture || BLANK_PROFILE_URL}
-                    />
-                  </div>
-                  <h3 className="ml-5 whitespace-nowrap text-xl">
-                    {entity.name}
-                  </h3>
-                </a>
+                <EntityCard key={entity.id} entity={entity} />
               ))}
             </div>
           </section>

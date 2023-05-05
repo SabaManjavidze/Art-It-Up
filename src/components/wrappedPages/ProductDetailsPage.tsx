@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { api } from "../../utils/api";
 import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
@@ -15,12 +15,12 @@ type OptionType = {
   variantId: number;
   cost: number;
 };
+const HomeNLivingTag = "Home & Living";
+const isClothingType = (tags: string[]) =>
+  tags.find((item) => item == HomeNLivingTag) === undefined;
 const ProductPage = ({ product }: ProductPagePropTypes) => {
-  const {
-    mutateAsync: addToCart,
-    isLoading,
-    isSuccess,
-  } = api.cart.addProductToCart.useMutation();
+  const { mutateAsync: addToCart, isLoading } =
+    api.cart.addProductToCart.useMutation();
 
   const [options, setOptions] = useState<OptionType>({
     quantity: 1,
@@ -28,6 +28,8 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
     variantId: product.variants[0]?.id as number,
     cost: product.variants[0]?.cost as number,
   });
+
+  const isClothing = useMemo(() => isClothingType(product.tags), []);
 
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = parseInt(event.target.value);
@@ -42,11 +44,11 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
   };
 
   const handleSizeChange = (id: number) => {
-    const variant = product.variants.find(
-      (variant) =>
-        variant.options[0] == (product?.options[0]?.values[0]?.id as number) &&
-        variant.options[1] == id
-    );
+    const variant = product.variants.find((varItem) => {
+      if (!isClothing) return varItem.options[0] == id;
+      const defaultColorId = product?.options[0]?.values[0]?.id as number;
+      return varItem.options[1] == id && varItem.options[0] == defaultColorId;
+    });
     setOptions({
       ...options,
       size: id,
@@ -129,21 +131,31 @@ const ProductPage = ({ product }: ProductPagePropTypes) => {
                   >
                     Sizes:
                   </label>
-                  <div className="mt-2 grid grid-cols-4 grid-rows-2 gap-y-4 md:grid-cols-7 lg:grid-cols-2 xl:grid-cols-6">
-                    {product.options[1]?.values.map((option) => (
-                      <button
-                        key={option.id}
-                        className={`ml-2 flex h-10 w-10 ${
-                          options.size == option.id
-                            ? "border-2  border-white"
-                            : null
-                        }
-                    items-center justify-center overflow-hidden rounded-full bg-skin-secondary `}
-                        onClick={() => handleSizeChange(option.id)}
-                      >
-                        <p className="text-lg">{option.title}</p>
-                      </button>
-                    ))}
+                  <div className="mt-2 grid grid-cols-4 grid-rows-2 gap-y-4 md:grid-cols-5 lg:grid-cols-2 xl:grid-cols-4">
+                    {product.options
+                      .find((item) => item.type == "size")
+                      ?.values.map((option) => (
+                        <button
+                          key={option.id}
+                          className={`ml-2 flex h-10 ${
+                            options.size == option.id
+                              ? "border-2  border-white"
+                              : null
+                          }
+                    items-center justify-center overflow-hidden ${
+                      isClothing ? "w-10 rounded-full" : "w-20 rounded-none"
+                    } bg-skin-secondary `}
+                          onClick={() => handleSizeChange(option.id)}
+                        >
+                          <p
+                            className={`text-lg ${
+                              isClothing ? "whitespace-nowrap" : ""
+                            }`}
+                          >
+                            {option.title}
+                          </p>
+                        </button>
+                      ))}
                   </div>
                 </div>
                 <div className="ml-5 flex flex-col justify-between">

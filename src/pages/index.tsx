@@ -154,14 +154,14 @@ const Home: NextPage = () => {
         {/* Footer */}
         <div className="bg-gray-900 py-10 ">
           <div className="mx-auto flex max-w-4xl justify-between px-4">
-            <div className="text-sm">
-              <a href="#" className=" hover:text-white">
+            <div className="text-sm ">
+              <a href="#" className="mx-2 hover:text-white">
                 Facebook
               </a>
-              <a href="#" className=" hover:text-white">
+              <a href="#" className="mx-2 hover:text-white">
                 Twitter
               </a>
-              <a href="#" className=" hover:text-white">
+              <a href="#" className="mx-2 hover:text-white">
                 Instagram
               </a>
             </div>

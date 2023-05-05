@@ -12,8 +12,14 @@ type SearchResultsPropType = {
 };
 export default function SearchResults({ users }: SearchResultsPropType) {
   const [isOpen, setIsOpen] = useState(true);
+  const context = api.useContext();
   const { mutateAsync: sendFriendReq, isLoading } =
-    api.friends.sendFriendRequest.useMutation();
+    api.friends.sendFriendRequest.useMutation({
+      onSuccess() {
+        context.friends.getSentRequests.invalidate();
+      },
+    });
+
   const handleSendFriendRequest = async (userId: string, username: string) => {
     await sendFriendReq({ addressantId: userId });
     toast.success(`sent friend request to ${username}`);
@@ -31,7 +37,7 @@ export default function SearchResults({ users }: SearchResultsPropType) {
               src={user?.image || ""}
               width={50}
               height={50}
-              className="h-auto w-auto rounded-full"
+              className="rounded-full"
               alt="user profile image"
             />
             <h3 className="text-lg text-skin-base">{user.name}</h3>

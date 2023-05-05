@@ -24,6 +24,17 @@ export const entityRouter = createTRPCRouter({
         },
       });
     }),
+  deleteEntity: protectedProcedure
+    .input(
+      z.object({
+        entityId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ input: { entityId } }) => {
+      await prisma.entity.delete({
+        where: { id: entityId },
+      });
+    }),
   createEntity: protectedProcedure
     .input(
       z.object({

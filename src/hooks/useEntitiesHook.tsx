@@ -17,7 +17,6 @@ type EntityContextProps = {
   handleCancelEntityClick: () => void;
   handleImageUpload: (imgs: File[]) => Promise<void>;
   closeModal: () => void;
-
   showGalleryUpload: boolean;
 };
 export const EntityContext = createContext<EntityContextProps>({
@@ -65,6 +64,7 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
     setShowGalleryUpload(false);
     setIsOpen(false);
   };
+
   const handleCreateEntitySubmit = async () => {
     setShowGalleryUpload(!!name);
     setIsOpen(false);
@@ -90,6 +90,7 @@ export const EntityProvider = ({ children }: { children: ReactNode }) => {
       name,
       picture: entityImgUrl,
     });
+    await utils.entity.getEntities.invalidate();
     imgs.forEach(async (image) => {
       const img = (await toBase64(image)) as string;
       await mutateAsync({ picture: img, entityId: entity.id });

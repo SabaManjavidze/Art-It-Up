@@ -16,30 +16,35 @@ export const SearchResultsPage = ({
     <div className="absolute min-h-screen bg-skin-main">
       {products
         ? products.map((product) => (
-            <a
+            <div
               key={product.id}
-              href={`/product/${product.id}`}
-              className="my-16 mx-48  flex flex-col items-center rounded-lg border border-gray-200 
-              bg-white shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800
-              dark:hover:bg-gray-700 md:flex-row"
+              className="my-16 mx-64 flex h-48 justify-center md:mx-0 "
             >
-              <div className="relative h-96 w-full">
-                <Image
-                  className="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                  fill
-                  src={product.picture}
-                  alt=""
-                />
-              </div>
-              <div className="flex flex-col justify-between p-4 leading-normal">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  {product.title}
-                </h5>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  {product.description}
-                </p>
-              </div>
-            </a>
+              <a
+                href={`/product/${product.id}`}
+                className="flex w-2/3 items-center rounded-lg 
+              border border-gray-200 bg-white shadow hover:bg-gray-100
+              dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+              >
+                <div className="relative h-48 w-full">
+                  <Image
+                    className="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                    fill
+                    src={product.picture}
+                    alt=""
+                  />
+                </div>
+                <div className="flex max-h-48 flex-col justify-between p-4 leading-normal">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    {product.title}
+                  </h5>
+                  <p
+                    dangerouslySetInnerHTML={{ __html: product.description }}
+                    className="mb-3 h-4/5 overflow-y-scroll font-normal text-gray-700 dark:text-gray-400"
+                  ></p>
+                </div>
+              </a>
+            </div>
           ))
         : null}
     </div>
