@@ -6,16 +6,10 @@ import { BiRadioCircle, BiRadioCircleMarked } from "react-icons/bi";
 import { IoCloseCircle } from "react-icons/io5";
 import PresentModal from "../CartPage/PresentModal";
 import SummarySection from "../CartPage/SummarySection";
+import { RouterOutputs } from "../../utils/api";
 
 export default function CartPage() {
-  const {
-    products,
-    handleSelectProduct,
-    selected,
-    handleRemoveCartProduct,
-    shippingCost,
-    removeProductLoading,
-  } = useCheckout();
+  const { products, shippingCost } = useCheckout();
   const [showPresentModal, setShowPresentModal] = useState(false);
 
   return (
@@ -42,46 +36,7 @@ export default function CartPage() {
           ) : (
             products.map((cartProduct, prodIdx) => {
               return (
-                <div
-                  key={cartProduct.productId}
-                  className="flex items-center border-none bg-transparent"
-                >
-                  <div className="flex w-32 items-center justify-center px-4">
-                    <button onClick={() => handleSelectProduct(prodIdx)}>
-                      {selected.find((idx) => idx == prodIdx) !== undefined ? (
-                        <BiRadioCircleMarked size={30} color="white" />
-                      ) : (
-                        <BiRadioCircle size={30} color="white" />
-                      )}
-                    </button>
-                  </div>
-
-                  <div className="relative ">
-                    <div className="absolute top-10 right-5">
-                      <button
-                        className="cursor-pointer pl-5 text-xs leading-3 text-red-500 underline duration-150 hover:scale-105"
-                        onClick={() => handleRemoveCartProduct(prodIdx)}
-                        title="Remove Product"
-                      >
-                        {removeProductLoading ? (
-                          <ClipLoader color="white" />
-                        ) : (
-                          <IoCloseCircle size={30} className="text-red-500" />
-                        )}
-                      </button>
-                    </div>
-                    <CartProductCard
-                      key={cartProduct.productId}
-                      title={cartProduct.product.title}
-                      src={cartProduct.product.picture}
-                      productId={cartProduct.productId}
-                      quantity={cartProduct.quantity}
-                      href={`/product/${cartProduct.productId}`}
-                      description={cartProduct.product.description}
-                      price={cartProduct.price / 100}
-                    />
-                  </div>
-                </div>
+                <CartProduct cartProduct={cartProduct} prodIdx={prodIdx} />
               );
             })
           )}
@@ -94,6 +49,63 @@ export default function CartPage() {
             />
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CartProduct({
+  cartProduct,
+  prodIdx,
+}: {
+  cartProduct: RouterOutputs["cart"]["getCart"][number];
+  prodIdx: number;
+}) {
+  const {
+    handleSelectProduct,
+    selected,
+    handleRemoveCartProduct,
+    removeProductLoading,
+  } = useCheckout();
+  return (
+    <div
+      key={cartProduct.productId}
+      className="flex items-center border-none bg-transparent"
+    >
+      <div className="flex w-32 items-center justify-center px-4">
+        <button onClick={() => handleSelectProduct(prodIdx)}>
+          {selected.find((idx) => idx == prodIdx) !== undefined ? (
+            <BiRadioCircleMarked size={30} color="white" />
+          ) : (
+            <BiRadioCircle size={30} color="white" />
+          )}
+        </button>
+      </div>
+
+      <div className="relative ">
+        <div className="absolute top-10 right-5">
+          <button
+            className="cursor-pointer pl-5 text-xs leading-3 text-red-500 underline duration-150 hover:scale-105"
+            onClick={() => handleRemoveCartProduct(prodIdx)}
+            title="Remove Product"
+          >
+            {removeProductLoading ? (
+              <ClipLoader color="white" />
+            ) : (
+              <IoCloseCircle size={30} className="text-red-500" />
+            )}
+          </button>
+        </div>
+        <CartProductCard
+          key={cartProduct.productId}
+          title={cartProduct.product.title}
+          src={cartProduct.product.picture}
+          productId={cartProduct.productId}
+          quantity={cartProduct.quantity}
+          href={`/product/${cartProduct.productId}`}
+          description={cartProduct.product.description}
+          price={cartProduct.price / 100}
+        />
       </div>
     </div>
   );
