@@ -86,7 +86,7 @@ model UserAddress {
 model Entity {
 id String @id @default(cuid())
 creatorId String 
-creator User @relation(references:[id],fields:[creatorId])
+creator User @relation(references:[id],fields:[creatorId],onDelete: Cascade)
 name String
 picture String?
 gallery UserImage[] 
@@ -99,7 +99,7 @@ model UserImage {
     id            String    @id @default(cuid())
     url           String    
     entityId        String 
-    user          Entity  @relation(fields: [entityId], references: [id])
+    user          Entity  @relation(fields: [entityId], references: [id],onDelete: Cascade)
     createdAt  DateTime @default(now())
     @@index(entityId)
     @@index(id)

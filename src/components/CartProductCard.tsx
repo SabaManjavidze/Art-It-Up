@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useCheckout } from "../hooks/useCheckoutHooks";
 
 type CategoryCardPropType = {
   href: string;
@@ -8,7 +9,8 @@ type CategoryCardPropType = {
   description: string;
   price: number;
   src: string;
-  defQuantity: number;
+  quantity: number;
+  productId: string;
 };
 const CartProductCard = ({
   href,
@@ -16,17 +18,17 @@ const CartProductCard = ({
   src,
   description,
   price,
-  defQuantity,
+  quantity,
+  productId,
 }: CategoryCardPropType) => {
-  const [quantity, setQuantity] = useState(defQuantity);
+  const { handleChangeQuantity } = useCheckout();
   return (
     <div className="items-strech border-t border-gray-50 py-8 md:flex md:py-10 lg:py-8">
-      <div className="w-full md:w-4/12 2xl:w-1/4">
+      <div className="relative w-full md:w-4/12 2xl:w-1/4">
         <Link href={href}>
           <Image
             src={src}
-            width={50}
-            height={50}
+            fill
             alt="Black Leather Bag"
             className="hidden h-full object-cover object-center md:block"
           />
@@ -52,7 +54,10 @@ const CartProductCard = ({
               value={quantity}
               type="number"
               onChange={(e) => {
-                setQuantity(parseInt(e.currentTarget.value));
+                handleChangeQuantity(
+                  productId,
+                  parseInt(e.currentTarget.value)
+                );
               }}
             />
             <p className="text-lg leading-none text-gray-800 dark:text-white">

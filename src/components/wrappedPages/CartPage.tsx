@@ -74,7 +74,8 @@ export default function CartPage() {
                       key={cartProduct.productId}
                       title={cartProduct.product.title}
                       src={cartProduct.product.picture}
-                      defQuantity={cartProduct.quantity}
+                      productId={cartProduct.productId}
+                      quantity={cartProduct.quantity}
                       href={`/product/${cartProduct.productId}`}
                       description={cartProduct.product.description}
                       price={cartProduct.price / 100}

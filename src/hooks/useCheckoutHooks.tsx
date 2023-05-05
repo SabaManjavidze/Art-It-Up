@@ -22,6 +22,7 @@ type CheckoutContextProps = {
   shippingCost?: RouterOutputs["printify"]["calculateOrderShipping"];
   handleOnApprove: PayPalButtonsComponentProps["onApprove"];
   handleCreateOrder: PayPalButtonsComponentProps["createOrder"];
+  handleChangeQuantity: (productId: string, quantity: number) => void;
   products: RouterOutputs["cart"]["getCart"];
   totalPrice: number;
   handleSelectProduct: (idx: number) => void;
@@ -36,6 +37,7 @@ export const CheckoutContext = createContext<CheckoutContextProps>({
   createOrder: async (props) => undefined,
   handleOnPayPalClick: async (data, actions) => {},
   handleSelectProduct: (index) => {},
+  handleChangeQuantity: (productId: string, quantity: number) => {},
   handleRemoveCartProduct: (productId) => {},
   detailsLoading: false,
   products: [],
@@ -72,7 +74,7 @@ export const CheckoutProvider = ({
   const totalPrice = useMemo(() => {
     const filteredProducts = filterProducts(products, selected, true);
     return filteredProducts.reduce((prev, curr) => {
-      return prev + curr.price;
+      return prev + curr.price * curr.quantity;
     }, 0);
   }, [selected, products]);
   const {
@@ -83,6 +85,21 @@ export const CheckoutProvider = ({
 
   const { data: shippingCost, mutateAsync: calculateShippingCost } =
     api.printify.calculateOrderShipping.useMutation();
+
+  const handleChangeQuantity = (productId: string, quantity: number) => {
+    context.cart.getCart.setData(
+      undefined,
+      products.map((prod) => {
+        if (prod.productId == productId) {
+          return {
+            ...prod,
+            quantity,
+          };
+        }
+        return prod;
+      })
+    );
+  };
 
   const handleSelectProduct = (prodIdx: number) => {
     if (selected.find((id) => id == prodIdx) === undefined) {
@@ -181,6 +198,7 @@ export const CheckoutProvider = ({
         handleCreateOrder,
         handleSelectProduct,
         handleOnPayPalClick,
+        handleChangeQuantity,
         handleRemoveCartProduct,
 
         entity,
