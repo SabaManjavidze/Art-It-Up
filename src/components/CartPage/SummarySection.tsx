@@ -16,12 +16,15 @@ export default function SummarySection({
   const {
     entity: friendEntity,
     handleOnApprove,
-    handleOnPayPalClick,
     handleCreateOrder,
     totalPrice,
     shippingCost,
+    checkIfReady,
   } = useCheckout();
   const [showButtons, setShowButtons] = useState(false);
+  const handleShowButtonsClick = () => {
+    if (checkIfReady()) setShowButtons(true);
+  };
   return (
     <section className="flex flex-col justify-between px-4 py-6 md:px-7 md:py-10 lg:px-8 lg:py-20">
       <div>
@@ -95,7 +98,6 @@ export default function SummarySection({
                 }}
                 className="flex w-full justify-center"
                 onApprove={handleOnApprove}
-                onClick={handleOnPayPalClick}
                 createOrder={handleCreateOrder}
               />
             </PayPalScriptProvider>
@@ -104,7 +106,7 @@ export default function SummarySection({
               className="w-full border border-gray-800 bg-gray-900 py-5
               text-base leading-none text-white duration-150 ease-in-out focus:outline-none focus:ring-2 
               focus:ring-gray-800 focus:ring-offset-2 dark:hover:bg-gray-700"
-              onClick={() => setShowButtons(true)}
+              onClick={handleShowButtonsClick}
             >
               Pay Now!
             </button>

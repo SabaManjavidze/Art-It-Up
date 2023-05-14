@@ -2,14 +2,14 @@ import { ClipLoader } from "react-spinners";
 import { api } from "../../utils/api";
 import AddressCard from "../ProfilePage/AddressCard";
 import { Accordion } from "react-accessible-accordion";
-import { useState } from "react";
 import { SelectableCard } from "../UI/SelectableCard";
+import { useCheckout } from "../../hooks/useCheckoutHooks";
 
 export const ShippingAddressSection = () => {
   const { data: addresses, isLoading } = api.user.getUserDetails.useQuery();
-  const [selected, setSelected] = useState<string>("");
+  const { address, setAddress } = useCheckout();
   const handleSelect = (id: string) => {
-    setSelected(selected == id ? "" : id);
+    setAddress(address == id ? "" : id);
   };
   return (
     <section>
@@ -21,13 +21,13 @@ export const ShippingAddressSection = () => {
               <ClipLoader size={200} color={"white"} />
             </div>
           ) : (
-            addresses?.map((address) => (
+            addresses?.map((addressItem) => (
               <SelectableCard
-                handleSelect={() => handleSelect(address.id)}
-                isSelected={selected == address.id}
-                key={address.id}
+                handleSelect={() => handleSelect(addressItem.id)}
+                isSelected={address == addressItem.id}
+                key={addressItem.id}
               >
-                <AddressCard details={address} />
+                <AddressCard details={addressItem} />
               </SelectableCard>
             ))
           )}
