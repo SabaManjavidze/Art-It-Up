@@ -100,13 +100,18 @@ export const userRouter = createTRPCRouter({
   addPersonalDetails: protectedProcedure
     .input(personalDetailsSchema)
     .mutation(async ({ input, ctx: { session } }) => {
+      await prisma.userAddress.update({
+        where: { selectedAddress: { userId: session.user.id, selected: true } },
+        data: { selected: false },
+      });
       await prisma.userAddress.create({
         data: {
           ...input.address,
-          zip: input.address.zip,
           userId: session.user.id,
+          selected: true,
         },
       });
+      // add personal details in a seperate form (phone, first/last name)
       await prisma.user.update({
         data: { phone: parseInt(input.phone) },
         where: { id: session.user.id },

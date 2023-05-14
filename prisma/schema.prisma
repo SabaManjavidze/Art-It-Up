@@ -80,7 +80,9 @@ model UserAddress {
     zip String
     title String
     orders Order[]
+    selected Boolean @default(false)
     @@unique([userId, title], name: "addressIdentifier")
+    @@unique([userId, selected], name: "selectedAddress")
 }
 
 model Entity {

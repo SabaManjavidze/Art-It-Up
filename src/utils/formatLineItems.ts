@@ -4,13 +4,13 @@ export const formatLineItems = async (
   products: (UserCartProducts & {
     product: Product;
   })[],
-  selected: number[]
+  selected: string[]
 ) => {
   const filtered_list: (UserCartProducts & {
     product: Product;
   })[] = [];
-  selected.forEach((prod_idx) => {
-    const product = products?.[prod_idx];
+  selected.forEach((prod_id) => {
+    const product = products.find(prod=>prod.productId==prod_id)
     if (product) {
       filtered_list.push(product);
     }

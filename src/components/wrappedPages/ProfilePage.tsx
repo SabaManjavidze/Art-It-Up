@@ -2,13 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { UserAddress } from "@prisma/client";
 import { nanoid } from "nanoid";
 import React, { useState } from "react";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionItemHeading,
-  AccordionItemButton,
-  AccordionItemPanel,
-} from "react-accessible-accordion";
+import { Accordion } from "react-accessible-accordion";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import { countriesArr, countriesObj } from "../../utils/countriesArray";
@@ -20,6 +14,7 @@ import {
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
 import "react-accessible-accordion/dist/fancy-example.css";
 import AutoCompleteSearch from "../UI/AutoCompleteSearch";
+import AddressCard from "../ProfilePage/AddressCard";
 
 type ProfilePagePropTypes = {
   personalDetails: UserAddress[];
@@ -32,7 +27,6 @@ export const PublicKeys = {
   "zip": "5",
 };
 export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
-  const [expanded, setExpanded] = useState<string>("");
   const trpc = api.useContext();
   const { mutateAsync: AddPersonalDetails } =
     api.user.addPersonalDetails.useMutation({
@@ -60,10 +54,6 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
       },
     });
   };
-  const handleItemExpand = (detailsId: string) => {
-    const id = expanded ? "" : detailsId;
-    return setExpanded(id);
-  };
   const { ref: innerRef, ...autoCompleteArgs } = PDForm("address.country");
   return (
     <div className="min-h-screen bg-skin-main text-white">
@@ -72,36 +62,7 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
           <label className="block py-10 text-2xl">Your Addresses</label>
           <Accordion allowZeroExpanded>
             {personalDetails?.map((details) => (
-              <AccordionItem
-                key={details.id}
-                onClick={() => handleItemExpand(details.id)}
-              >
-                <AccordionItemHeading>
-                  <AccordionItemButton
-                    className="flex w-full items-center border-none 
-                  bg-skin-secondary p-4 text-left"
-                  >
-                    {expanded == details.id ? (
-                      <AiOutlineCaretDown color="white" size={30} />
-                    ) : (
-                      <AiOutlineCaretRight color="white" size={30} />
-                    )}
-                    <p className="ml-3 text-lg">{details.title}</p>
-                  </AccordionItemButton>
-                </AccordionItemHeading>
-                <AccordionItemPanel className="animate-fadein p-5">
-                  {(Object.keys(details) as (keyof UserAddress)[]).map(
-                    (key) => {
-                      if ((PublicKeys as any)[key])
-                        return (
-                          <p key={nanoid()}>
-                            {key}: {details[key]}
-                          </p>
-                        );
-                    }
-                  )}
-                </AccordionItemPanel>
-              </AccordionItem>
+              <AddressCard details={details} />
             ))}
           </Accordion>
         </div>

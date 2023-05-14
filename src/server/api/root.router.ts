@@ -7,6 +7,7 @@ import { entityRouter } from "./routers/entity.router";
 import { cartRouter } from "./routers/cart.router";
 import { friendsRouter } from "./routers/friends.router";
 import { prisma } from "../db";
+import { addressRouter } from "./routers/address.router";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   printify: printifyRouter,
   user: userRouter,
   entity: entityRouter,
+  address: addressRouter,
   order: orderRouter,
   cart: cartRouter,
   friends: friendsRouter,
