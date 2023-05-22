@@ -2,14 +2,14 @@ import type { ChangeEvent } from "react";
 import React, { useCallback } from "react";
 import Image from "next/image";
 import { AiOutlinePlusSquare } from "react-icons/ai";
-import type { RouterOutputs} from "../../utils/api";
+import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import { useEntities } from "../../hooks/useEntitiesHook";
 import Modal from "../UI/Modal";
 import ImageInput from "../ImageInput";
-import GallerySection from "../entities/GallerySection";
+import GallerySection from "../EntitiesPageComponents/GallerySection";
 import { PacmanLoader } from "react-spinners";
-import EntityCard from "../EntitiesPage/EntityCard";
+import EntityCard from "../EntitiesPageComponents/EntityCard";
 
 interface EntitiesPagePropType {
   entities?: RouterOutputs["entity"]["getEntities"];

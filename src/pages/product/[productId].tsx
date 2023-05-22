@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { ClipLoader } from "react-spinners";
-import ProductPage from "../../components/wrappedPages/ProductDetailsPage";
+import ProductPage from "../../components/WrappedPages/ProductDetailsPage";
 import { api } from "../../utils/api";
 import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
 

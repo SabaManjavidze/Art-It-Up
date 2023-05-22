@@ -2,7 +2,7 @@ import React from "react";
 import { ClipLoader } from "react-spinners";
 import { api } from "../../utils/api";
 import { CheckoutProvider } from "../../hooks/useCheckoutHooks";
-import CartPage from "../../components/wrappedPages/CartPage";
+import CartPage from "../../components/WrappedPages/CartPage";
 
 const UserCart = () => {
   const { data, isLoading, error } = api.cart.getCart.useQuery();

@@ -1,6 +1,6 @@
 import { ClipLoader } from "react-spinners";
 import { api } from "../../utils/api";
-import AddressCard from "../ProfilePage/AddressCard";
+import AddressCard from "../ProfilePageComponents/AddressCard";
 import { Accordion } from "react-accessible-accordion";
 import { SelectableCard } from "../UI/SelectableCard";
 import { useCheckout } from "../../hooks/useCheckoutHooks";

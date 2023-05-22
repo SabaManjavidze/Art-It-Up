@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { ClipLoader } from "react-spinners";
-import CartProductCard from "../../components/CartProductCard";
+import CartProductCard from "../CartProductCard";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
-import { BiRadioCircle, BiRadioCircleMarked } from "react-icons/bi";
-import { IoCloseCircle } from "react-icons/io5";
-import PresentModal from "../CartPage/PresentModal";
-import SummarySection from "../CartPage/SummarySection";
-import { RouterOutputs, api } from "../../utils/api";
-import { ShippingAddressSection } from "../CartPage/ShippingAddressSection";
+import PresentModal from "../CartPageComponents/PresentModal";
+import SummarySection from "../CartPageComponents/SummarySection";
+import type { RouterOutputs } from "../../utils/api";
+import { ShippingAddressSection } from "../CartPageComponents/ShippingAddressSection";
 import { SelectableCard } from "../UI/SelectableCard";
 
 export default function CartPage() {

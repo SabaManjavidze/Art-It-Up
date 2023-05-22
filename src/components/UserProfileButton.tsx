@@ -17,6 +17,7 @@ const UserProfileButton = ({
   const [showModal, setShowModal] = useState(false);
   const profileOptions = [
     { title: "Profile", path: "/user/profile" },
+    { title: "My Orders", path: "/user/orders" },
     { title: "Settings", path: "/user/settings" },
   ];
   const handleModalClick = () => setShowModal(!showModal);

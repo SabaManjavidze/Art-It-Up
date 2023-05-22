@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { SearchResultsPage } from "../../components/wrappedPages/SearchResultsPage";
+import { SearchResultsPage } from "../../components/WrappedPages/SearchResultsPage";
 import React from "react";
 import { ClipLoader } from "react-spinners";
 

@@ -6,9 +6,9 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
-import { UserAddress } from "@prisma/client";
+import type { UserAddress } from "@prisma/client";
 import { nanoid } from "nanoid";
-import { PublicKeys } from "../wrappedPages/ProfilePage";
+import { PublicKeys } from "../WrappedPages/ProfilePage";
 
 export default function AddressCard({ details }: { details: UserAddress }) {
   const [expanded, setExpanded] = useState<string>("");

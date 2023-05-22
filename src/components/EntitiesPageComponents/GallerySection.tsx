@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
 import { z } from "zod";
-import ImageInput from "../../components/ImageInput";
+import ImageInput from "../ImageInput";
 import { api } from "../../utils/api";
 import { toBase64 } from "../../utils/convertToBase64";
 import { useEntities } from "../../hooks/useEntitiesHook";

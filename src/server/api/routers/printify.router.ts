@@ -9,11 +9,20 @@ import {
 import { prisma } from "../../db";
 import { Printify } from "../../PrintifyClient";
 import { TRPCError } from "@trpc/server";
+import { User } from "@prisma/client";
 
 export const printify = new Printify({
 	apiKey: process.env.PRINTIFY_ACCESS_TOKEN as string,
 	shopId: process.env.PRINTIFY_SHOP_ID,
 });
+
+const checkUserPersonalDetails = (user: any & { firstName?: string, lastName?: string }) => {
+	if (!user?.firstName || !user?.lastName)
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: "User has not entered their first/last name",
+		});
+}
 
 export const printifyRouter = createTRPCRouter({
 	searchProducts: protectedProcedure
@@ -41,19 +50,19 @@ export const printifyRouter = createTRPCRouter({
 			const user = await prisma.user.findFirst({
 				where: { id: session.user.id },
 				select: {
-					address: { where: { id: input.addressId } },
+					address: { where: { id: input.addressId, selected: true } },
 					firstName: true,
 					lastName: true,
 					phone: true,
 				},
 			});
+			console.log("user found")
 
 			if (!user) throw new TRPCError({ code: "BAD_REQUEST" });
-			if (!user?.firstName || !user?.lastName)
-				throw new TRPCError({
-					code: "FORBIDDEN",
-					message: "User has not entered their first/last name",
-				});
+
+			checkUserPersonalDetails(user)
+			console.log("checked out personal details")
+
 			const address = user?.address[0];
 			if (!address)
 				throw new TRPCError({
@@ -64,7 +73,8 @@ export const printifyRouter = createTRPCRouter({
 							"You can add your personal details your the profile page",
 					},
 				});
-			await prisma.order.create({
+			console.log("address is selected")
+			const { id: orderId } = await prisma.order.create({
 				data: {
 					addressId: input.addressId,
 					creatorId: session.user.id,
@@ -72,6 +82,17 @@ export const printifyRouter = createTRPCRouter({
 					totalPrice: input.totalPrice,
 					totalShipping: input.totalShipping,
 				},
+			});
+			const formatedLineItems = input.line_items.map(item => { return { productId: item.product_id, variantId: item.variant_id, quantity: item.quantity } })
+			await prisma.lineItems.createMany({
+				data: formatedLineItems.map(item => {
+					return {
+						orderId,
+						...item,
+						cost: 0,
+						shippingCost: 0
+					}
+				}),
 			});
 			await printify.createOrder({
 				address_to: {

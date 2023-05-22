@@ -8,7 +8,7 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
-import { PublicKeys } from "../wrappedPages/ProfilePage";
+import { PublicKeys } from "../WrappedPages/ProfilePage";
 import { nanoid } from "nanoid";
 type DetailsSectionPropType = {
   personalDetails: UserAddress[];

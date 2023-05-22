@@ -14,7 +14,7 @@ import {
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
 import "react-accessible-accordion/dist/fancy-example.css";
 import AutoCompleteSearch from "../UI/AutoCompleteSearch";
-import AddressCard from "../ProfilePage/AddressCard";
+import AddressCard from "../ProfilePageComponents/AddressCard";
 
 type ProfilePagePropTypes = {
   personalDetails: UserAddress[];
@@ -62,7 +62,7 @@ export const ProfilePage = ({ personalDetails }: ProfilePagePropTypes) => {
           <label className="block py-10 text-2xl">Your Addresses</label>
           <Accordion allowZeroExpanded>
             {personalDetails?.map((details) => (
-              <AddressCard details={details} />
+              <AddressCard key={details.id} details={details} />
             ))}
           </Accordion>
         </div>

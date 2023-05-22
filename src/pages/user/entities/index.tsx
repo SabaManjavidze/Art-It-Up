@@ -2,7 +2,7 @@ import React from "react";
 import { api } from "../../../utils/api";
 import { ClipLoader } from "react-spinners";
 import { EntityProvider } from "../../../hooks/useEntitiesHook";
-import EntitiesPage from "../../../components/wrappedPages/EntitiesPage";
+import EntitiesPage from "../../../components/WrappedPages/EntitiesPage";
 import { useRouter } from "next/router";
 
 export default function EntitiesPageContainer() {

@@ -1,6 +1,6 @@
 import React from "react";
 import { api } from "../../utils/api";
-import { ProfilePage } from "../../components/wrappedPages/ProfilePage";
+import { ProfilePage } from "../../components/WrappedPages/ProfilePage";
 import { ClipLoader } from "react-spinners";
 
 export default function ProfilePageContainer() {
