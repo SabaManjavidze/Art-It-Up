@@ -4,6 +4,7 @@ import { ClipLoader } from "react-spinners";
 import ProductPage from "../../components/WrappedPages/ProductDetailsPage";
 import { api } from "../../utils/api";
 import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
+import PDPage from "../../components/WrappedPages/ProductDetailsPage";
 
 const ProductPageContainer = () => {
   const router = useRouter();
@@ -36,7 +37,7 @@ const ProductPageContainer = () => {
       </div>
     );
   }
-  return <ProductPage product={product as PrintifyGetProductResponse} />;
+  return <PDPage product={product as PrintifyGetProductResponse} />;
 };
 
 export default ProductPageContainer;

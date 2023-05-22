@@ -80,6 +80,8 @@ const CartProductCard = ({
               className="mr-6 w-10 border-none bg-skin-secondary py-2 px-1 outline-none"
               value={quantity}
               type="number"
+              min="1"
+              max="50"
               onChange={(e) => {
                 handleChangeQuantity(
                   productId,

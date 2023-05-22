@@ -8,8 +8,16 @@ const withOpacity = (varName) => {
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
 
-  plugins: [],
+    plugins: [
+      // ...
+      require('@tailwindcss/aspect-ratio'),
+    ],
   theme: {
+      extend: {
+        gridTemplateRows: {
+          '[auto,auto,1fr]': 'auto auto 1fr',
+        },
+      },
     extend: {
       animation: {
         wiggle: "wiggle 0.4s ease-in-out",

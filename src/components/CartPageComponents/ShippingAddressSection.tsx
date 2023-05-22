@@ -6,8 +6,8 @@ import { SelectableCard } from "../UI/SelectableCard";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 
 export const ShippingAddressSection = () => {
-  const { data: addresses, isLoading } = api.user.getUserDetails.useQuery();
   const { address, setAddress } = useCheckout();
+  const { data: addresses, isLoading } = api.user.getUserDetails.useQuery();
   const handleSelect = (id: string) => {
     setAddress(address == id ? "" : id);
   };
@@ -24,7 +24,7 @@ export const ShippingAddressSection = () => {
             addresses?.map((addressItem) => (
               <SelectableCard
                 handleSelect={() => handleSelect(addressItem.id)}
-                isSelected={address == addressItem.id}
+                isSelected={address == addressItem.id||addressItem.selected}
                 key={addressItem.id}
               >
                 <AddressCard details={addressItem} />
