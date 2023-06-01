@@ -24,7 +24,7 @@ export default function OrdersPage() {
 					{
 						orders.map(order => (
 
-							<OrderCard order={order} />
+							<OrderCard key={order.id} order={order} />
 						))
 					}
 				</div>

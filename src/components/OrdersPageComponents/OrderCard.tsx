@@ -1,7 +1,7 @@
 import React from "react"
 import { Order } from "@prisma/client"
 import Image from "next/image"
-import { RouterOutputs } from "../../utils/api"
+import type { RouterOutputs } from "../../utils/api"
 import LineItemCard from "./LineItemCard"
 
 interface OrderCardPropType { order: RouterOutputs["order"]["getMyOrders"][number] }

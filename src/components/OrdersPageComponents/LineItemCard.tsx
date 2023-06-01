@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { RouterOutputs } from "../../utils/api"
+import type { RouterOutputs } from "../../utils/api"
 
 
 export default function LineItemCard({ item }: { item: RouterOutputs["order"]["getMyOrders"][number]["line_items"][number] }) {

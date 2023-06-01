@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { AiOutlineStar } from "react-icons/ai";
-import { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
+import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
 import { api } from "../../utils/api";
 import { toast } from "react-toastify";
 import Image from "next/image";
