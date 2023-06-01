@@ -11,16 +11,13 @@ import { nanoid } from "nanoid";
 import { PublicKeys } from "../WrappedPages/ProfilePage";
 
 export default function AddressCard({ details }: { details: UserAddress }) {
-  const [expanded, setExpanded] = useState<string>("");
-  const handleItemExpand = (detailsId: string) => {
-    const id = expanded ? "" : detailsId;
-    return setExpanded(id);
+  const [expanded, setExpanded] = useState("");
+  const handleItemExpand = () => {
+    const id = expanded ? "" : details.id;
+    setExpanded(id);
   };
   return (
-    <AccordionItem
-      key={details.id}
-      onClick={() => handleItemExpand(details.id)}
-    >
+    <AccordionItem key={details.id} onClick={handleItemExpand}>
       <AccordionItemHeading>
         <AccordionItemButton
           className="flex w-full items-center rounded-md 

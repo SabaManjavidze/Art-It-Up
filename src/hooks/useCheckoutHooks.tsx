@@ -15,7 +15,8 @@ type CheckoutContextProps = {
 		props: RouterInputs["printify"]["createPrintifyOrder"]
 	) => Promise<void>;
 	detailsLoading: boolean;
-	userDetails?: RouterOutputs["user"]["getUserDetails"];
+	shippingLoading: boolean;
+	userDetails?: RouterOutputs["user"]["getUserAddress"];
 	shippingCost?: RouterOutputs["printify"]["calculateOrderShipping"];
 	handleOnApprove: PayPalButtonsComponentProps["onApprove"];
 	handleCreateOrder: PayPalButtonsComponentProps["createOrder"];
@@ -35,7 +36,8 @@ export const CheckoutContext = createContext<CheckoutContextProps>({
 	createOrder: async (props) => undefined,
 	handleSelectProduct: (index) => { },
 	handleChangeQuantity: (productId: string, quantity: number) => { },
-	detailsLoading: false,
+	detailsLoading: true,
+	shippingLoading: true,
 	products: [],
 	selected: [],
 	address: "",
@@ -68,9 +70,9 @@ export const CheckoutProvider = ({
 		data: userDetails,
 		isLoading: detailsLoading,
 		error: detailsError,
-	} = api.user.getUserDetails.useQuery();
+	} = api.user.getUserAddress.useQuery();
 
-	const { data: shippingCost, mutateAsync: calculateShippingCost } =
+	const { data: shippingCost, mutateAsync: calculateShippingCost, isLoading: shippingLoading } =
 		api.printify.calculateOrderShipping.useMutation();
 
 	const totalPrice = useMemo(() => {
@@ -150,14 +152,22 @@ export const CheckoutProvider = ({
 			products as NonNullable<typeof products>,
 			selected
 		);
-		if (line_items && line_items.length > 1 && userDetails?.[0] && entity)
-			await createOrder({
+		console.log({ line_items })
+		if (line_items && line_items.length > 0 && address && entity)
+			console.log({
 				line_items: line_items,
-				entityId: entity.id,
+				entityId: entity?.id,
 				addressId: address,
 				totalPrice: totalPrice,
 				totalShipping: shippingCost?.standard as number,
-			});
+			})
+		await createOrder({
+			line_items: line_items,
+			entityId: entity?.id,
+			addressId: address,
+			totalPrice: totalPrice,
+			totalShipping: shippingCost?.standard as number,
+		});
 		return actions?.order?.capture().then((details) => {
 			const name = details?.payer?.name?.given_name;
 			toast.success(`Transaction completed by ${name}`);
@@ -193,6 +203,8 @@ export const CheckoutProvider = ({
 
 				userDetails,
 				detailsLoading,
+
+				shippingLoading,
 
 				selected,
 				setSelected,

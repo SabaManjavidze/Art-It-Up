@@ -1,14 +1,13 @@
-import { useMemo, useState } from 'react'
-import { RadioGroup } from '@headlessui/react'
-import { AiOutlineStar } from 'react-icons/ai'
-import { PrintifyGetProductResponse } from '../../utils/printify/printifyTypes';
-import { api } from '../../utils/api';
-import { toast } from 'react-toastify';
-import Image from 'next/image';
+import { useMemo, useState } from "react";
+import { RadioGroup } from "@headlessui/react";
+import { AiOutlineStar } from "react-icons/ai";
+import { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
+import { api } from "../../utils/api";
+import { toast } from "react-toastify";
+import Image from "next/image";
 
-
-function classNames(...classes:string[]) {
-  return classes.filter(Boolean).join(' ')
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
 }
 
 type ProductPagePropTypes = {
@@ -24,7 +23,6 @@ const HomeNLivingTag = "Home & Living";
 const isClothingType = (tags: string[]) =>
   tags.find((item) => item == HomeNLivingTag) === undefined;
 export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
-
   const { mutateAsync: addToCart, isLoading } =
     api.cart.addProductToCart.useMutation();
 
@@ -86,9 +84,16 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
     <div className="bg-skin-main">
       <div className="pt-6">
         <nav aria-label="Breadcrumb">
-          <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <ol
+            role="list"
+            className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+          >
             <li className="text-sm">
-              <a href={`/product/${product.id}`} aria-current="page" className="font-medium text-white hover:text-gray-200">
+              <a
+                href={`/product/${product.id}`}
+                aria-current="page"
+                className="font-medium text-white hover:text-gray-200"
+              >
                 {product.title}
               </a>
             </li>
@@ -99,48 +104,57 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
           <div className="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
             <Image
-              src={product?.images?.[0]?.src||""}
-              alt={product?.images?.[0]?.src||""}
+              src={product.images?.[0]?.src || ""}
+              alt={product.images?.[0]?.src || ""}
               className="h-full w-full object-cover object-center"
+              fill
             />
           </div>
           <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
             <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
               <Image
-                src={product?.images?.[1]?.src||""}
-                alt={product?.images?.[1]?.src||""}
+                src={product.images?.[1]?.src || ""}
+                alt={product.images?.[1]?.src || ""}
                 fill
                 className="h-full w-full object-cover object-center"
               />
             </div>
             <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
               <Image
-                src={product?.images?.[2]?.src||""}
-                alt={product?.images?.[2]?.src||""}
+                src={product.images?.[2]?.src || ""}
+                alt={product.images?.[2]?.src || ""}
                 className="h-full w-full object-cover object-center"
+                fill
               />
             </div>
           </div>
-          <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
+          <div className="aspect-h-5 aspect-w-4 sm:overflow-hidden sm:rounded-lg lg:aspect-h-4 lg:aspect-w-3">
             <Image
-              src={product?.images?.[3]?.src||""}
-              alt={product?.images?.[3]?.src||""}
+              src={product.images?.[3]?.src || ""}
+              alt={product.images?.[3]?.src || ""}
               className="h-full w-full object-cover object-center"
+              fill
             />
           </div>
         </div>
 
         {/* Product info */}
-        <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 
-        lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
+        <div
+          className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 
+        lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16"
+        >
           <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{product.title}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              {product.title}
+            </h1>
           </div>
 
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-white">{options.cost/100} $</p>
+            <p className="text-3xl tracking-tight text-white">
+              {options.cost / 100} $
+            </p>
 
             {/* Reviews */}
             {/* <div className="mt-6">
@@ -167,54 +181,63 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
 
             <div className="mt-10">
               {/* Sizes */}
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="quantity"
-                    className="block text-lg font-medium text-gray-700"
-                  >
-                    Quantity:
-                  </label>
-                  <input
-                    type="number"
-                    name="quantity"
-                    min="1"
-                    id="quantity"
-                    value={options.quantity}
-                    onChange={handleQuantityChange}
-                    className="mt-2 h-10 w-16 rounded-md border-gray-300 bg-skin-secondary px-2 text-white 
+              <div className="flex flex-col">
+                <label
+                  htmlFor="quantity"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Quantity:
+                </label>
+                <input
+                  type="number"
+                  name="quantity"
+                  min="1"
+                  id="quantity"
+                  value={options.quantity}
+                  onChange={handleQuantityChange}
+                  className="mt-2 h-10 w-16 rounded-md border-gray-300 bg-skin-secondary px-2 text-white 
                 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  />
-                </div>
+                />
+              </div>
               <div className="mt-10">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-white">Size</h3>
-                  <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  <a
+                    href="#"
+                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                  >
                     Size guide
                   </a>
                 </div>
 
-                <RadioGroup value={options.size} onChange={handleSizeChange} className="mt-4">
-                  <RadioGroup.Label className="sr-only text-white">Choose a size</RadioGroup.Label>
+                <RadioGroup
+                  value={options.size}
+                  onChange={handleSizeChange}
+                  className="mt-4"
+                >
+                  <RadioGroup.Label className="sr-only text-white">
+                    Choose a size
+                  </RadioGroup.Label>
                   <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
                     {product.options
                       .find((item) => item.type == "size")
                       ?.values.map((option) => (
-                      <RadioGroup.Option
-                        key={option.id}
-                        value={option.id}
-                        // disabled={!size.inStock}
-                          className={`ml-2 flex text-white h-10 ${
+                        <RadioGroup.Option
+                          key={option.id}
+                          value={option.id}
+                          // disabled={!size.inStock}
+                          className={`ml-2 flex h-10 text-white ${
                             options.size == option.id
                               ? "border-indigo-500"
                               : null
                           }
                     items-center justify-center overflow-hidden ${
                       isClothing ? "w-16" : "w-36"
-                    } bg-skin-secondary group relative flex items-center rounded-md border-2 py-3 px-4 text-sm 
-                    font-medium cursor-pointer hover:bg-skin-light-secondary uppercase focus:outline-none sm:flex-1 sm:py-6 
-                    duration-150`}
+                    } group relative flex cursor-pointer items-center rounded-md border-2 bg-skin-secondary py-3 px-4 
+                    text-sm font-medium uppercase duration-150 hover:bg-skin-light-secondary focus:outline-none sm:flex-1 
+                    sm:py-6`}
                           onClick={() => handleSizeChange(option.id)}
-                      >
+                        >
                           <p
                             className={`text-lg ${
                               isClothing ? "whitespace-nowrap" : ""
@@ -222,8 +245,8 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
                           >
                             {option.title}
                           </p>
-                      </RadioGroup.Option>
-                    ))}
+                        </RadioGroup.Option>
+                      ))}
                   </div>
                 </RadioGroup>
               </div>
@@ -244,7 +267,10 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
               <h3 className="sr-only">Description</h3>
 
               <div className="space-y-6">
-                <p className="text-base text-white" dangerouslySetInnerHTML={{__html:product.description}}></p>
+                <p
+                  className="text-base text-white"
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                ></p>
               </div>
             </div>
 
@@ -273,5 +299,5 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
         </div>
       </div>
     </div>
-  )
+  );
 }
