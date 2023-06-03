@@ -94,7 +94,7 @@ export const printifyRouter = createTRPCRouter({
 					}
 				}),
 			});
-			await printify.createOrder({
+			const createOrderObj = {
 				address_to: {
 					email: session.user.email as string,
 					phone: user.phone?.toString() as string,
@@ -111,7 +111,9 @@ export const printifyRouter = createTRPCRouter({
 				send_shipping_notification: false,
 				shipping_method: 1,
 				external_id: input?.entityId ?? "",
-			});
+			}
+			// commenting this out for a bit (bc it's not neccessary)
+			//await printify.createOrder(createOrderObj);
 		}),
 	calculateOrderShipping: protectedProcedure
 		.input(

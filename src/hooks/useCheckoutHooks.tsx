@@ -152,22 +152,14 @@ export const CheckoutProvider = ({
 			products as NonNullable<typeof products>,
 			selected
 		);
-		console.log({ line_items })
 		if (line_items && line_items.length > 0 && address && entity)
-			console.log({
+			await createOrder({
 				line_items: line_items,
 				entityId: entity?.id,
 				addressId: address,
 				totalPrice: totalPrice,
 				totalShipping: shippingCost?.standard as number,
-			})
-		await createOrder({
-			line_items: line_items,
-			entityId: entity?.id,
-			addressId: address,
-			totalPrice: totalPrice,
-			totalShipping: shippingCost?.standard as number,
-		});
+			});
 		return actions?.order?.capture().then((details) => {
 			const name = details?.payer?.name?.given_name;
 			toast.success(`Transaction completed by ${name}`);

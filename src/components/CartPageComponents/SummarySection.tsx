@@ -24,8 +24,7 @@ export default function SummarySection({
 	} = useCheckout();
 	const [showButtons, setShowButtons] = useState(false);
 	const handleShowButtonsClick = () => {
-		//if (checkIfReady()) setShowButtons(true);
-		handleOnApprove()
+		if (checkIfReady()) setShowButtons(true);
 	};
 	return (
 		<section className="flex flex-col justify-between px-4 py-6 md:px-7 md:py-10 lg:px-8 lg:py-20">
@@ -65,7 +64,7 @@ export default function SummarySection({
 				{friendEntity && (
 					<button
 						className="flex w-4/5 items-center justify-around rounded-md border-2 
-                border-white p-2 duration-150 hover:bg-white/20 active:bg-white/40
+                border-white p-2 duration-150 hover:bg-white/20 active:bg-white/40 my-4
                 disabled:border-gray-400 disabled:text-gray-400 disabled:hover:bg-transparent"
 						disabled
 					>
@@ -88,7 +87,7 @@ export default function SummarySection({
 					<SlPresent size={20} className="mr-4 text-red-500" />
 					Buy for a friend!
 				</button>
-				<div className="mt-3 ">
+				<div className="mt-3">
 					{showButtons ? (
 						<PayPalScriptProvider
 							options={{
@@ -101,7 +100,7 @@ export default function SummarySection({
 									tagline: false,
 									shape: "pill",
 								}}
-								className="flex w-full justify-center"
+								className="flex justify-center"
 								onApprove={handleOnApprove}
 								createOrder={handleCreateOrder}
 							/>
