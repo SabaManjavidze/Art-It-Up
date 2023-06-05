@@ -19,7 +19,7 @@ export const ShippingAddressSection = () => {
 		}
 	}, [isLoading])
 	return (
-		<section>
+		<section className="bg-skin-main">
 			<h2 className="ml-12 text-3xl">Shipping Address</h2>
 			<div className="mt-5 flex justify-start">
 				<Accordion className="ml-12 w-1/2" allowZeroExpanded>
