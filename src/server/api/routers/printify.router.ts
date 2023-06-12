@@ -141,8 +141,11 @@ export const printifyRouter = createTRPCRouter({
 	getPrintifyProduct: publicProcedure
 		.input(z.object({ id: z.string().min(1) }))
 		.query(async ({ input: { id } }) => {
-			const product = await printify.getProduct(id);
-			if (product) return product as unknown as PrintifyGetProductResponse;
+			const product = await printify.getProduct(id) as unknown as PrintifyGetProductResponse;
+			const HomeNLivingTag = "Home & Living";
+			const isClothingType = product.tags.find((item) => item == HomeNLivingTag) === undefined;
+			if (!product) throw new TRPCError({ code: "NOT_FOUND" })
+			return Object.assign(product, { isClothe: isClothingType })
 		}),
 	getPrintifyShopProducts: publicProcedure.query(async () => {
 		const products = await printify.getProducts();

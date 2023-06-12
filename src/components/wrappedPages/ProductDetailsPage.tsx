@@ -2,16 +2,17 @@ import { useMemo, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { AiOutlineStar } from "react-icons/ai";
 import type { PrintifyGetProductResponse } from "../../utils/printify/printifyTypes";
-import { api } from "../../utils/api";
+import { api, RouterOutputs } from "../../utils/api";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { ClipLoader } from "react-spinners";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
 }
 
 type ProductPagePropTypes = {
-	product: PrintifyGetProductResponse;
+	product: RouterOutputs["printify"]["getPrintifyProduct"];
 };
 type OptionType = {
 	quantity: number;
@@ -19,18 +20,15 @@ type OptionType = {
 	variantId: number;
 	cost: number;
 };
-const HomeNLivingTag = "Home & Living";
-const isClothingType = (tags: string[]) =>
-	tags.find((item) => item == HomeNLivingTag) === undefined;
 export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
-	const { mutateAsync: addToCart, isLoading } =
+	const { mutateAsync: addToCart, isLoading: addToCartLoading } =
 		api.cart.addProductToCart.useMutation();
 
 	const [options, setOptions] = useState<OptionType>({
 		quantity: 1,
-		size: product.options[1]?.values[0]?.id as number,
-		variantId: product.variants[0]?.id as number,
-		cost: product.variants[0]?.cost as number,
+		size: product?.options[1]?.values[0]?.id as number,
+		variantId: product?.variants[0]?.id as number,
+		cost: product?.variants[0]?.cost as number,
 	});
 
 	const handleAddToCart = async () => {
@@ -65,10 +63,9 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
 		});
 	};
 
-	const isClothing = useMemo(() => isClothingType(product.tags), []);
 	const handleSizeChange = (id: number) => {
 		const variant = product.variants.find((varItem) => {
-			if (!isClothing) return varItem.options[0] == id;
+			if (!product.isClothe) return varItem.options[0] == id;
 			const defaultColorId = product?.options[0]?.values[0]?.id as number;
 			return varItem.options[1] == id && varItem.options[0] == defaultColorId;
 		});
@@ -94,7 +91,7 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
 								aria-current="page"
 								className="font-medium text-white hover:text-gray-200"
 							>
-								{product.title}
+								{/*product category/product style/product title*/}{product.title}
 							</a>
 						</li>
 					</ol>
@@ -230,14 +227,14 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
 														? "border-indigo-500"
 														: null
 														}
-                    items-center justify-center overflow-hidden ${isClothing ? "w-16" : "w-36"
+                    items-center justify-center overflow-hidden ${product.isClothe ? "w-16" : "w-36"
 														} group relative flex cursor-pointer items-center rounded-md border-2 bg-skin-secondary py-3 px-4 
                     text-sm font-medium uppercase duration-150 hover:bg-skin-light-secondary focus:outline-none sm:flex-1 
                     sm:py-6`}
 													onClick={() => handleSizeChange(option.id)}
 												>
 													<p
-														className={`text-lg ${isClothing ? "whitespace-nowrap" : ""
+														className={`text-lg ${product.isClothe ? "whitespace-nowrap" : ""
 															}`}
 													>
 														{option.title}
@@ -253,7 +250,7 @@ export default function ProductDetailsPage({ product }: ProductPagePropTypes) {
 								className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
 								onClick={handleAddToCart}
 							>
-								Add to bag
+								{addToCartLoading ? <ClipLoader size={20} color="white" /> : "Add to bag"}
 							</button>
 						</div>
 					</div>

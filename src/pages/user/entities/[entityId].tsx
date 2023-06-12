@@ -3,38 +3,38 @@ import Image from "next/image";
 import { api } from "../../../utils/api";
 
 interface EntityDetailsPagePropType {
-  entityId: string;
+	entityId: string;
 }
 export default function EntityDetailsPage({
-  entityId,
+	entityId,
 }: EntityDetailsPagePropType) {
-  const { data: entity } = api.entity.getEntity.useQuery({ entityId });
-  return (
-    <div className="flex min-h-screen justify-center bg-skin-main px-1.5">
-      <div
-        className="grid grid-cols-2 grid-rows-2 py-32 sm:grid-cols-2 sm:flex-row 
+	const { data: entity } = api.entity.getEntity.useQuery({ entityId });
+	return (
+		<div className="flex min-h-screen justify-center bg-skin-main px-1.5">
+			<div
+				className="grid grid-cols-2 grid-rows-2 py-32 sm:grid-cols-2 sm:flex-row 
       sm:justify-center md:grid-cols-3 lg:grid-cols-4"
-      >
-        {entity?.gallery.map((image, index) => (
-          <div
-            key={image.id}
-            className="relative flex h-64 w-48 justify-center "
-          >
-            <Image
-              src={image.url}
-              alt=""
-              sizes="(max-width: 768px) 100vw,
+			>
+				{entity?.gallery.map(image => (
+					<div
+						key={image.id}
+						className="relative flex h-64 w-48 justify-center "
+					>
+						<Image
+							src={image.url}
+							alt=""
+							sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
               33vw"
-              priority
-              fill
-              className="w-full rounded-md object-contain"
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+							priority
+							fill
+							className="w-full rounded-md object-contain"
+						/>
+					</div>
+				))}
+			</div>
+		</div>
+	);
 }
 import type { GetServerSideProps } from "next";
 import { appRouter } from "../../../server/api/root.router";
@@ -44,22 +44,22 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { getServerAuthSession } from "../../../server/auth";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerAuthSession({
-    req: context.req,
-    res: context.res,
-  });
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createContextInner({ session }),
-    transformer: superjson,
-  });
+	const session = await getServerAuthSession({
+		req: context.req,
+		res: context.res,
+	});
+	const ssg = createProxySSGHelpers({
+		router: appRouter,
+		ctx: await createContextInner({ session }),
+		transformer: superjson,
+	});
 
-  const entityId = context?.params?.entityId as string;
-  await ssg.entity.getEntity.prefetch({ entityId });
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      entityId,
-    },
-  };
+	const entityId = context?.params?.entityId as string;
+	await ssg.entity.getEntity.prefetch({ entityId });
+	return {
+		props: {
+			trpcState: ssg.dehydrate(),
+			entityId,
+		},
+	};
 };
