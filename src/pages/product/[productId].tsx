@@ -34,7 +34,6 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 		variantId: product?.variants[0]?.id as number,
 		cost: product?.variants[0]?.cost as number,
 	});
-	if (error || !product) return <h1>there was an error {JSON.stringify(error, null, 2)}</h1>
 
 	useEffect(() => {
 		if (descRef?.current) {
@@ -42,6 +41,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 		}
 	}, [descRef])
 
+	if (error || !product) return <h1>there was an error {JSON.stringify(error, null, 2)}</h1>
 	const handleAddToCart = async () => {
 		try {
 			await addToCart({
