@@ -152,7 +152,7 @@ export const CheckoutProvider = ({
 			products as NonNullable<typeof products>,
 			selected
 		);
-		if (line_items && line_items.length > 0 && address && entity)
+		if (line_items && line_items.length > 0 && address)
 			await createOrder({
 				line_items: line_items,
 				entityId: entity?.id,

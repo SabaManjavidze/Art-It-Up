@@ -15,7 +15,13 @@ export const cartRouter = createTRPCRouter({
 				product: true,
 			},
 		});
-		return products;
+		return products.map(item => {
+			const [sizeId, sizeTitle] = item.size.split(":")
+			return {
+				...item,
+				sizeId: sizeId as number, sizeTitle: sizeTitle as string
+			}
+		});
 	}),
 	removeProductFromCart: protectedProcedure
 		.input(
@@ -37,8 +43,10 @@ export const cartRouter = createTRPCRouter({
 				description: z.string(),
 				variantId: z.number(),
 				quantity: z.number(),
-				size: z.string(),
+				sizeId: z.number(),
+				sizeTitle: z.string(),
 				price: z.number(),
+				isInCart: z.boolean(),
 			})
 		)
 		.mutation(
@@ -49,33 +57,40 @@ export const cartRouter = createTRPCRouter({
 					title,
 					description,
 					quantity,
-					size,
+					sizeId, sizeTitle,
 					variantId,
 					price,
+					isInCart
 				},
 				ctx: { session },
 			}) => {
 				try {
-					await prisma.userCartProducts.create({
-						data: {
-							product: {
-								connectOrCreate: {
-									where: { id: productId },
-									create: {
-										id: productId,
-										title,
-										picture,
-										description,
+					if (isInCart) {
+						await prisma.userCartProducts.delete({
+							where: { userId_productId: { userId: session.user.id, productId: productId } },
+						});
+					} else {
+						await prisma.userCartProducts.create({
+							data: {
+								product: {
+									connectOrCreate: {
+										where: { id: productId },
+										create: {
+											id: productId,
+											title,
+											picture,
+											description,
+										},
 									},
 								},
+								variantId,
+								quantity,
+								price,
+								user: { connect: { id: session.user.id } },
+								size: `${sizeId}:${sizeTitle}`,
 							},
-							variantId,
-							quantity,
-							price,
-							user: { connect: { id: session.user.id } },
-							size,
-						},
-					});
+						});
+					}
 				} catch (error) {
 					if (error instanceof Prisma.PrismaClientKnownRequestError) {
 						if (error.code === "P2002") {

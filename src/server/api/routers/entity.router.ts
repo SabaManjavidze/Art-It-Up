@@ -4,6 +4,7 @@ import { prisma } from "../../db";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { v2 } from "cloudinary";
+import { MAX_ENTITY_COUNT } from "../../../utils/constants";
 
 export const entityRouter = createTRPCRouter({
 	getEntity: protectedProcedure
@@ -53,7 +54,7 @@ export const entityRouter = createTRPCRouter({
 			const entities = await prisma.entity.findMany({
 				where: { creatorId: session.user.id },
 			});
-			if (entities.length >= 5)
+			if (entities.length >= MAX_ENTITY_COUNT)
 				throw new TRPCError({
 					code: "FORBIDDEN",
 					message: "cannot create more than 5 entities",

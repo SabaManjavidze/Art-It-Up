@@ -79,6 +79,7 @@ function CartProduct({
 				key={cartProduct.productId}
 				title={cartProduct.product.title}
 				src={cartProduct.product.picture}
+				size={{ id: cartProduct.sizeId, title: cartProduct.sizeTitle }}
 				productId={cartProduct.productId}
 				quantity={cartProduct.quantity}
 				href={`/product/${cartProduct.productId}`}

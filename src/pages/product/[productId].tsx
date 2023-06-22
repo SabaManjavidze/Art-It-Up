@@ -13,9 +13,6 @@ type OptionType = {
 	variantId: number;
 	cost: number;
 };
-function classNames(...classes: string[]) {
-	return classes.filter(Boolean).join(" ");
-}
 const ProductPageContainer = ({ productId }: { productId: string }) => {
 	const {
 		data: product, error
@@ -24,8 +21,13 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 			id: productId,
 		},
 	);
+	const utils = api.useContext()
 	const { mutateAsync: addToCart, isLoading: addToCartLoading } =
-		api.cart.addProductToCart.useMutation();
+		api.cart.addProductToCart.useMutation({
+			onSuccess() {
+				utils.printify.getPrintifyProduct.invalidate()
+			},
+		});
 	const descRef = useRef<HTMLParagraphElement>(null)
 
 	const [options, setOptions] = useState<OptionType>({
@@ -37,7 +39,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 
 	useEffect(() => {
 		if (descRef?.current) {
-			descRef.current.innerHTML = product.description
+			descRef.current.innerHTML = product?.description || ""
 		}
 	}, [descRef])
 
@@ -49,17 +51,23 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 				description: product.description,
 				title: product.title,
 				picture: product.images[0]?.src as string,
-				size: options.size.toString(),
+				sizeId: options.size,
+				sizeTitle: product.options[1]?.values.find(size => size.id == options.size)?.title as string,
 				variantId: options.variantId,
 				quantity: options.quantity,
 				price: options.cost / options.quantity,
+				isInCart: product.isInCart
 			});
-			toast.success("A product has been added to your cart");
+			if (product.isInCart) {
+				toast.info("Removed product from your cart");
+			}
+			else {
+				toast.success("A product has been added to your cart");
+			}
 		} catch (error) {
 			toast.error(
-				"There was an erorr. Product has not been added to your cart"
+				error as string
 			);
-			console.log(error);
 		}
 	};
 	const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -233,10 +241,10 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 							</div>
 							<button
 								type="submit"
-								className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+								className={`mt-10 flex w-full items-center justify-center rounded-md border border-transparent ${product.isInCart ? "bg-red-500 hover:bg-red-400 focus:ring-red-300" : "bg-indigo-600 focus:ring-indigo-500 hover:bg-indigo-700"} px-8 py-3 duration-300 text-base font-medium text-white focus:outline-none focus:ring-2 `}
 								onClick={handleAddToCart}
 							>
-								{addToCartLoading ? <ClipLoader size={20} color="white" /> : "Add to bag"}
+								{addToCartLoading ? <ClipLoader size={20} color="white" /> : product.isInCart ? "Remove product from cart" : "Add to cart"}
 							</button>
 						</div>
 					</div>

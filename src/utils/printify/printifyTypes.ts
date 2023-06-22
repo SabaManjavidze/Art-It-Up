@@ -38,7 +38,7 @@ export interface PrintifyProductType {
 }
 
 export interface Option {
-	name: string;
+	name: string & ("Sizes" | "Color");
 	type: string;
 	values: Value[];
 }
