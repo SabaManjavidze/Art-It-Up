@@ -1,6 +1,6 @@
 import { createTRPCRouter, publicProcedure } from "./trpc";
 import { servicesRouter } from "./routers/services.router";
-import { printifyRouter } from "./routers/printify.router";
+import { productRouter } from "./routers/product.router";
 import { userRouter } from "./routers/user.router";
 import { orderRouter } from "./routers/order.router";
 import { entityRouter } from "./routers/entity.router";
@@ -16,7 +16,7 @@ import { addressRouter } from "./routers/address.router";
  */
 export const appRouter = createTRPCRouter({
   services: servicesRouter,
-  printify: printifyRouter,
+  printify: productRouter,
   user: userRouter,
   entity: entityRouter,
   address: addressRouter,

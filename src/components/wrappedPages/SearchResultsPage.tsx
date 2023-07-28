@@ -13,7 +13,7 @@ export const SearchResultsPage = ({
   const { data: products, isLoading: productsLoading } =
     api.printify.searchProducts.useQuery({ name: query, tags });
   return (
-    <div className="absolute min-h-screen bg-skin-main">
+    <div className="absolute min-h-screen bg-background">
       {products
         ? products.map((product) => (
             <div
@@ -35,7 +35,7 @@ export const SearchResultsPage = ({
                   />
                 </div>
                 <div className="flex max-h-48 flex-col justify-between p-4 leading-normal">
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-primary-foreground">
                     {product.title}
                   </h5>
                   <p

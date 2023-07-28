@@ -31,14 +31,14 @@ export default function EditEntitySection({
           </div>
         </div>
         <button
-          className="ml-4 rounded-md bg-black py-2 px-4 text-white duration-150 hover:bg-gray-800
+          className="ml-4 rounded-md bg-black py-2 px-4 text-primary-foreground duration-150 hover:bg-gray-800
           focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
           onClick={handleAddEntityClick}
         >
           Edit
         </button>
         <button
-          className="ml-4 rounded-md bg-gray-600 py-2 px-4 text-white duration-150 hover:bg-gray-500
+          className="ml-4 rounded-md bg-gray-600 py-2 px-4 text-primary-foreground duration-150 hover:bg-gray-500
           focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
           onClick={handleCancelEntity}
         >

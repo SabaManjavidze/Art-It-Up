@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FiShoppingCart, FiHeart, FiLogIn, FiSearch } from "react-icons/fi";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { TfiGallery } from "react-icons/tfi";
-import { ClipLoader } from "react-spinners";
+import { Loader2 } from "lucide-react";
 import UserProfileButton from "./UserProfileButton";
 import SearchBar from "./SearchBar";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -33,9 +33,9 @@ const Navbar = () => {
   const [divRef] = useAutoAnimate<HTMLDivElement>();
 
   return (
-    <nav className="flex items-center justify-between bg-skin-secondary p-4 text-white">
+    <nav className="flex items-center justify-between bg-secondary p-4 text-secondary-foreground">
       {/* Logo */}
-      <Link href="/" className="text-skin-primary text-lg font-medium">
+      <Link href="/" className="text-lg font-medium">
         Online Clothing Store
       </Link>
 
@@ -50,7 +50,7 @@ const Navbar = () => {
           {showSearchBar ? <SearchBar /> : null}
 
           <button
-            className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
+            className="hover:text-skin-secondary duration-150 hover:scale-110"
             onClick={() => setShowSearchBar(!showSearchBar)}
           >
             <FiSearch size={20} />
@@ -60,7 +60,7 @@ const Navbar = () => {
             : buttons.map((button) => (
                 <a
                   href={button.href}
-                  className="text-skin-primary hover:text-skin-secondary duration-150 hover:scale-110"
+                  className="hover:text-skin-secondary duration-150 hover:scale-110"
                   key={button.href}
                 >
                   {button.icon}
@@ -69,7 +69,7 @@ const Navbar = () => {
         </div>
         <div className="flex w-32 flex-col items-center">
           {status === "loading" ? (
-            <ClipLoader color="white" />
+            <Loader2 color="white" />
           ) : session?.user ? (
             <div className="mr-12 w-full">
               <UserProfileButton
@@ -78,10 +78,7 @@ const Navbar = () => {
               />
             </div>
           ) : (
-            <a
-              href={"/api/auth/signin"}
-              className="text-skin-primary hover:text-skin-secondary "
-            >
+            <a href={"/api/auth/signin"} className="hover:text-skin-secondary ">
               <FiLogIn size={20} />
               LogIn
             </a>

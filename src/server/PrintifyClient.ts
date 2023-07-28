@@ -1,10 +1,7 @@
 import PrintifyClient from "@kastlabs/printify-client";
 import type { z } from "zod";
-import type {
-  lineItemsZodType} from "../utils/printify/printifyTypes";
-import {
-  addressToSchema
-} from "../utils/printify/printifyTypes";
+import type { lineItemsZodType } from "../utils/printify/printifyTypes";
+import { addressToSchema } from "../utils/printify/printifyTypes";
 const addressWithoutTitle = addressToSchema.omit({ title: true });
 type userDetails = {
   first_name: string;
@@ -31,3 +28,7 @@ export class Printify extends PrintifyClient {
     );
   }
 }
+export const printify = new Printify({
+  apiKey: process.env.PRINTIFY_ACCESS_TOKEN as string,
+  shopId: process.env.PRINTIFY_SHOP_ID,
+});

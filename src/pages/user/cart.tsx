@@ -1,5 +1,5 @@
 import React from "react";
-import { ClipLoader } from "react-spinners";
+import { Loader2 } from "lucide-react";
 import { api } from "../../utils/api";
 import { CheckoutProvider } from "../../hooks/useCheckoutHooks";
 import CartPage from "../../components/WrappedPages/CartPage";
@@ -8,8 +8,8 @@ const UserCart = () => {
   const { data, isLoading, error } = api.cart.getCart.useQuery();
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-skin-main">
-        <ClipLoader color="white" />
+      <div className="flex h-screen items-center justify-center bg-background">
+        <Loader2 color="white" />
       </div>
     );
   }

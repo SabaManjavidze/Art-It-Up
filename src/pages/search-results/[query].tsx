@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { SearchResultsPage } from "../../components/WrappedPages/SearchResultsPage";
 import React from "react";
-import { ClipLoader } from "react-spinners";
+import { Loader2 } from "lucide-react";
 
 export default function SearchResultsPageContainer() {
   const router = useRouter();
@@ -10,8 +10,8 @@ export default function SearchResultsPageContainer() {
 
   if (!query)
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-skin-main">
-        <ClipLoader size={200} color={"white"} />
+      <div className="flex min-h-screen w-full items-center justify-center bg-background">
+        <Loader2 size={200} color={"white"} />
       </div>
     );
 

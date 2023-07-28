@@ -31,12 +31,12 @@ export const api = createTRPCNext<AppRouter>({
       queryClientConfig: {
         defaultOptions: {
           mutations: {
-            retry(failureCount, error) {
+            retry() {
               return false;
             },
           },
           queries: {
-            retry(failureCount, error) {
+            retry() {
               return false;
             },
             refetchOnWindowFocus: false,

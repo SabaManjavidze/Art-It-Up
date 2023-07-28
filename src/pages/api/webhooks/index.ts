@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import { printify } from "../../../server/api/routers/printify.router";
 import lodash from "lodash";
 import type { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
 import { prisma } from "../../../server/db";
+import { printify } from "../../../server/PrintifyClient";
 
 export const config = {
   api: {

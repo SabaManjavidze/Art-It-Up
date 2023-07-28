@@ -1,10 +1,10 @@
 import type { Dispatch, SetStateAction } from "react";
 import React, { useCallback, useState } from "react";
 import { BLANK_PROFILE_URL } from "../../pages/_app";
-import Modal from "../UI/Modal";
+import Modal from "../ui/Modal";
 import { debounce } from "lodash";
 import { api } from "../../utils/api";
-import { ClipLoader } from "react-spinners";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 
@@ -51,8 +51,8 @@ export default function PresentModal({
       <input
         type="text"
         placeholder="Search..."
-        className="mt-4 w-full rounded-none border-[1px] border-gray-400 bg-skin-light-secondary 
-          		py-2 pl-5 pr-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="bg-skin-light-secondary mt-4 w-full rounded-none border-[1px] border-gray-400 
+          		py-2 pl-5 pr-3 text-primary-foreground placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={userQuery}
         onChange={(e) => {
           const value = e.currentTarget.value;
@@ -64,13 +64,13 @@ export default function PresentModal({
       />
       {usersLoading ? (
         <div className="flex h-48 items-center justify-center">
-          <ClipLoader size={20} color="white" />
+          <Loader2 size={20} color="white" />
         </div>
       ) : (
         users?.map((user) => (
           <div
             key={user.id}
-            className="mt-5 flex w-full flex-col items-center justify-around text-white"
+            className="mt-5 flex w-full flex-col items-center justify-around text-primary-foreground"
           >
             <button
               className="flex w-full items-center justify-around rounded-md border-2 border-white 
@@ -94,7 +94,7 @@ export default function PresentModal({
                 className=" rounded-full"
                 alt="user profile image"
               />
-              <h3 className="text-lg text-skin-base">{user.name}</h3>
+              <h3 className="text-skin-base text-lg">{user.name}</h3>
             </button>
             <div className="mt-3 flex w-full justify-end">
               {expandedUser.userId === user.id &&
@@ -118,7 +118,7 @@ export default function PresentModal({
                       className=" rounded-full"
                       alt="user profile image"
                     />
-                    <h3 className="text-lg text-skin-base">{entity.name}</h3>
+                    <h3 className="text-skin-base text-lg">{entity.name}</h3>
                   </button>
                 ))}
             </div>

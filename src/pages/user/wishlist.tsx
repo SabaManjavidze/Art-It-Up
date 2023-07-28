@@ -31,7 +31,7 @@ export default function Wishlist() {
               </div>
               <button
                 onClick={() => handleRemove(product.id.toString())}
-                className="rounded-md bg-red-500 px-4 py-2 text-white"
+                className="rounded-md bg-red-500 px-4 py-2 text-primary-foreground"
               >
                 Remove
               </button>

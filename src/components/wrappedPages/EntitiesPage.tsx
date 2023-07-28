@@ -5,7 +5,7 @@ import { AiOutlinePlusSquare } from "react-icons/ai";
 import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import { useEntities } from "../../hooks/useEntitiesHook";
-import Modal from "../UI/Modal";
+import Modal from "../ui/Modal";
 import ImageInput from "../ImageInput";
 import GallerySection from "../EntitiesPageComponents/GallerySection";
 import { PacmanLoader } from "react-spinners";
@@ -33,7 +33,7 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
   };
   return (
     <div
-      className={`min-h-screen w-full overflow-y-hidden bg-skin-main text-skin-base ${
+      className={`text-skin-base min-h-screen w-full overflow-y-hidden bg-background ${
         isOpen && "overflow-y-hidden"
       } `}
     >
@@ -52,14 +52,14 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
           <div className="mt-16 flex w-full justify-center">
             <div className="w-1/2">
               <input
-                className="w-full rounded-md bg-skin-secondary py-2 text-lg
-                 text-white duration-150 focus:ring-2 focus:ring-white"
+                className="w-full rounded-md bg-secondary py-2 text-lg
+                 text-primary-foreground duration-150 focus:ring-2 focus:ring-white"
                 placeholder={"Entity Name"}
                 value={name}
                 onChange={handleNameChange}
                 type="text"
               />
-              <div className={"mt-3 text-white"}>
+              <div className={"mt-3 text-primary-foreground"}>
                 <div className={"pt-1 pb-3"}>
                   <label className="text-lg">Entity Profile Picture</label>
                 </div>
@@ -73,7 +73,7 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
               </div>
 
               <button
-                className="mt-4 rounded-md bg-black py-2 px-4 text-white hover:bg-gray-800 
+                className="mt-4 rounded-md bg-black py-2 px-4 text-primary-foreground hover:bg-gray-800 
           focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
                 onClick={handleCreateEntitySubmit}
               >
@@ -92,7 +92,7 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
         hover:bg-white/20 active:scale-[0.98] active:bg-white/40"
           >
             <AiOutlinePlusSquare size={30} color="white" />
-            <h2 className="text-lg text-white">Add New Entity</h2>
+            <h2 className="text-lg text-primary-foreground">Add New Entity</h2>
           </button>
         )}
         {!showGalleryUpload && entities && (

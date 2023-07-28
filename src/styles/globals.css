@@ -2,52 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
-  margin: 0;
-} */
-html {
-  scroll-behavior: smooth;
-}
-
 @layer base {
   :root {
-    --color-palette-primary: 238, 40, 138;
-    --color-palette-light-primary: 242, 90, 163;
-    --color-palette-secondary: 59, 130, 246;
-    --color-palette-danger: 224, 71, 46;
-    --color-palette-disable: 124, 124, 124;
-    --color-text-base: 201, 209, 217;
-    --color-background-secondary: 31, 42, 68;
-    --color-background-main: 16, 23, 42;
-    --color-background-light-secondary: 43, 58, 93;
+    --background: 0, 0%, 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 232, 20%, 29%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 201 100% 39%;
+    --accent-foreground: 243 75% 59%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+
+    --ring: 217.2 32.6% 17.5%;
   }
 }
 
-.card {
-  @apply mb-5  block   rounded-lg border border-gray-200  bg-skin-secondary text-white shadow-md;
-}
-
-.primary-button {
-  @apply rounded bg-amber-300 py-2 px-4 shadow outline-none hover:bg-amber-400  active:bg-amber-500;
-}
-.default-button {
-  @apply rounded bg-gray-100 py-2  px-4 text-black shadow outline-none hover:bg-gray-200  active:bg-gray-300;
-}
-
-input,
-select,
-textarea {
-  @apply rounded border p-2  outline-none ring-indigo-300  focus:ring;
-}
-
-.dropdown-link {
-  @apply flex p-2 hover:bg-gray-200;
-}
-
-.alert-error {
-  @apply my-3 rounded-lg bg-red-100 p-3 text-red-700;
-}
-
-.alert-success {
-  @apply my-3 rounded-lg bg-green-100 p-3 text-green-700;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

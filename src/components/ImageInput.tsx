@@ -91,7 +91,7 @@ const ImageInput: React.FC<Props> = ({
       )}
       {showButton && images.length > 0 && (
         <button
-          className="mt-4 rounded-md bg-black py-2 px-4 text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+          className="mt-4 rounded-md bg-black py-2 px-4 text-primary-foreground hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
           onClick={handleImagesSelected}
         >
           Upload Images

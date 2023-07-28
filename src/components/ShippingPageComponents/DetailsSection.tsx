@@ -32,7 +32,7 @@ export const DetailsSection = ({
             <AccordionItemHeading>
               <AccordionItemButton
                 className="flex w-full items-center border-none 
-                  bg-skin-secondary p-4 text-left"
+                  bg-secondary p-4 text-left"
               >
                 {expanded == details.id ? (
                   <AiOutlineCaretDown color="white" size={30} />

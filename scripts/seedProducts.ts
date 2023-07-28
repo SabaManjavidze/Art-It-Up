@@ -1,8 +1,8 @@
-import { printify } from "../src/server/api/routers/printify.router";
 import { prisma } from "../src/server/db";
 import { PrintifyGetProductResponse } from "../src/utils/printify/printifyTypes";
 import lodash from "lodash";
 import crypto from "crypto";
+import { printify } from "../src/server/PrintifyClient";
 
 const seedProducts = async () => {
   const printifyProducts = (await printify.getProducts()) as unknown as {

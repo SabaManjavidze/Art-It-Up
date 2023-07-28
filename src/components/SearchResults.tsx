@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import type { RouterOutputs } from "../utils/api";
 import { api } from "../utils/api";
-import { ClipLoader } from "react-spinners";
+import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import Modal from "./UI/Modal";
+import Modal from "./ui/Modal";
 
 type SearchResultsPropType = {
   users: RouterOutputs["user"]["searchUsers"];
@@ -31,7 +31,7 @@ export default function SearchResults({ users }: SearchResultsPropType) {
         {users.map((user) => (
           <div
             key={user.id}
-            className="mt-5 flex items-center justify-around text-white"
+            className="mt-5 flex items-center justify-around text-primary-foreground"
           >
             <Image
               src={user?.image || ""}
@@ -40,7 +40,7 @@ export default function SearchResults({ users }: SearchResultsPropType) {
               className="rounded-full"
               alt="user profile image"
             />
-            <h3 className="text-lg text-skin-base">{user.name}</h3>
+            <h3 className="text-skin-base text-lg">{user.name}</h3>
             <button
               disabled={user.id == session.data?.user.id || user.isFriend}
               className="rounded-md border-2 border-white p-2 duration-150 hover:bg-white/20 active:bg-white/40 disabled:border-gray-400  disabled:text-gray-400 
@@ -48,7 +48,7 @@ export default function SearchResults({ users }: SearchResultsPropType) {
               onClick={() => handleSendFriendRequest(user.id, user.name)}
             >
               {isLoading ? (
-                <ClipLoader color="white" />
+                <Loader2 color="white" />
               ) : (
                 <p className="text-md text-center">Add To Friends</p>
               )}
