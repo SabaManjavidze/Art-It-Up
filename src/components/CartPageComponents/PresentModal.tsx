@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import React, { useCallback, useState } from "react";
 import { BLANK_PROFILE_URL } from "../../pages/_app";
-import Modal from "../ui/Modal";
+import Modal from "@/components/ui/Modal";
 import { debounce } from "lodash";
 import { api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
