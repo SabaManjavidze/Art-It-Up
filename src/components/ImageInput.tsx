@@ -45,16 +45,16 @@ const ImageInput: React.FC<Props> = ({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div
         {...getRootProps()}
         className="cursor-pointer rounded-md border-2 border-dashed border-gray-300 p-4"
       >
-        <input {...getInputProps()} />
+        <input multiple={multiple} {...getInputProps()} />
         <div className="flex flex-col items-center justify-center space-y-2">
           <PlusCircleIcon className="h-12 w-12 text-gray-400" />
           {isDragActive ? (
-            <p className="text-skin-600 text-lg font-medium">
+            <p className="text-lg font-medium text-accent-foreground">
               Drop the images here
             </p>
           ) : (
@@ -71,22 +71,39 @@ const ImageInput: React.FC<Props> = ({
       </div>
       {images.length > 0 && (
         <div className="mt-4 grid grid-cols-4 gap-4">
-          {images.map((image, index) => (
-            <div key={nanoid()} className="relative h-64 w-48">
+          {multiple ? (
+            images.map((image, index) => (
+              <div key={nanoid()} className="relative h-64 w-48">
+                <button
+                  className="absolute top-0 right-0 z-10 h-6 w-6 text-gray-400 hover:text-red-500"
+                  onClick={() => removeImage(index)}
+                >
+                  &#10005;
+                </button>
+                <Image
+                  src={URL.createObjectURL(image)}
+                  alt=""
+                  fill
+                  className="w-full rounded-md object-contain"
+                />
+              </div>
+            ))
+          ) : (
+            <div className="relative h-64 w-48">
               <button
                 className="absolute top-0 right-0 z-10 h-6 w-6 text-gray-400 hover:text-red-500"
-                onClick={() => removeImage(index)}
+                onClick={() => removeImage(0)}
               >
                 &#10005;
               </button>
               <Image
-                src={URL.createObjectURL(image)}
+                src={URL.createObjectURL(images[0] as File)}
                 alt=""
                 fill
                 className="w-full rounded-md object-contain"
               />
             </div>
-          ))}
+          )}
         </div>
       )}
       {showButton && images.length > 0 && (

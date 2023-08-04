@@ -10,6 +10,8 @@ import ImageInput from "../ImageInput";
 import GallerySection from "../EntitiesPageComponents/GallerySection";
 import { PacmanLoader } from "react-spinners";
 import EntityCard from "../EntitiesPageComponents/EntityCard";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 interface EntitiesPagePropType {
   entities?: RouterOutputs["entity"]["getEntities"];
@@ -51,8 +53,8 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
         >
           <div className="mt-16 flex w-full justify-center">
             <div className="w-1/2">
-              <input
-                className="w-full rounded-md bg-secondary py-2 text-lg
+              <Input
+                className="w-full rounded-md py-2 text-lg
                  text-primary-foreground duration-150 focus:ring-2 focus:ring-white"
                 placeholder={"Entity Name"}
                 value={name}
@@ -72,28 +74,27 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
                 />
               </div>
 
-              <button
-                className="mt-4 rounded-md bg-black py-2 px-4 text-primary-foreground hover:bg-gray-800 
-          focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+              <Button
+                className="mt-4 rounded-md py-2 px-4 text-secondary-foreground"
                 onClick={handleCreateEntitySubmit}
               >
                 Submit
-              </button>
+              </Button>
             </div>
           </div>
         </Modal>
         {showGalleryUpload ? (
           <GallerySection />
         ) : (
-          <button
+          <Button
             onClick={handleAddEntityClick}
-            className="flex w-52 items-center justify-between
-        rounded-sm border-2 border-white px-3 py-2 duration-150
-        hover:bg-white/20 active:scale-[0.98] active:bg-white/40"
+            className="duration-300 hover:scale-[0.98]"
           >
             <AiOutlinePlusSquare size={30} color="white" />
-            <h2 className="text-lg text-primary-foreground">Add New Entity</h2>
-          </button>
+            <h2 className="ml-3 text-lg text-secondary-foreground">
+              Add New Entity
+            </h2>
+          </Button>
         )}
         {!showGalleryUpload && entities && (
           <section className="mt-16 w-1/2">

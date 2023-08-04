@@ -1,4 +1,4 @@
-import type { ReactNode} from "react";
+import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { BiRadioCircle, BiRadioCircleMarked } from "react-icons/bi";
 
@@ -25,9 +25,9 @@ export function SelectableCard({
       <div ref={ref2} className="flex w-20 items-center justify-center px-4">
         <button onClick={handleSelect}>
           {isSelected ? (
-            <BiRadioCircleMarked size={30} color="white" />
+            <BiRadioCircleMarked size={30} className="text-primary" />
           ) : (
-            <BiRadioCircle size={30} color="white" />
+            <BiRadioCircle size={30} className="text-primary" />
           )}
         </button>
       </div>

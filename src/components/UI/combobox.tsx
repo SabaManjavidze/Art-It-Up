@@ -17,16 +17,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Capitalize } from "@/utils/constants";
 
-export function Combobox({
-  results,
-  placeholder,
-}: {
-  results: { label: string; value: string }[];
+interface ComboboxPropType extends React.InputHTMLAttributes<HTMLInputElement> {
+  searchResults: { label: string; value: string }[];
   placeholder: string;
-}) {
+  value: string;
+  setValue: React.Dispatch<string>;
+}
+export function Combobox({
+  searchResults,
+  placeholder,
+  value,
+  setValue,
+  ...inputArgs
+}: ComboboxPropType) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -35,24 +41,26 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between text-secondary-foreground"
+          className="w-full justify-between border-2 text-muted-foreground"
         >
-          {value
-            ? results.find((framework) => framework.value === value)?.label
-            : placeholder}
+          {value ? Capitalize(value) : placeholder}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="">
         <Command>
-          <CommandInput placeholder={placeholder} className="h-9" />
+          <CommandInput
+            placeholder={placeholder}
+            {...inputArgs}
+            className="h-9"
+          />
           <CommandEmpty>Not found.</CommandEmpty>
-          <CommandGroup>
-            {results.map((framework) => (
+          <CommandGroup className="max-h-[132px] overflow-y-auto">
+            {searchResults.map((framework) => (
               <CommandItem
                 key={framework.value}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                  setValue(currentValue);
                   setOpen(false);
                 }}
               >

@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { IoCloseCircle } from "react-icons/io5";
 import type { SearchType } from "./ui/SearchTypeDropDown";
 import SearchTypeDropDown from "./ui/SearchTypeDropDown";
+import { Input } from "@/components/ui/input";
 
 type CategoryCardPropType = {
   href: string;
@@ -59,8 +60,8 @@ const CartProductCard = ({
     setIsOpen(true);
   };
   return (
-    <div className="items-strech border-t border-gray-50 py-8 md:flex md:py-10 lg:py-8">
-      <div className="relative w-full md:w-4/12 2xl:w-1/4">
+    <div className="items-strech border-t border-primary py-8 md:flex md:py-10 lg:py-8">
+      <div className="relative w-full border-2 border-primary/30 md:w-4/12 2xl:w-1/4">
         <Link href={href}>
           <Image
             src={src}
@@ -96,8 +97,8 @@ const CartProductCard = ({
         ></p>
         <div className="flex items-center justify-between pt-5">
           <div className="flex items-center">
-            <input
-              className="mr-6 w-10 border-none bg-secondary py-2 px-1 outline-none"
+            <Input
+              className="mr-6 w-10 border-2 py-2 px-1 outline-none"
               value={quantity}
               type="number"
               min="1"
@@ -119,7 +120,6 @@ const CartProductCard = ({
                 isLoading={isOpen ? sizesLoading : false}
                 handleOpenClick={handleOpenClick}
                 options={sizes as any}
-                className="border-none !bg-secondary py-3"
               />
               <p className="ml-3 text-lg leading-none text-gray-800 dark:text-primary-foreground">
                 Size

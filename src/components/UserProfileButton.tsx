@@ -20,9 +20,10 @@ const UserProfileButton = ({
   userPicture,
   username,
 }: UserProfileButtonPropTypes) => {
-  const [showModal, setShowModal] = useState(false);
   const profileOptions = [
     { title: "Profile", path: "/user/profile" },
+    { title: "Gallery", path: "/user/entities" },
+    { title: "Friends", path: "/user/friends" },
     { title: "My Orders", path: "/user/orders" },
     { title: "Settings", path: "/user/settings" },
   ];
@@ -30,26 +31,32 @@ const UserProfileButton = ({
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <button className="m-0 p-0 !outline-none">
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex items-center justify-center">
             <Image
               src={userPicture}
-              width={50}
-              height={50}
+              width={40}
+              height={40}
               className="rounded-full"
               alt="user profile image"
             />
-            <h3 className="text-skin-base text-md whitespace-nowrap">
-              {username}
-            </h3>
           </div>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <h3 className="text-md mx-3 whitespace-nowrap">
+            {username.slice(0, 20)}
+          </h3>
+        </DropdownMenuLabel>
         <DropdownMenuGroup>
           {profileOptions.map((item) => (
-            <DropdownMenuItem key={item.path}>
-              <Link href={item.path}>{item.title}</Link>
+            <DropdownMenuItem
+              className="hover:!bg-primary/[.08]"
+              key={item.path}
+            >
+              <Link href={item.path} className="w-full">
+                {item.title}
+              </Link>
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>

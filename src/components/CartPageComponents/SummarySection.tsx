@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { SlPresent } from "react-icons/sl";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 import { BLANK_PROFILE_URL } from "../../pages/_app";
+import { IoClose, IoCloseCircle } from "react-icons/io5";
 
 export default function SummarySection({
   showPresentModal,
@@ -81,37 +82,46 @@ export default function SummarySection({
           </button>
         )}
         <button
-          className="flex w-full items-center justify-center bg-red-900/50 py-5
-              text-base leading-none text-primary-foreground duration-150 ease-in-out focus:outline-none focus:ring-2 
-              focus:ring-offset-2 dark:hover:bg-red-800/70"
+          className="flex w-full items-center justify-center bg-red-500 py-5
+              text-base leading-none text-secondary-foreground duration-150 ease-in-out hover:bg-red-600 focus:outline-none 
+              focus:ring-2 focus:ring-offset-2"
           onClick={() => setShowPresentModal(true)}
         >
-          <SlPresent size={20} className="mr-4 text-red-500" />
+          <SlPresent size={20} className="mr-4 text-secondary-foreground" />
           Buy for a friend!
         </button>
         <div className="mt-3">
           {showButtons ? (
-            <PayPalScriptProvider
-              options={{
-                "client-id": process.env.PAYPAL_CLIENT_ID as string,
-              }}
-            >
-              <PayPalButtons
-                style={{
-                  label: "checkout",
-                  tagline: false,
-                  shape: "pill",
+            <div>
+              <div className="relative h-7">
+                <IoCloseCircle
+                  className="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-muted-foreground/90"
+                  size={20}
+                  onClick={() => setShowButtons(false)}
+                />
+              </div>
+              <PayPalScriptProvider
+                options={{
+                  "client-id": process.env.PAYPAL_CLIENT_ID as string,
                 }}
-                className="flex justify-center"
-                onApprove={handleOnApprove}
-                createOrder={handleCreateOrder}
-              />
-            </PayPalScriptProvider>
+              >
+                <PayPalButtons
+                  style={{
+                    label: "checkout",
+                    tagline: false,
+                    shape: "pill",
+                  }}
+                  className="flex justify-center"
+                  onApprove={handleOnApprove}
+                  createOrder={handleCreateOrder}
+                />
+              </PayPalScriptProvider>
+            </div>
           ) : (
             <button
               className="w-full border border-gray-800 bg-gray-900 py-5
-              text-base leading-none text-primary-foreground duration-150 ease-in-out focus:outline-none focus:ring-2 
-              focus:ring-gray-800 focus:ring-offset-2 dark:hover:bg-gray-700"
+              text-base leading-none text-secondary-foreground duration-150 ease-in-out hover:bg-gray-700 focus:outline-none 
+              focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
               onClick={handleShowButtonsClick}
             >
               Pay Now!

@@ -76,3 +76,6 @@
     @apply bg-background text-foreground;
   }
 }
+.slider-wrapper {
+  width: 30% !important;
+}

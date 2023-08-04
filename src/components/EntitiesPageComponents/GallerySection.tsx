@@ -1,14 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 import ImageInput from "../ImageInput";
 import { api } from "../../utils/api";
-import { toBase64 } from "../../utils/convertToBase64";
 import { useEntities } from "../../hooks/useEntitiesHook";
-import { BLANK_PROFILE_URL } from "../../pages/_app";
 import EditEntitySection from "./EditEntitySection";
 
 const GallerySection = () => {

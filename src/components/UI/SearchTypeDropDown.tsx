@@ -4,12 +4,9 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Fragment } from "react";
 import { HiChevronUpDown as UpDownIcon } from "react-icons/hi2";
-import { nanoid } from "nanoid";
 import { Loader2 } from "lucide-react";
 import { Button } from "./button";
 
@@ -25,7 +22,6 @@ type SearchTypeDropDownPropType = {
   options?: SearchType[];
   handleOpenClick?: () => void;
   isLoading?: boolean;
-  className?: string;
 };
 export default function SearchTypeDropDown({
   selected,
@@ -33,12 +29,15 @@ export default function SearchTypeDropDown({
   options,
   handleOpenClick,
   isLoading = false,
-  className = "",
 }: SearchTypeDropDownPropType) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button className="flex items-center justify-center text-secondary-foreground">
+        <Button
+          onClick={handleOpenClick}
+          variant={"outline"}
+          className={"flex items-center justify-center text-primary-foreground"}
+        >
           {isLoading ? (
             <Loader2 color="white" size={10} />
           ) : (
@@ -55,7 +54,9 @@ export default function SearchTypeDropDown({
             <DropdownMenuItem key={option.id} className="p-0">
               <button
                 onClick={() => setSelected(option)}
-                className={"block px-4 py-2 text-sm hover:opacity-80"}
+                className={
+                  "flex w-full justify-start px-4 py-2 text-sm hover:opacity-80"
+                }
               >
                 {option.title}
               </button>

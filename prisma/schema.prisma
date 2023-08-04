@@ -75,7 +75,7 @@ model UserAddress {
     country String
     region String
     address1 String
-    address2 String
+    address2 String?
     city String
     zip String
     title String

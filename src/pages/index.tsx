@@ -9,6 +9,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 
 const categories = [
   { title: "Hoodies", href: "/search-results/_?tags=hoodies" },
@@ -39,14 +40,36 @@ const Home: NextPage = () => {
           <h2 className="text-center text-3xl font-medium ">
             Featured Products
           </h2>
-          <div className="flex flex-wrap justify-center bg-white">
+          <div className="bg-whiterst:w-full flex flex-wrap justify-center first:w-full">
             {!isLoading && data ? (
               <Carousel
                 showArrows={true}
                 selectedItem={selectedItem}
                 swipeable
-                className="w-3/4 xl:w-1/4"
+                className="w-full px-5"
                 showThumbs={false}
+                renderArrowNext={(clickHandler, hasNext, label) => (
+                  <button
+                    type="button"
+                    onClick={clickHandler}
+                    className={`${
+                      hasNext ? "block" : "hidden"
+                    } absolute top-0 bottom-0 right-0 z-10 mt-0 bg-primary/40 p-1`}
+                  >
+                    <AiFillCaretRight size={22} className="text-background" />
+                  </button>
+                )}
+                renderArrowPrev={(clickHandler, hasPrev, label) => (
+                  <button
+                    type="button"
+                    onClick={clickHandler}
+                    className={`${
+                      hasPrev ? "block" : "hidden"
+                    } absolute top-0 bottom-0 left-0 z-10 mt-0 bg-primary/40 p-1`}
+                  >
+                    <AiFillCaretLeft size={22} className="text-background" />
+                  </button>
+                )}
                 renderIndicator={(e, isSelected, index) => {
                   return (
                     <li
