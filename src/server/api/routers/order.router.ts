@@ -113,7 +113,7 @@ export const orderRouter = createTRPCRouter({
           first_name: user.firstName as string,
           last_name: user.lastName as string,
           address1: address.address1,
-          address2: address.address2.toString(),
+          address2: address?.address2?.toString() || "",
           zip: address.zip,
           city: address.city,
           region: address.region as "",

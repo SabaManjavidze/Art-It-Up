@@ -1,12 +1,12 @@
 import Head from "next/head";
 import React from "react";
-import { ToastContainer } from "react-toastify";
+import { Footer } from "./Footer";
 
 export default function Layout({
-  title,
+  title = "Art It Up",
   children,
 }: {
-  title: string;
+  title?: string;
   children: React.ReactElement | React.ReactElement[] | null;
 }) {
   return (
@@ -17,10 +17,8 @@ export default function Layout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex min-h-screen flex-col justify-between bg-background text-primary-foreground">
-        <main className="container m-auto mt-4 px-4">{children}</main>
-        <footer className="flex h-10 items-center justify-center shadow-inner">
-          <p>Copyright © 2022 Art It Up</p>
-        </footer>
+        <main>{children}</main>
+        <Footer />
       </div>
     </>
   );

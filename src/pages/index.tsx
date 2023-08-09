@@ -174,23 +174,6 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        {/* Footer */}
-        <div className="bg-secondary py-10 ">
-          <div className="mx-auto flex max-w-4xl justify-between px-4">
-            <div className="text-sm ">
-              <a href="#" className="mx-2 hover:text-primary-foreground">
-                Facebook
-              </a>
-              <a href="#" className="mx-2 hover:text-primary-foreground">
-                Twitter
-              </a>
-              <a href="#" className="mx-2 hover:text-primary-foreground">
-                Instagram
-              </a>
-            </div>
-            <div className="text-sm">&copy; 2023 Online Clothing Store</div>
-          </div>
-        </div>
       </div>
     </>
   );

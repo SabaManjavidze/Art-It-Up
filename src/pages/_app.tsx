@@ -9,22 +9,23 @@ import "../styles/selectSearch.css";
 import Navbar from "../components/NavBar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Layout from "@/components/Layout";
 
 export const BLANK_PROFILE_URL =
-	"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 const MyApp: AppType<{ session: Session | null }> = ({
-	Component,
-	pageProps: { session, ...pageProps },
+  Component,
+  pageProps: { session, ...pageProps },
 }) => {
-	return (
-		<SessionProvider session={session}>
-			<div>
-				<Navbar />
-				<Component {...pageProps} />
-				<ToastContainer limit={1} position="bottom-center" />
-			</div>
-		</SessionProvider>
-	);
+  return (
+    <SessionProvider session={session}>
+      <Layout>
+        <Navbar />
+        <Component {...pageProps} />
+        <ToastContainer limit={1} position="bottom-center" />
+      </Layout>
+    </SessionProvider>
+  );
 };
 
 export default api.withTRPC(MyApp);

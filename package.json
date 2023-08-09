@@ -9,6 +9,8 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
+    "db": "pscale connect dorten main-shadow --port=3309",
+    "all": "npm-run-all --parallel dev db",
     "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonJS\\\"}\""
   },
   "dependencies": {
@@ -54,7 +56,6 @@
     "react-hook-form": "^7.45.1",
     "react-icons": "^4.7.1",
     "react-responsive-carousel": "^3.2.23",
-    "react-spinners": "^0.13.8",
     "react-toastify": "^9.1.2",
     "superjson": "1.9.1",
     "tailwind-merge": "^1.13.2",
@@ -74,6 +75,7 @@
     "autoprefixer": "^10.4.7",
     "eslint": "^8.30.0",
     "eslint-config-next": "13.1.6",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.14",
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",

@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { Button } from "./button";
-import { Tags } from "@prisma/client";
+import type { Tags } from "@prisma/client";
 
 type MultipleSelectPropType = {
   tags: Tags[];
