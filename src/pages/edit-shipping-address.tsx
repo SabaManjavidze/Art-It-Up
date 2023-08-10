@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
 import { api } from "../utils/api";
@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import type { z } from "zod";
+import { z } from "zod";
 import {
 	Form,
 	FormControl,
@@ -22,30 +22,52 @@ import {
 } from "@/components/ui/form";
 import { Capitalize } from "@/utils/constants";
 import { Combobox } from "@/components/ui/combobox";
+import type { UserAddress } from "@prisma/client";
+import { useSearchParams } from "next/navigation"
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 const formSchema = addressToSchema.omit({ country: true });
 type FormType = z.infer<typeof formSchema>;
 
-export default function ShippingAddress() {
+export default function EditShippingAddress() {
 	const trpc = api.useContext();
 	const [selected, setSelected] = useState("");
-	const { mutateAsync: addShippingAddress, isLoading } =
-		api.user.addShippingAddress.useMutation({
-			onSuccess() {
-				trpc.user.getUserAddress.invalidate();
-			},
-		});
+	const [address, setAddress] = useState<UserAddress | null>(null);
 	const router = useRouter()
+	const { mutateAsync: editShippingAddress, isLoading } =
+		api.address.editAddress.useMutation();
 	const form = useForm<FormType>({
 		resolver: zodResolver(formSchema),
 	});
 
+	useEffect(() => {
+		async function getAddressFromParams() {
+			let defAddress: UserAddress | undefined
+			window.location.href.split("?")?.slice(-1)[0]?.split("&").forEach(item => {
+				const [key, value] = item.split("=")
+				if (!value || !key) return
+				defAddress = { ...defAddress, [key]: value.replaceAll("%20", " ") } as any
+			})
+			if (!defAddress) return
+			try {
+				await addressToSchema.and(z.object({ id: z.string() })).parseAsync(defAddress)
+				setAddress(defAddress)
+				setSelected(Object.entries(countriesObj).find(([key, value]) => value == defAddress?.country)?.[0] || "")
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		getAddressFromParams()
+	}, [])
+
 	const onSubmit = async (data: FormType) => {
-		if (!data) return;
-		await addShippingAddress({
+		if (!data || !address) return;
+
+		await editShippingAddress({
 			...data,
 			country: countriesObj[Capitalize(selected) as keyof typeof countriesObj],
+			addressId: address.id
 		});
 		router.push("/user/profile")
 	};
@@ -59,20 +81,22 @@ export default function ShippingAddress() {
 					className="flex flex-col items-center justify-center pb-20"
 				>
 					<div className="w-72">
-						<div className="flex flex-col w-full justify-center">
+						<div className="flex w-full flex-col justify-center">
 							<FormLabel className="pb-4">Country</FormLabel>
-							<Combobox
-								setValue={setSelected}
-								searchResults={countriesArr.map(({ name }) => {
-									return { label: name, value: name };
-								})}
-								value={selected}
-								defaultValue={""}
-								placeholder="Search country..."
-							/>
+							{address &&
+								<Combobox
+									setValue={setSelected}
+									searchResults={countriesArr.map(({ name }) => {
+										return { label: name, value: name };
+									})}
+									required
+									value={selected}
+									placeholder="Search country..."
+								/>
+							}
 						</div>
 
-						{AddressObjectKeys.map((key) => {
+						{address && AddressObjectKeys.map((key) => {
 							if (key !== "country")
 								return (
 									<div
@@ -82,6 +106,7 @@ export default function ShippingAddress() {
 										<FormField
 											control={form.control}
 											name={key}
+											defaultValue={address?.[key] ?? ""}
 											render={({ field }) => (
 												<FormItem className="w-full">
 													<div className="flex items-center justify-between">
@@ -104,9 +129,14 @@ export default function ShippingAddress() {
 								);
 						})}
 					</div>
-					<div className="flex justify-center">
+					<div className="flex w-72 justify-between">
+						<Link href="/user/profile">
+							<Button variant={"outline"} className="border-2 mt-10 w-24">
+								Cancel
+							</Button>
+						</Link>
 						<Button type="submit" className="mt-10 w-24">
-							{isLoading ? <Loader2 size={15} /> : "Submit"}
+							{isLoading ? <Loader2 size={15} /> : "Update"}
 						</Button>
 					</div>
 				</form>

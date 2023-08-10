@@ -91,7 +91,7 @@ const Navbar = () => {
 								<ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
 									<li className="row-span-3">
 										<NavigationMenuLink asChild>
-											<a
+											<Link
 												className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
 												href="/"
 											>
@@ -103,7 +103,7 @@ const Navbar = () => {
 													Beautifully designed components built with Radix UI
 													and Tailwind CSS.
 												</p>
-											</a>
+											</Link>
 										</NavigationMenuLink>
 									</li>
 									<ListItem href="/docs" title="Introduction">
@@ -168,13 +168,13 @@ const Navbar = () => {
 					{showSearchBar
 						? null
 						: buttons.map((button) => (
-							<a
+							<Link
 								href={button.href}
 								className="hover:text-skin-secondary duration-150 hover:scale-110"
 								key={button.href}
 							>
 								{button.icon}
-							</a>
+							</Link>
 						))}
 					<div className="flex flex-col items-center">
 						{status === "loading" ? (
@@ -185,12 +185,12 @@ const Navbar = () => {
 								username={session.user?.name as string}
 							/>
 						) : (
-							<a
+							<Link
 								href={"/api/auth/signin"}
 								className="hover:text-skin-secondary "
 							>
 								<FiLogIn size={20} />
-							</a>
+							</Link>
 						)}
 					</div>
 				</div>

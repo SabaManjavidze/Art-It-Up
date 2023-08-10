@@ -74,7 +74,7 @@ export default function SummarySection({
 						Total
 					</p>
 					<p className="text-right text-2xl font-bold leading-normal text-gray-800 dark:text-primary-foreground">
-						{shippingLoading ? <Loader2 className="text-primary-foreground" /> : "$" + ((shippingCost?.standard as number) + totalPrice) / 100}
+						{shippingLoading ? <Loader2 className="text-primary-foreground" /> : `\$${((shippingCost?.standard as number) + totalPrice) / 100}`}
 					</p>
 				</div>
 				{friendEntity && (

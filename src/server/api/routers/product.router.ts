@@ -59,7 +59,7 @@ export const productRouter = createTRPCRouter({
 				(item) => item.type == "size"
 			)?.values;
 			if (!sizes) return [];
-			let factor: number = 0
+			let factor = 0
 			const HomeNLivingTag = "Home & Living";
 			const isClothingType =
 				product.tags.find((item) => item == HomeNLivingTag) === undefined;
