@@ -10,6 +10,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
+import {
+  BsFillArrowLeftCircleFill,
+  BsFillArrowRightCircleFill,
+} from "react-icons/bs";
 
 const categories = [
   { title: "Hoodies", href: "/search-results/_?tags=hoodies" },
@@ -46,7 +50,7 @@ const Home: NextPage = () => {
                 showArrows={true}
                 selectedItem={selectedItem}
                 swipeable
-                className="w-full px-5"
+                className="w-[90%] px-5"
                 showThumbs={false}
                 renderArrowNext={(clickHandler, hasNext, label) => (
                   <button
@@ -54,9 +58,12 @@ const Home: NextPage = () => {
                     onClick={clickHandler}
                     className={`${
                       hasNext ? "block" : "hidden"
-                    } absolute top-0 bottom-0 right-0 z-10 mt-0 bg-primary/40 p-1`}
+                    } absolute top-1/2 bottom-0 right-0 z-10 mt-0 -translate-y-1/2 p-1`}
                   >
-                    <AiFillCaretRight size={22} className="text-background" />
+                    <BsFillArrowRightCircleFill
+                      size={30}
+                      className="text-primary duration-150 hover:scale-110"
+                    />
                   </button>
                 )}
                 renderArrowPrev={(clickHandler, hasPrev, label) => (
@@ -65,9 +72,12 @@ const Home: NextPage = () => {
                     onClick={clickHandler}
                     className={`${
                       hasPrev ? "block" : "hidden"
-                    } absolute top-0 bottom-0 left-0 z-10 mt-0 bg-primary/40 p-1`}
+                    } absolute top-1/2 bottom-0 left-0 z-10 mt-0 -translate-y-1/2 p-1`}
                   >
-                    <AiFillCaretLeft size={22} className="text-background" />
+                    <BsFillArrowLeftCircleFill
+                      size={30}
+                      className="text-primary duration-150 hover:scale-110"
+                    />
                   </button>
                 )}
                 renderIndicator={(e, isSelected, index) => {
@@ -94,13 +104,25 @@ const Home: NextPage = () => {
               >
                 {data.data.map((product) => (
                   <Link href={`/product/${product.id}`} key={product.id}>
-                    <Image
-                      src={product.images[0]?.src as string}
-                      alt={product.title}
-                      className="w-full object-cover"
-                      width={1920}
-                      height={1080}
-                    />
+                    <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
+                      <div className="aspect-h-4 aspect-w-5 hidden overflow-hidden rounded-lg lg:block">
+                        <Image
+                          src={product.images?.[0]?.src || ""}
+                          alt={product.images?.[0]?.src || ""}
+                          className="h-full w-full object-contain object-center"
+                          fill
+                        />
+                      </div>
+
+                      <div className="aspect-h-5 aspect-w-4 sm:overflow-hidden sm:rounded-lg lg:aspect-h-4 lg:aspect-w-3">
+                        <Image
+                          src={product.images?.[1]?.src || ""}
+                          alt={product.images?.[1]?.src || ""}
+                          className="h-full w-full object-contain object-center"
+                          fill
+                        />
+                      </div>
+                    </div>
                   </Link>
                 ))}
               </Carousel>

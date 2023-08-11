@@ -34,8 +34,8 @@ const UserProfileButton = ({
           <div className="flex items-center justify-center">
             <Image
               src={userPicture}
-              width={40}
-              height={40}
+              width={30}
+              height={30}
               className="rounded-full"
               alt="user profile image"
             />
