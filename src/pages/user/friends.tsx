@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import Layout from "../../components/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 const RowNames = ["Image", "Name", "Status"];
 const TabList = ["Received Requests", "Sent Requests", "Friends"] as const;
@@ -56,21 +57,14 @@ function UserFriendsPage() {
           onValueChange={setActiveTab}
           defaultValue="Received Requests"
         >
-          <TabsList className="flex w-full justify-center rounded-lg bg-secondary p-2">
+          <TabsList className="flex w-full justify-center rounded-lg p-2">
             {TabList.map((tab, i) => (
-              <TabsTrigger
-                key={nanoid()}
-                value={tab}
-                className={`mr-2 flex-1 rounded-md bg-secondary px-3 py-4 text-sm font-medium text-secondary-foreground hover:bg-background focus:outline-none ${
-                  tab == activeTab ? "ring-2 ring-indigo-400" : null
-                } 
-	    duration-150`}
-              >
+              <TabsTrigger key={nanoid()} value={tab} className="text-md">
                 {tab}
               </TabsTrigger>
             ))}
           </TabsList>
-          <TabsContent value="Recieved Requests" className="w-full pb-4">
+          <TabsContent value="Received Requests" className="w-full pb-4">
             <div className="flex items-center justify-around pb-12">
               {RowNames.map((name) => (
                 <div
@@ -83,7 +77,7 @@ function UserFriendsPage() {
             </div>
             <div className="px-3">
               {receivedRequestsLoading ? (
-                <Loader2 size={20} color="white" />
+                <Loader2 size={20} />
               ) : receivedRequests && receivedRequests.length > 0 ? (
                 receivedRequests.map((receivedReq) => (
                   <div
@@ -105,40 +99,39 @@ function UserFriendsPage() {
                       </h3>
                     </div>
                     <div className="flex flex-1 justify-center">
-                      <button
-                        className="rounded-md border-2 border-white p-2 duration-150 hover:bg-white/20 active:bg-white/40 disabled:border-gray-400  
-	    disabled:text-gray-400 disabled:hover:bg-transparent"
-                        onClick={() =>
-                          handleAcceptRequest(
-                            receivedReq.id,
-                            receivedReq.user.name,
-                            "ACCEPTED"
-                          )
-                        }
-                      >
-                        {reqLoading == "accept" ? (
-                          <Loader2 color="white" size={20} />
-                        ) : (
-                          "Accept"
-                        )}
-                      </button>
-                      <button
-                        className="rounded-md border-2 border-white p-2 duration-150 hover:bg-white/20 active:bg-white/40 disabled:border-gray-400  
-	    disabled:text-gray-400 disabled:hover:bg-transparent"
-                        onClick={() =>
-                          handleAcceptRequest(
-                            receivedReq.id,
-                            receivedReq.user.name,
-                            "REJECTED"
-                          )
-                        }
-                      >
-                        {reqLoading == "decline" ? (
-                          <Loader2 color="white" size={20} />
-                        ) : (
-                          "Decline"
-                        )}
-                      </button>
+                      <div className="flex w-2/5 justify-between">
+                        <Button
+                          onClick={() =>
+                            handleAcceptRequest(
+                              receivedReq.id,
+                              receivedReq.user.name,
+                              "ACCEPTED"
+                            )
+                          }
+                        >
+                          {reqLoading == "accept" ? (
+                            <Loader2 size={20} />
+                          ) : (
+                            "Accept"
+                          )}
+                        </Button>
+                        <Button
+                          variant={"destructive"}
+                          onClick={() =>
+                            handleAcceptRequest(
+                              receivedReq.id,
+                              receivedReq.user.name,
+                              "REJECTED"
+                            )
+                          }
+                        >
+                          {reqLoading == "decline" ? (
+                            <Loader2 size={20} />
+                          ) : (
+                            "Decline"
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))

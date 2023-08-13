@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
+import { signOut } from "next-auth/react";
 
 type UserProfileButtonPropTypes = {
   userPicture: string;
@@ -59,6 +60,14 @@ const UserProfileButton = ({
               </Link>
             </DropdownMenuItem>
           ))}
+          <DropdownMenuItem className="hover:!bg-primary/[.08]">
+            <button
+              onClick={() => signOut()}
+              className="m-0 flex w-full justify-start p-0"
+            >
+              Logout
+            </button>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

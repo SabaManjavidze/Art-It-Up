@@ -88,12 +88,11 @@ export default function EntitiesPage({ entities }: EntitiesPagePropType) {
         ) : (
           <Button
             onClick={handleAddEntityClick}
-            className="duration-300 hover:scale-[0.98]"
+            variant={"ghost"}
+            className="h-12 border border-primary/50 duration-300 hover:scale-[0.98]"
           >
-            <AiOutlinePlusSquare size={30} color="white" />
-            <h2 className="ml-3 text-lg text-secondary-foreground">
-              Add New Entity
-            </h2>
+            <AiOutlinePlusSquare size={30} />
+            <h2 className="ml-3 text-lg ">Add New Entity</h2>
           </Button>
         )}
         {!showGalleryUpload && entities && (
