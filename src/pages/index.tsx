@@ -107,8 +107,8 @@ const Home: NextPage = () => {
                     <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
                       <div className="aspect-h-4 aspect-w-5 hidden overflow-hidden rounded-lg lg:block">
                         <Image
-                          src={product.images?.[0]?.src || ""}
-                          alt={product.images?.[0]?.src || ""}
+                          src={product.images?.[1]?.src || ""}
+                          alt={product.images?.[1]?.src || ""}
                           className="h-full w-full object-contain object-center"
                           fill
                         />
@@ -116,8 +116,8 @@ const Home: NextPage = () => {
 
                       <div className="aspect-h-5 aspect-w-4 sm:overflow-hidden sm:rounded-lg lg:aspect-h-4 lg:aspect-w-3">
                         <Image
-                          src={product.images?.[1]?.src || ""}
-                          alt={product.images?.[1]?.src || ""}
+                          src={product.images?.[0]?.src || ""}
+                          alt={product.images?.[0]?.src || ""}
                           className="h-full w-full object-contain object-center"
                           fill
                         />

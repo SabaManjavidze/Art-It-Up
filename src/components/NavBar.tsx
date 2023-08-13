@@ -85,7 +85,7 @@ const Navbar = () => {
     >
       <div className="flex w-full justify-around">
         {/* Logo */}
-        <div className="block w-[25%] md:hidden">
+        <div className="flex w-[25%] items-center justify-start md:hidden">
           <button
             onClick={() => setNavIsOpen(!navIsOpen)}
             className="my-0 flex items-center p-0"
@@ -93,7 +93,7 @@ const Navbar = () => {
             <MenuIcon />
           </button>
         </div>
-        <div className="flex w-3/5 items-center text-center md:w-[15%]">
+        <div className="flex w-1/2 items-center justify-center text-center md:w-[15%]">
           <Link href="/" className="text-lg font-medium">
             Art It Up
           </Link>
@@ -170,9 +170,6 @@ const Navbar = () => {
           <div
             ref={divRef}
             className={`flex w-full items-center justify-around`}
-            // className={`${
-            //   session?.user ? "mr-12" : ""
-            // } flex w-full items-center justify-around`}
           >
             {showSearchBar ? <SearchBar /> : null}
 
@@ -277,7 +274,7 @@ const Navbar = () => {
             <ul
               className={`${
                 btnIsOpen.components ? "grid" : "hidden"
-              } w-[500px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] `}
+              } w-[400px] gap-3 p-4 sm:w-[500px] md:grid-cols-2 lg:w-[600px] `}
             >
               {components.map((component) => (
                 <ListItem
