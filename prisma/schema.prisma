@@ -1,6 +1,5 @@
 generator client {
     provider = "prisma-client-js"
-    previewFeatures = ["clientExtensions"]
 }
 
 datasource db {
@@ -49,8 +48,23 @@ model Product {
     tags ProductTags[]
     orders LineItems[]
     cartHolder UserCartProducts[]
+    wishHolder UserWishListProducts[]
 }
 
+model UserWishListProducts {
+  product   Product  @relation(fields:[productId],references: [id])
+  productId String 
+  user   User @relation(fields: [userId], references: [id])
+  userId String 
+  assignedAt DateTime @default(now())
+  price Int
+  size String
+  variantId Int
+
+  @@id([userId, productId])
+  @@index([productId])
+  @@index([userId])
+}
 model UserCartProducts {
   product   Product  @relation(fields:[productId],references: [id])
   productId String 
@@ -178,6 +192,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     cart          UserCartProducts[]   
+    wishList      UserWishListProducts[]   
     reviews       Review[]    
     orders       Order[]    
     address       UserAddress[]

@@ -1,41 +1,41 @@
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { useState } from "react";
+import WishProductCard from "@/components/WishListPageComponents/WishProductCard";
+import { api } from "@/utils/api";
+import React, { useEffect, useState } from "react";
 
-export default function Wishlist() {
-  const [wishlist, setWishlist] = useState([
-    { id: 1, name: "Product 1", price: "$10" },
-    { id: 2, name: "Product 2", price: "$20" },
-    { id: 3, name: "Product 3", price: "$30" },
-  ]);
-  const [divRef] = useAutoAnimate<HTMLDivElement>();
+export default function index() {
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = api.wishList.getWishList.useQuery();
 
-  const handleRemove = (product_id: string) => {
-    setWishlist((prevWishlist) =>
-      prevWishlist.filter((item) => item.id.toString() !== product_id)
-    );
-  };
+  if (isLoading) return <h1>loading...</h1>;
+  if (error) return <h1>error</h1>;
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex min-h-screen flex-col items-center justify-center py-8">
-        <h1 className="mb-4 text-2xl font-bold">My Wishlist</h1>
-        <div className="w-full" ref={divRef}>
-          {wishlist.map((product) => (
-            <div
-              key={product.id}
-              className="mb-4 flex items-center justify-between rounded-lg bg-white p-4 shadow-md"
-            >
-              <div>
-                <h2 className="text-lg font-medium">{product.name}</h2>
-                <p className="text-gray-500">{product.price}</p>
-              </div>
-              <button
-                onClick={() => handleRemove(product.id.toString())}
-                className="rounded-md bg-red-500 px-4 py-2 text-primary-foreground"
-              >
-                Remove
-              </button>
-            </div>
+    <div className="container mx-auto flex items-center justify-center px-4 py-12 md:px-6 2xl:px-0">
+      <div className="jusitfy-start flex flex-col items-start">
+        <div className="mt-3">
+          <h1 className="text-3xl font-semibold leading-8 tracking-tight text-gray-800 lg:text-4xl lg:leading-9">
+            WishList
+          </h1>
+        </div>
+        <div className="mt-4">
+          <p className="text-2xl leading-6 tracking-tight text-gray-600">
+            {products.length} Items
+          </p>
+        </div>
+        <div className=" mt-10 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-y-0">
+          {products.map(({ product, price, size }) => (
+            <WishProductCard
+              description={product.description}
+              href={`/product/${product.id}`}
+              title={product.title}
+              price={price}
+              productId={product.id}
+              size={size}
+              src={product.picture}
+            />
           ))}
         </div>
       </div>

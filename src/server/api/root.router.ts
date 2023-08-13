@@ -8,6 +8,7 @@ import { cartRouter } from "./routers/cart.router";
 import { friendsRouter } from "./routers/friends.router";
 import { prisma } from "../db";
 import { addressRouter } from "./routers/address.router";
+import { wishListRouter } from "./routers/wishList.router";
 
 /**
  * This is the primary router for your server.
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   address: addressRouter,
   order: orderRouter,
   cart: cartRouter,
+  wishList: wishListRouter,
   friends: friendsRouter,
   getTags: publicProcedure.query(async () => {
     return await prisma.tags.findMany();

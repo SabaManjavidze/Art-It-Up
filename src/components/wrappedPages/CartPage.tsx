@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CartProductCard from "../CartProductCard";
+import CartProductCard from "../CartPageComponents/CartProductCard";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 import PresentModal from "../CartPageComponents/PresentModal";
 import SummarySection from "../CartPageComponents/SummarySection";

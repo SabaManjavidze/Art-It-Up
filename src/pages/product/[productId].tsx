@@ -22,11 +22,18 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
         utils.printify.getPrintifyProduct.invalidate();
       },
     });
+  const { mutateAsync: addToWishList, isLoading: addToWishListLoading } =
+    api.wishList.addProductToList.useMutation({
+      onSuccess() {
+        utils.printify.getPrintifyProduct.invalidate();
+      },
+    });
   const descRef = useRef<HTMLParagraphElement>(null);
 
   const [options, setOptions] = useState<OptionType>({
     quantity: 1,
-    size: product?.options[1]?.values[0]?.id as number,
+    size: product?.options.find((item) => item.type == "size")?.values[0]
+      ?.id as number,
     variantId: product?.variants[0]?.id as number,
     cost: product?.variants[0]?.cost as number,
   });
@@ -65,6 +72,30 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
   if (error || !product) {
     return <h1>there was an error {JSON.stringify(error, null, 2)}</h1>;
   }
+  const handleAddToWishList = async () => {
+    try {
+      await addToWishList({
+        productId: product.id,
+        description: product.description,
+        title: product.title,
+        picture: product.images[0]?.src as string,
+        sizeId: options.size,
+        sizeTitle: product.options
+          .find((item) => item.type == "size")
+          ?.values.find((size) => size.id == options.size)?.title as string,
+        variantId: options.variantId,
+        price: options.cost / options.quantity,
+        isInWishList: product.isInWishList,
+      });
+      if (product.isInWishList) {
+        toast.info("Removed Product From Your WishList");
+      } else {
+        toast.success("Product has been added to your WishList");
+      }
+    } catch (error) {
+      toast.error(error as string);
+    }
+  };
   const handleAddToCart = async () => {
     try {
       await addToCart({
@@ -265,23 +296,36 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                     ))}
                 </div>
               </div>
-              <Button
-                type="submit"
-                className={`mt-10 flex w-full items-center justify-center ${
-                  product.isInCart
-                    ? "bg-red-500 hover:bg-red-400 focus:ring-red-300"
-                    : "bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500"
-                } px-8 py-3 text-base font-medium text-secondary-foreground duration-300 focus:outline-none focus:ring-2 `}
-                onClick={handleAddToCart}
-              >
-                {addToCartLoading ? (
-                  <Loader2 size={20} color="white" />
-                ) : product.isInCart ? (
-                  "Remove product from cart"
-                ) : (
-                  "Add to cart"
-                )}
-              </Button>
+              <div className="mt-10 flex flex-col">
+                <Button
+                  type="submit"
+                  variant={"destructive"}
+                  className="text-base"
+                  onClick={handleAddToWishList}
+                >
+                  {addToWishListLoading ? (
+                    <Loader2 size={20} color="white" />
+                  ) : product.isInWishList ? (
+                    "Remove Product From WishList"
+                  ) : (
+                    "Add To WishList"
+                  )}
+                </Button>
+                <Button
+                  type="submit"
+                  variant={"secondary"}
+                  className="mt-5 text-base"
+                  onClick={handleAddToCart}
+                >
+                  {addToCartLoading ? (
+                    <Loader2 size={20} color="white" />
+                  ) : product.isInCart ? (
+                    "Remove Product From Cart"
+                  ) : (
+                    "Add To Cart"
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
 
