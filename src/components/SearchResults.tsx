@@ -5,7 +5,7 @@ import { api } from "../utils/api";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import Modal from "./ui/Modal";
+import Modal from "./ui/modal";
 
 type SearchResultsPropType = {
   users: RouterOutputs["user"]["searchUsers"];

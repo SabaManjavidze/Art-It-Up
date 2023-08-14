@@ -4,7 +4,10 @@ import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
-
+import Link from "next/link";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 type OptionType = {
   quantity: number;
   size: number;
@@ -28,6 +31,8 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
         utils.printify.getPrintifyProduct.invalidate();
       },
     });
+  const session = useSession();
+  const router = useRouter();
   const descRef = useRef<HTMLParagraphElement>(null);
 
   const [options, setOptions] = useState<OptionType>({
@@ -73,6 +78,11 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
     return <h1>there was an error {JSON.stringify(error, null, 2)}</h1>;
   }
   const handleAddToWishList = async () => {
+    if (session.status == "unauthenticated") {
+      toast.error("Unauthenticated. click here to sign in", {
+        onClick: () => router.push(SIGNIN_ROUTE),
+      });
+    }
     try {
       await addToWishList({
         productId: product.id,
@@ -97,6 +107,11 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
     }
   };
   const handleAddToCart = async () => {
+    if (session.status == "unauthenticated") {
+      toast.error("Unauthenticated. click here to sign in", {
+        onClick: () => router.push(SIGNIN_ROUTE),
+      });
+    }
     try {
       await addToCart({
         productId: product.id,
@@ -247,12 +262,6 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                   <h3 className="text-sm font-medium text-primary-foreground">
                     Size
                   </h3>
-                  <Link
-                    href="#"
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Size guide
-                  </Link>
                 </div>
 
                 <Label className="sr-only text-primary-foreground">
@@ -356,11 +365,9 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { getServerAuthSession } from "../../server/auth";
 import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
-import Link from "next/link";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { SIGNIN_ROUTE } from "@/utils/constants";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({

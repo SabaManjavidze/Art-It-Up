@@ -7,13 +7,9 @@ import {
   addressToSchema,
   createOrderItemSchema,
   lineItemsZodType,
-} from "../../../utils/printify/printifyTypes";
+  personalDetailsSchema,
+} from "@/utils/zodTypes";
 
-const userSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  phone: z.number(),
-});
 export const orderRouter = createTRPCRouter({
   getMyOrders: protectedProcedure.query(async ({ ctx: { session } }) => {
     const orders = await prisma.order.findMany({
@@ -61,25 +57,17 @@ export const orderRouter = createTRPCRouter({
 
       if (!user) throw new TRPCError({ code: "BAD_REQUEST" });
 
-      const parseResult = await userSchema.safeParseAsync(user);
-      if (!parseResult.success) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: parseResult.error.message,
-        });
-      }
+      await personalDetailsSchema.parseAsync(user);
 
       const address = user?.address[0];
       if (!address)
         throw new TRPCError({
           code: "FORBIDDEN",
           cause: {
-            message: "user has not added personal details",
-            description:
-              "You can add your personal details your the profile page",
+            message: "user has not added an address to ship to",
+            description: "You can add shipping address from the profile page",
           },
         });
-      console.log("address is selected");
       const { id: orderId } = await prisma.order.create({
         data: {
           addressId: input.addressId,

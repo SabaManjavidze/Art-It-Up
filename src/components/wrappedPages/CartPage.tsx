@@ -31,7 +31,7 @@ export default function CartPage() {
             Cart
           </p>
 
-          <div className="mt-7">
+          <div className="mt-4">
             {products.length < 1 ? (
               <div className="mt-16 flex px-12">
                 <p className="text-lg">No Products In Your Cart</p>

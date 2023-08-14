@@ -5,7 +5,7 @@ import { AiOutlinePlusSquare } from "react-icons/ai";
 import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import { useEntities } from "../../hooks/useEntitiesHook";
-import Modal from "../ui/Modal";
+import Modal from "../ui/modal";
 import ImageInput from "../ImageInput";
 import GallerySection from "../EntitiesPageComponents/GallerySection";
 import { PacmanLoader } from "react-spinners";

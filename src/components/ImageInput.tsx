@@ -21,9 +21,12 @@ const ImageInput: React.FC<Props> = ({
   showButton = true,
 }) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    setImages((prevImages) => [...prevImages, ...acceptedFiles]);
+    if (multiple) {
+      setImages((prevImages) => [...prevImages, ...acceptedFiles]);
+    } else {
+      setImages(acceptedFiles);
+    }
   }, []);
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {

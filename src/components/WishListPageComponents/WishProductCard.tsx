@@ -158,8 +158,12 @@ const WishProductCard = ({
             ${price}
           </p>
         </div>
-        <Button onClick={handleMoveToCart} className="mt-5 w-full">
-          {moveToCartLoading ? <Loader2 size={20} /> : "Add To Cart"}
+        <Button
+          isLoading={moveToCartLoading}
+          onClick={handleMoveToCart}
+          className="mt-5 w-full"
+        >
+          Add To Cart
         </Button>
       </div>
     </div>

@@ -37,7 +37,7 @@ const UserProfileButton = ({
               src={userPicture}
               width={30}
               height={30}
-              className="rounded-full"
+              className="rounded-full border-2 border-primary-foreground/70"
               alt="user profile image"
             />
           </div>

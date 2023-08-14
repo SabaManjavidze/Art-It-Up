@@ -4,7 +4,7 @@ import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { addressToSchema } from "@/utils/printify/printifyTypes";
+import { addressToSchema } from "@/utils/zodTypes";
 
 export const addressRouter = createTRPCRouter({
   removeAddress: protectedProcedure
