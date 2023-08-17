@@ -23,8 +23,22 @@ export const productRouter = createTRPCRouter({
               ? { some: { tag: { name: { in: tags } } } }
               : undefined,
         },
+        include: {
+          wishHolder: {
+            where: {
+              userId: session.user.id,
+            },
+          },
+        },
       });
-      return products;
+      return products.map((product) => {
+        const isInWishList = product.wishHolder.length > 0;
+        const { wishHolder, ...newProduct } = product;
+        return {
+          ...newProduct,
+          isInWishList,
+        };
+      });
     }),
 
   getPrintifyProduct: publicProcedure

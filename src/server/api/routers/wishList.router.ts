@@ -100,14 +100,8 @@ export const wishListRouter = createTRPCRouter({
             await prisma.userWishListProducts.create({
               data: {
                 product: {
-                  connectOrCreate: {
-                    where: { id: productId },
-                    create: {
-                      id: productId,
-                      title,
-                      picture,
-                      description,
-                    },
+                  connect: {
+                    id: productId,
                   },
                 },
                 variantId,

@@ -16,7 +16,6 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Button } from "./ui/button";
-import { BsArrowRight } from "react-icons/bs";
 import { Loader2, MenuIcon } from "lucide-react";
 import { AiOutlineArrowsAlt } from "react-icons/ai";
 import Modal from "./ui/modal";
@@ -137,7 +136,11 @@ const Navbar = () => {
             Art It Up
           </Link>
         </div>
-        <div className="hidden w-1/2 justify-center md:flex">
+        <div
+          className={`hidden w-1/2 justify-center md:${
+            showSearchBar ? "hidden" : "flex"
+          }`}
+        >
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -204,14 +207,19 @@ const Navbar = () => {
           </NavigationMenu>
         </div>
 
+        {showSearchBar ? (
+          <div className="flex w-full justify-center">
+            <SearchBar />
+          </div>
+        ) : null}
         {/* Buttons */}
-        <div className="flex w-[25%] items-center justify-between md:w-[15%] ">
+        <div
+          className={`flex w-[25%] items-center justify-between md:w-[15%] `}
+        >
           <div
             ref={divRef}
             className={`flex w-full items-center justify-around`}
           >
-            {showSearchBar ? <SearchBar /> : null}
-
             <button
               className="hover:text-skin-secondary duration-150 hover:scale-110"
               onClick={() => setShowSearchBar(!showSearchBar)}
@@ -233,7 +241,11 @@ const Navbar = () => {
                     {button.icon}
                   </Link>
                 ))}
-            <div className="flex flex-col items-center">
+            <div
+              className={`${
+                showSearchBar ? "hidden" : "flex"
+              } flex-col items-center`}
+            >
               {status === "loading" ? (
                 <Loader2 className="text-primary-foreground" />
               ) : session?.user ? (

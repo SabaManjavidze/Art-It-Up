@@ -17,7 +17,7 @@ import { wishListRouter } from "./routers/wishList.router";
  */
 export const appRouter = createTRPCRouter({
   services: servicesRouter,
-  printify: productRouter,
+  product: productRouter,
   user: userRouter,
   entity: entityRouter,
   address: addressRouter,

@@ -49,7 +49,7 @@ const CartProductCard = ({
     mutateAsync: getSizes,
     isLoading: sizesLoading,
     data: sizes,
-  } = api.printify.getPrintifyProductSizes.useMutation();
+  } = api.product.getPrintifyProductSizes.useMutation();
 
   const [selectedSize, setSize] = useState<SearchType>({
     id: size.id.toString(),

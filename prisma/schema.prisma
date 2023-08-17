@@ -43,6 +43,9 @@ model Product {
     id        String   @id @default(cuid())
     title     String 
     description String @db.Text()
+    defautlSize String @default("") 
+    defaultPrice Int @default(0)
+    defaultVariantId Int @default(0)
     picture String
     created_at DateTime @default(now())
     reviews Review[]

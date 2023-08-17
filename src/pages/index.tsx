@@ -23,7 +23,7 @@ const categories = [
 const Home: NextPage = () => {
   const [selectedItem, setSelectedItem] = useState(0);
   const router = useRouter();
-  const { data, isLoading } = api.printify.getPrintifyShopProducts.useQuery();
+  const { data, isLoading } = api.product.getPrintifyShopProducts.useQuery();
 
   if (isLoading)
     return (

@@ -1,8 +1,12 @@
 import { prisma } from "../src/server/db";
-import { PrintifyGetProductResponse } from "../src/utils/printify/printifyTypes";
+import {
+  PrintifyGetProductResponse,
+  Variant,
+} from "../src/utils/printify/printifyTypes";
 import lodash from "lodash";
 import crypto from "crypto";
 import { printify } from "../src/server/PrintifyClient";
+import { Product } from "@prisma/client";
 
 const seedProducts = async () => {
   const printifyProducts = (await printify.getProducts()) as unknown as {
@@ -28,7 +32,7 @@ const seedProducts = async () => {
     });
   }
 
-  const formatedProducts = prodsToAdd.map((product) => {
+  const formatedProducts: Product[] = prodsToAdd.map((product) => {
     product.tags.forEach((tag) => {
       const id = crypto.randomUUID();
       if (!tags[tag]) {
@@ -36,9 +40,65 @@ const seedProducts = async () => {
       }
       productTags.push({ tagId: tags[tag] as string, productId: product.id });
     });
+    let variants: Variant[] = [];
+
+    const HomeNLivingTag = "Home & Living";
+    const BlanketTag = "Blankets";
+    let defColor = 0;
+    let defDepth = 0;
+    const isClothingType =
+      product.tags.find((item) => item == HomeNLivingTag) === undefined;
+    const defVariant = product.variants?.[0];
+
+    let variant = defVariant;
+
+    if (product && (defVariant?.options?.length as number) > 1) {
+      if (isClothingType) {
+        defColor = product?.options?.find((item) => item?.type == "color")
+          ?.values[0]?.id as number;
+        variants = product.variants.filter(
+          (variant) =>
+            variant.options.find((option) => option == defColor) &&
+            variant.is_available
+        );
+      } else if (product.tags.find((item) => item == BlanketTag)) {
+        variants = product.variants;
+      } else {
+        defDepth = product?.options?.find((item) => item?.type == "depth")
+          ?.values[0]?.id as number;
+        variants = product.variants.filter(
+          (variant) =>
+            variant.options.find((option) => option == defDepth) &&
+            variant.is_available
+        );
+      }
+
+      variant = variants[0];
+    }
+    const sizes = product.options.find((item) => item.type == "size")?.values;
+
+    const defSize = sizes?.[0];
+
+    if (!variant) {
+      console.log("couldn't find the varaint");
+      console.log({
+        varaints: variants.map((item) => item.options),
+        defaultVariants: product.variants.map((item) => item.options),
+        defSize: defSize?.id as number,
+        defColor: defColor as number,
+        defDepth: defDepth as number,
+        title: product.title,
+        tags: product.tags,
+        isClothingType,
+      });
+      throw new Error("haha");
+    }
     return {
       id: product.id,
       title: product.title,
+      defaultPrice: variant.price,
+      defautlSize: `${defSize?.id}:${defSize?.title}`,
+      defaultVariantId: variant.id,
       description: product.description,
       picture: product.images[0]?.src.toString() as string,
       created_at: new Date(product.created_at),

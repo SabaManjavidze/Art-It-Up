@@ -15,20 +15,20 @@ type OptionType = {
   cost: number;
 };
 const ProductPageContainer = ({ productId }: { productId: string }) => {
-  const { data: product, error } = api.printify.getPrintifyProduct.useQuery({
+  const { data: product, error } = api.product.getPrintifyProduct.useQuery({
     id: productId,
   });
   const utils = api.useContext();
   const { mutateAsync: addToCart, isLoading: addToCartLoading } =
     api.cart.addProductToCart.useMutation({
       onSuccess() {
-        utils.printify.getPrintifyProduct.invalidate();
+        utils.product.getPrintifyProduct.invalidate();
       },
     });
   const { mutateAsync: addToWishList, isLoading: addToWishListLoading } =
     api.wishList.addProductToList.useMutation({
       onSuccess() {
-        utils.printify.getPrintifyProduct.invalidate();
+        utils.product.getPrintifyProduct.invalidate();
       },
     });
   const session = useSession();
@@ -72,7 +72,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
     if (descRef?.current) {
       descRef.current.innerHTML = product?.description || "";
     }
-  }, [descRef]);
+  }, [descRef, product?.description]);
 
   if (error || !product) {
     return <h1>there was an error {JSON.stringify(error, null, 2)}</h1>;
@@ -381,7 +381,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   const productId = context?.params?.productId as string;
-  await ssg.printify.getPrintifyProduct.prefetch({ id: productId });
+  await ssg.product.getPrintifyProduct.prefetch({ id: productId });
   return {
     props: {
       trpcState: ssg.dehydrate(),

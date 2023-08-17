@@ -43,13 +43,13 @@ const SearchBar = () => {
       }
       router.push(
         `/search-results/${searchTerm}?tags=${
-          selectedTags.length > 0 ? names.join(", ") : null
+          selectedTags.length > 0 ? names.join(", ") : ""
         }`
       );
     }
   };
   return (
-    <div className="relative flex h-10">
+    <div className="relative flex h-10 w-4/5">
       <SearchTypeDropDown
         selected={searchType}
         handleSelectItem={setSearchType}
@@ -57,19 +57,22 @@ const SearchBar = () => {
           { id: "1", title: "Products" },
           { id: "2", title: "Users" },
         ]}
-        className="rounded-r-none"
+        className="rounded-none"
       />
-      <form className="flex" onSubmit={(e) => handleSearch(e)}>
+      <form className="flex w-full" onSubmit={(e) => handleSearch(e)}>
         <Input
           type="text"
           placeholder="Search..."
-          className="rounded-sm border-none duration-150 focus-visible:ring-inset
+          className="w-full rounded-none border border-x-0 duration-150 focus-visible:ring-inset
            focus-visible:ring-opacity-100 focus-visible:ring-offset-0"
           value={searchTerm}
           required
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Button isLoading={usersLoading} className="text-secondary-foreground">
+        <Button
+          isLoading={usersLoading}
+          className="rounded-none text-secondary-foreground"
+        >
           Search
         </Button>
         {searchType.title == "Products" && tags ? (
@@ -77,6 +80,7 @@ const SearchBar = () => {
             tags={tags}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
+            className="rounded-none"
           />
         ) : null}
       </form>
