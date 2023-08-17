@@ -14,13 +14,27 @@ export const userRouter = createTRPCRouter({
         firstName: true,
         lastName: true,
         phone: true,
+        friendUserFriends: {
+          where: { status: "ACCEPTED" },
+          select: { friendId: true },
+        },
+        userFriends: {
+          where: { status: "ACCEPTED" },
+          select: { friendId: true },
+        },
       },
     });
     if (!details)
       throw new TRPCError({
         code: "BAD_REQUEST",
       });
-    return details;
+    return {
+      firstName: details.firstName,
+      lastName: details.lastName,
+      phone: details.phone,
+      friendCount:
+        details.friendUserFriends.length + details.userFriends.length,
+    };
   }),
   addPersonalDetails: protectedProcedure
     .input(

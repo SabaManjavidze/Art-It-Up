@@ -24,9 +24,7 @@ const UserProfileButton = ({
   const profileOptions = [
     { title: "Profile", path: "/user/profile" },
     { title: "Gallery", path: "/user/entities" },
-    { title: "Friends", path: "/user/friends" },
     { title: "My Orders", path: "/user/orders" },
-    { title: "Settings", path: "/user/settings" },
   ];
   return (
     <DropdownMenu modal={false}>

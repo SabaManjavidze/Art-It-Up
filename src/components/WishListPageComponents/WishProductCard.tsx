@@ -5,6 +5,7 @@ import { api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
 import { IoCloseCircle } from "react-icons/io5";
 import { Button } from "../ui/button";
+import { limitTxt } from "@/utils/utils";
 
 interface WishProductCardPropType {
   title: string;
@@ -96,9 +97,7 @@ const WishProductCard = ({
       <div className="mt-6 flex items-center justify-between">
         <div className="flex items-center justify-center">
           <p className="pr-4 text-2xl font-semibold leading-6 tracking-tight text-gray-800">
-            {title.length > MIN_TITLE_LENGTH
-              ? `${title.slice(0, MIN_TITLE_LENGTH)}...`
-              : title}
+            {limitTxt(title, MIN_TITLE_LENGTH)}
           </p>
         </div>
         <div className="flex items-center justify-center">

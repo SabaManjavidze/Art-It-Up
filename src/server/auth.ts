@@ -45,6 +45,7 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID?.toString() as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET?.toString() as string,
       allowDangerousEmailAccountLinking: true,
+
       profile(prof: GoogleProfile, tokens) {
         return {
           firstName: prof.given_name,

@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Capitalize } from "@/utils/constants";
+import { Capitalize } from "@/utils/utils";
 import { Combobox } from "@/components/ui/combobox";
 import { useRouter } from "next/router";
 

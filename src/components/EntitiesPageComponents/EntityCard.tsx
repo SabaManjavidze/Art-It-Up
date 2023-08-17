@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { BLANK_PROFILE_URL } from "../../pages/_app";
-import { useEntities } from "../../hooks/useEntitiesHook";
 import { Loader2 } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { api } from "../../utils/api";

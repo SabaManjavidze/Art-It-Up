@@ -42,7 +42,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = cva(
-  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-accent-foreground focus:bg-primary focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-primary/50 "
+  "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 hover:text-accent-foreground focus:bg-primary/[15%] focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 "
 );
 
 const NavigationMenuTrigger = React.forwardRef<
@@ -126,7 +126,7 @@ const NavListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-primary/10 hover:text-accent-foreground focus:bg-primary focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-primary/10 hover:text-accent-foreground focus:bg-primary/10 focus:text-accent-foreground",
             className
           )}
           {...props}
@@ -152,7 +152,7 @@ const ListItem = React.forwardRef<
         ref={ref}
         href={href ?? "#"}
         className={cn(
-          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-primary/10 hover:text-accent-foreground focus:bg-primary focus:text-accent-foreground",
+          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-primary/10 hover:text-accent-foreground focus:bg-primary/10 focus:text-accent-foreground",
           className
         )}
         {...props}

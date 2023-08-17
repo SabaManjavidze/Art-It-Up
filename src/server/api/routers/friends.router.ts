@@ -6,6 +6,23 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
 export const friendsRouter = createTRPCRouter({
+  removeFriend: protectedProcedure
+    .input(
+      z.object({
+        friendId: z.string().cuid(),
+        userId: z.string().cuid(),
+      })
+    )
+    .mutation(async ({ input: { friendId, userId }, ctx: { session } }) => {
+      await prisma.friends.delete({
+        where: {
+          userId_friendId: {
+            friendId,
+            userId,
+          },
+        },
+      });
+    }),
   acceptFriendRequest: protectedProcedure
     .input(
       z.object({

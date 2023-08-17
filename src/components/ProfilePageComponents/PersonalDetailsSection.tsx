@@ -21,7 +21,11 @@ const ZodPDForm = z.object({
   lastName: z.string().min(4),
 });
 type ZodPDFormType = z.infer<typeof ZodPDForm>;
-const PersonalDetailsKeys = ["phone", "firstName", "lastName"] as const;
+const PersonalDetailsKeys = [
+  { key: "phone", title: "Phone Number" },
+  { key: "firstName", title: "First Name" },
+  { key: "lastName", title: "Last Name" },
+] as const;
 export default function PersonalDetailsSection() {
   const { mutateAsync: AddPersonalDetails } =
     api.user.addPersonalDetails.useMutation();
@@ -40,16 +44,16 @@ export default function PersonalDetailsSection() {
   };
 
   return (
-    <section className="min-h-screen bg-background text-primary-foreground">
+    <div className="bg-background text-primary-foreground">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col items-center justify-center pb-20"
+          className="flex flex-col items-center justify-center"
         >
-          <div className="w-72">
+          <div className="w-full">
             {PDLoading
               ? null
-              : PersonalDetailsKeys.map((key) => {
+              : PersonalDetailsKeys.map(({ key, title }) => {
                   return (
                     <FormField
                       key={key}
@@ -58,11 +62,11 @@ export default function PersonalDetailsSection() {
                       defaultValue={personalDetails?.[key]?.toString() || ""}
                       render={({ field }) => (
                         <FormItem className="pt-4">
-                          <FormLabel>{key}</FormLabel>
+                          <FormLabel>{title}</FormLabel>
                           <FormControl>
                             <Input
                               className="w-full rounded-sm py-2 text-lg text-primary-foreground"
-                              placeholder={key}
+                              placeholder={title}
                               type={key == "phone" ? "number" : "text"}
                               {...field}
                             />
@@ -74,7 +78,7 @@ export default function PersonalDetailsSection() {
                   );
                 })}
           </div>
-          <div className="mt-3 flex justify-center">
+          <div className="absolute right-5 bottom-0 flex justify-center">
             <Button
               variant={"default"}
               className="text-secondary-foreground"
@@ -86,6 +90,6 @@ export default function PersonalDetailsSection() {
           </div>
         </form>
       </Form>
-    </section>
+    </div>
   );
 }
