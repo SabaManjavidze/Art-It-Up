@@ -29,7 +29,7 @@ export default function SummarySection({
     checkIfReady,
     shippingLoading,
     handleUpdateShippingCost,
-    quantityChanged,
+    valuesChanged,
   } = useCheckout();
   const [showButtons, setShowButtons] = useState(false);
   const {
@@ -53,29 +53,27 @@ export default function SummarySection({
   };
 
   return (
-    <section className="flex flex-col justify-between px-4 py-6 md:px-7 md:py-10 lg:px-8 lg:py-20">
+    <section className="flex flex-col justify-between bg-primary/5 px-4 py-6 md:px-7 md:py-10 lg:px-8 lg:py-20">
       <div>
-        <p className="text-3xl font-black leading-9 text-gray-800 dark:text-primary-foreground lg:text-4xl">
+        <p className="text-3xl font-black leading-9 text-gray-800 lg:text-4xl">
           Summary
         </p>
         <div className="flex items-center justify-between pt-16">
-          <p className="text-base leading-none text-gray-800 dark:text-primary-foreground">
-            Subtotal
-          </p>
-          <p className="text-base leading-none text-gray-800 dark:text-primary-foreground">
+          <p className="text-base leading-none text-gray-800 ">Subtotal</p>
+          <p className="text-base leading-none text-gray-800 ">
             ${totalPrice / 100}
           </p>
         </div>
         <div className="flex items-center justify-between pt-5">
-          <p className="flex-1 text-base leading-none text-gray-800 dark:text-primary-foreground">
+          <p className="flex-1 text-base leading-none text-gray-800 ">
             Shipping
           </p>
-          {quantityChanged ? (
+          {valuesChanged ? (
             <Button onClick={handleUpdateShippingCost}>
               Show Shipping Cost
             </Button>
           ) : (
-            <p className="flex-1 text-end leading-none text-gray-800 dark:text-primary-foreground">
+            <p className="flex-1 text-end leading-none text-gray-800 ">
               $
               {shippingLoading
                 ? "loading..."
@@ -88,10 +86,8 @@ export default function SummarySection({
       </div>
       <div>
         <div className="flex items-center justify-between pb-6 pt-20 lg:pt-5">
-          <p className="text-2xl leading-normal text-gray-800 dark:text-primary-foreground">
-            Total
-          </p>
-          <p className="text-right text-2xl font-bold leading-normal text-gray-800 dark:text-primary-foreground">
+          <p className="text-2xl leading-normal text-gray-800 ">Total</p>
+          <p className="text-right text-2xl font-bold leading-normal text-gray-800 ">
             {shippingLoading ? (
               <Loader2 className="text-primary-foreground" />
             ) : (

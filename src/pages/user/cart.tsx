@@ -49,6 +49,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   await ssg.cart.getCart.prefetch();
+  await ssg.user.getUserAddress.prefetch();
   let redirect: { permanent: boolean; destination: string } | undefined;
   if (!session) {
     redirect = {

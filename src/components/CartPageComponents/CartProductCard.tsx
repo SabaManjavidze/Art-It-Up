@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 import { api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
@@ -35,7 +35,7 @@ const CartProductCard = ({
     handleChangeQuantity,
     selected,
     setSelected,
-    setQuantityChanged,
+    setValuesChanged,
   } = useCheckout();
   const utils = api.useContext();
 
@@ -58,7 +58,7 @@ const CartProductCard = ({
   const [isOpen, setIsOpen] = useState(false);
   const handleRemoveCartProduct = async (prodId: string) => {
     setSelected(selected.filter((id) => id !== prodId));
-    setQuantityChanged(true);
+    setValuesChanged(true);
     await removeCartProduct({ productId: prodId });
   };
   const handleOpenClick = async () => {
@@ -67,15 +67,21 @@ const CartProductCard = ({
     }
     setIsOpen(true);
   };
+  const descRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (descRef?.current) {
+      descRef.current.innerHTML = description;
+    }
+  }, [descRef]);
   return (
     <div className="items-strech border-t border-primary py-8 md:flex md:py-10 lg:py-8">
-      <div className="relative w-full border-2 border-primary/30 md:w-4/12 2xl:w-1/4">
+      <div className="relative h-72 w-full border-2 border-primary/30 md:w-4/12 2xl:w-1/4">
         <Link href={href}>
           <Image
             src={src}
             fill
             alt={title}
-            className="hidden h-full object-cover object-center md:block"
+            className="h-full object-contain object-center md:object-cover"
           />
         </Link>
       </div>
@@ -100,8 +106,8 @@ const CartProductCard = ({
           Size: {selectedSize.title}
         </p>
         <p
-          dangerouslySetInnerHTML={{ __html: description }}
-          className="text-md mt-4 w-3/4 leading-5 text-gray-600 dark:text-primary-foreground"
+          ref={descRef}
+          className="text-md mt-4 hidden w-3/4 leading-5 text-gray-600 dark:text-primary-foreground md:block"
         ></p>
         <div className="flex items-center justify-between pt-5">
           <div className="flex items-center">

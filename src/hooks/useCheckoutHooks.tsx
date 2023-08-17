@@ -25,8 +25,8 @@ type CheckoutContextProps = {
   handleChangeQuantity: (productId: string, quantity: number) => void;
   handleChangeSize: (productId: string, variantId: number) => void;
   handleUpdateShippingCost: () => Promise<void>;
-  quantityChanged: boolean;
-  setQuantityChanged: Dispatch<boolean>;
+  valuesChanged: boolean;
+  setValuesChanged: Dispatch<boolean>;
   products: RouterOutputs["cart"]["getCart"];
   totalPrice: number;
   handleSelectProduct: (id: string) => void;
@@ -46,12 +46,12 @@ export const CheckoutContext = createContext<CheckoutContextProps>({
   handleUpdateShippingCost: async () => undefined,
   detailsLoading: true,
   shippingLoading: true,
-  quantityChanged: false,
+  valuesChanged: false,
   products: [],
   selected: [],
   address: "",
   setAddress: () => {},
-  setQuantityChanged: () => {},
+  setValuesChanged: () => {},
   setSelected: () => {},
   totalPrice: 0,
   setEntity: () => {},
@@ -70,7 +70,7 @@ export const CheckoutProvider = ({
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [address, setAddress] = useState<string>("");
-  const [quantityChanged, setQuantityChanged] = useState(false);
+  const [valuesChanged, setValuesChanged] = useState(false);
   const [entity, setEntity] = useState<MinimalEntityType | undefined>();
   const context = api.useContext();
 
@@ -114,7 +114,7 @@ export const CheckoutProvider = ({
         }),
       });
     }
-    setQuantityChanged(false);
+    setValuesChanged(false);
   };
   const handleChangeSize = (productId: string, price: number) => {
     context.cart.getCart.setData(
@@ -131,7 +131,7 @@ export const CheckoutProvider = ({
     );
   };
   const handleChangeQuantity = (productId: string, quantity: number) => {
-    setQuantityChanged(true);
+    setValuesChanged(true);
     context.cart.getCart.setData(
       undefined,
       products.map((prod) => {
@@ -159,6 +159,7 @@ export const CheckoutProvider = ({
       if (!userAddresses?.[0]) return;
       const { id, userId, title, ...address_to } =
         userAddresses[0] as UserAddress;
+      setAddress(userAddresses.find((addr) => !!addr.selected)?.id || "");
 
       if (products.length > 0) {
         setSelected(
@@ -247,10 +248,10 @@ export const CheckoutProvider = ({
         entity,
         setEntity,
 
-        quantityChanged,
+        valuesChanged,
         handleUpdateShippingCost,
 
-        setQuantityChanged,
+        setValuesChanged,
 
         products,
         totalPrice,
