@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { api } from "../../utils/api";
-import { CheckoutProvider } from "../../hooks/useCheckoutHooks";
-import CartPage from "../../components/WrappedPages/CartPage";
+import { RouterOutputs, api } from "../../utils/api";
+import { CheckoutProvider, useCheckout } from "../../hooks/useCheckoutHooks";
+import PresentModal from "@/components/CartPageComponents/PresentModal";
+import SummarySection from "@/components/CartPageComponents/SummarySection";
+import { ShippingAddressSection } from "@/components/CartPageComponents/ShippingAddressSection";
 
 const UserCart = () => {
-  const { data, isLoading, error } = api.cart.getCart.useQuery();
+  const { data: products, isLoading, error } = api.cart.getCart.useQuery();
+  const [showPresentModal, setShowPresentModal] = useState(false);
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
@@ -21,8 +24,54 @@ const UserCart = () => {
     );
   }
   return (
-    <CheckoutProvider products={data}>
-      <CartPage />
+    <CheckoutProvider products={products}>
+      <div className="text-skin-base min-h-screen w-full bg-background ">
+        {showPresentModal && (
+          <PresentModal
+            showPresentModal={showPresentModal}
+            setShowPresentModal={setShowPresentModal}
+          />
+        )}
+        <div className="py-12">
+          <ShippingAddressSection />
+        </div>
+        <div className="flex flex-col justify-end lg:flex-row">
+          <div
+            className="w-full py-4 pr-4 
+        md:py-8 md:pr-6 lg:py-14 lg:pr-8"
+          >
+            <p className="ml-12 pt-9 text-3xl font-black leading-10 dark:text-primary-foreground lg:text-4xl">
+              Cart
+            </p>
+
+            <div className="mt-4">
+              {products.length < 1 ? (
+                <div className="mt-16 flex px-12">
+                  <p className="text-lg">No Products In Your Cart</p>
+                </div>
+              ) : (
+                products.map((cartProduct, prodIdx) => {
+                  return (
+                    <CartProduct
+                      key={cartProduct.productId}
+                      cartProduct={cartProduct}
+                      prodIdx={prodIdx}
+                    />
+                  );
+                })
+              )}
+            </div>
+          </div>
+          <div className="mt-32 mr-5 h-full w-full bg-gray-100 dark:bg-gray-800 md:w-full lg:w-96">
+            {products.length > 0 && (
+              <SummarySection
+                setShowPresentModal={setShowPresentModal}
+                showPresentModal={showPresentModal}
+              />
+            )}
+          </div>
+        </div>
+      </div>
     </CheckoutProvider>
   );
 };
@@ -36,6 +85,8 @@ import { getServerAuthSession } from "../../server/auth";
 import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
 import { SIGNIN_ROUTE } from "@/utils/constants";
+import { SelectableCard } from "@/components/ui/SelectableCard";
+import CartProductCard from "@/components/CartPageComponents/CartProductCard";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({
@@ -47,9 +98,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     ctx: await createContextInner({ session }),
     transformer: superjson,
   });
-
+  console.time("cart");
   await ssg.cart.getCart.prefetch();
+  console.timeEnd("cart");
+  console.time("addresses");
   await ssg.user.getUserAddress.prefetch();
+  console.timeEnd("addresses");
   let redirect: { permanent: boolean; destination: string } | undefined;
   if (!session) {
     redirect = {
@@ -64,3 +118,30 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
+function CartProduct({
+  cartProduct,
+}: {
+  cartProduct: RouterOutputs["cart"]["getCart"][number];
+  prodIdx: number;
+}) {
+  const { handleSelectProduct, selected } = useCheckout();
+
+  return (
+    <SelectableCard
+      handleSelect={() => handleSelectProduct(cartProduct.productId)}
+      isSelected={!!selected.find((item) => item == cartProduct.productId)}
+    >
+      <CartProductCard
+        key={cartProduct.productId}
+        title={cartProduct.product.title}
+        src={cartProduct.product.picture}
+        size={{ id: cartProduct.sizeId, title: cartProduct.sizeTitle }}
+        productId={cartProduct.productId}
+        quantity={cartProduct.quantity}
+        href={`/product/${cartProduct.productId}`}
+        description={cartProduct.product.description}
+        price={cartProduct.price / 100}
+      />
+    </SelectableCard>
+  );
+}

@@ -4,6 +4,7 @@ import AddressCard from "../ProfilePageComponents/AddressCard";
 import { SelectableCard } from "../ui/SelectableCard";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export const ShippingAddressSection = () => {
   const {
@@ -27,8 +28,8 @@ export const ShippingAddressSection = () => {
     }
   }, [isLoading]);
   return (
-    <section className="bg-background">
-      <h2 className="ml-12 text-3xl">Shipping Address</h2>
+    <section className="bg-background px-20">
+      <h2 className="text-3xl">Shipping Address</h2>
       <div className="mt-5 grid grid-cols-1 gap-4 gap-x-10 px-8 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:grid-cols-4">
         {isLoading ? (
           <div className="flex min-h-screen w-full items-center justify-center bg-background">
@@ -51,6 +52,11 @@ export const ShippingAddressSection = () => {
             </SelectableCard>
           ))
         )}
+      </div>
+      <div className="mt-4">
+        <Link href="/shipping-address" className="hover:text-accent-foreground">
+          + add address
+        </Link>
       </div>
     </section>
   );

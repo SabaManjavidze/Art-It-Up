@@ -39,7 +39,7 @@ export default function ProfilePageContainer() {
 
   return (
     <div className="container-xl min-h-screen bg-background px-3 text-primary-foreground lg:px-5">
-      <div className="relative mt-8 flex items-center">
+      <div className="relative mt-8 flex flex-col items-center md:flex-row">
         <div className="flex flex-col">
           <Image
             src={session.data?.user.image || ""}
@@ -49,15 +49,15 @@ export default function ProfilePageContainer() {
             className="rounded-full border-2 border-primary-foreground/70 object-contain"
             alt="User Profile Picture rounded-full"
           />
-          <div className="mt-8">
-            <h2 className="text-start text-2xl font-bold">
+          <div className="mt-8 text-center md:text-start">
+            <h2 className="text-2xl font-bold">
               {personalDetails.firstName} {personalDetails.lastName}
             </h2>
-            <h2 className="text-start text-xl font-normal text-muted-foreground">
+            <h2 className="text-xl font-normal text-muted-foreground">
               {session.data?.user.name}
             </h2>
           </div>
-          <div className="mt-4 flex items-center text-muted-foreground">
+          <div className="mt-4 flex items-center justify-center text-muted-foreground md:justify-start">
             <div className="flex items-center">
               <BsPeople size={20} />
               <h2 className="mx-1 text-center font-medium text-primary-foreground">
@@ -76,7 +76,7 @@ export default function ProfilePageContainer() {
             </Button>
           </Link>
         </div>
-        <div className="ml-32 w-[70%]">
+        <div className="ml-0 w-[70%] md:ml-32">
           <PersonalDetailsSection />
         </div>
       </div>

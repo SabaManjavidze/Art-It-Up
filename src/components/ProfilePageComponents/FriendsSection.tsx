@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import type { Session } from "next-auth";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { BsPersonDash } from "react-icons/bs";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
 const RowNames = ["Image", "Name", "Status"];
 const TabList = ["Friends", "Received Requests", "Sent Requests"] as const;
@@ -61,13 +62,17 @@ function FriendsSection() {
       >
         <TabsList className="flex w-full justify-center rounded-lg p-2">
           {TabList.map((tab, i) => (
-            <TabsTrigger key={nanoid()} value={tab} className="text-md">
+            <TabsTrigger
+              key={nanoid()}
+              value={tab}
+              className="sm:text-md rounded-none border-r-2 border-primary-foreground/30 text-sm last-of-type:border-r-0 md:text-lg"
+            >
               {tab}
             </TabsTrigger>
           ))}
         </TabsList>
         <TabsContent value="Friends" className="w-full pb-4">
-          <div className="grid grid-cols-5 gap-4 gap-x-10 px-3">
+          <div className="grid gap-4 gap-x-10 px-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {friendsLoading ? (
               <Loader2 size={20} color="white" />
             ) : friends && friends.length > 0 ? (
@@ -89,7 +94,7 @@ function FriendsSection() {
           <div className="flex items-center justify-around pb-12">
             {RowNames.map((name) => (
               <div
-                className="h-full flex-1 border-2 border-gray-300 text-center text-xl"
+                className="text-md h-full flex-1 border-2 border-gray-300 text-center md:text-xl"
                 key={nanoid()}
               >
                 {name}
@@ -103,56 +108,52 @@ function FriendsSection() {
               receivedRequests.map((receivedReq) => (
                 <div
                   key={receivedReq.friendId}
-                  className="flex items-center justify-around"
+                  className="flex items-center justify-around rounded-md border border-primary-foreground/30 py-4"
                 >
                   <div className="flex flex-1 justify-center">
                     <Image
                       src={receivedReq?.user?.image || ""}
-                      width={50}
-                      height={50}
+                      width={70}
+                      height={70}
                       className="rounded-full border border-primary-foreground/70"
                       alt="user profile image"
                     />
                   </div>
                   <div className="flex flex-1 justify-center">
-                    <h3 className="text-skin-base text-lg">
+                    <h3 className="text-skin-base text-md md:text-lg">
                       {receivedReq?.user?.name}
                     </h3>
                   </div>
-                  <div className="flex flex-1 justify-center">
-                    <div className="flex w-2/5 justify-between">
-                      <Button
-                        onClick={() =>
-                          handleAcceptRequest(
-                            receivedReq.id,
-                            receivedReq.user.name,
-                            "ACCEPTED"
-                          )
-                        }
-                      >
-                        {reqLoading == "accept" ? (
-                          <Loader2 size={20} />
-                        ) : (
-                          "Accept"
-                        )}
-                      </Button>
-                      <Button
-                        variant={"destructive"}
-                        onClick={() =>
-                          handleAcceptRequest(
-                            receivedReq.id,
-                            receivedReq.user.name,
-                            "REJECTED"
-                          )
-                        }
-                      >
-                        {reqLoading == "decline" ? (
-                          <Loader2 size={20} />
-                        ) : (
-                          "Decline"
-                        )}
-                      </Button>
-                    </div>
+                  <div className="flex flex-1 justify-around">
+                    <Button
+                      isLoading={reqLoading == "accept"}
+                      className="md:text-md h-9 px-4  text-[13px] md:h-10 md:py-2"
+                      onClick={() =>
+                        handleAcceptRequest(
+                          receivedReq.id,
+                          receivedReq.user.name,
+                          "ACCEPTED"
+                        )
+                      }
+                    >
+                      <p className="hidden md:block">Accept</p>
+                      <AiOutlineCheck className="block md:hidden" />
+                    </Button>
+                    <Button
+                      isLoading={reqLoading == "decline"}
+                      variant={"destructive"}
+                      className="md:text-md h-9 px-4 text-[13px] md:h-10 md:px-4 md:py-2"
+                      onClick={() =>
+                        handleAcceptRequest(
+                          receivedReq.id,
+                          receivedReq.user.name,
+                          "REJECTED"
+                        )
+                      }
+                    >
+                      <p className="hidden md:block">Decline</p>
+                      <AiOutlineClose className="block md:hidden" />
+                    </Button>
                   </div>
                 </div>
               ))
@@ -179,14 +180,14 @@ function FriendsSection() {
               sentRequests.map((sentReq) => (
                 <div
                   key={sentReq.friendId}
-                  className="flex items-center justify-around"
+                  className="flex items-center justify-around rounded-md border border-primary-foreground/30 py-4"
                 >
                   <div className="flex flex-1 justify-center">
                     <Image
                       src={sentReq.friend?.image || ""}
                       width={50}
                       height={50}
-                      className=" rounded-full"
+                      className="rounded-full border border-primary-foreground/70"
                       alt="user profile image"
                     />
                   </div>

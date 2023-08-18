@@ -73,6 +73,9 @@ const Navbar = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState<"google" | "facebook" | "none">(
+    "none"
+  );
   const [btnIsOpen, setBtnIsOpen] = useState({
     getStarted: false,
     components: false,
@@ -91,7 +94,12 @@ const Navbar = () => {
       >
         <div className="flex flex-col items-center justify-center py-12">
           <Button
-            onClick={() => signIn("google")}
+            onClick={() => {
+              setLoading("google");
+              signIn("google");
+              setLoading("none");
+            }}
+            isLoading={loading == "google"}
             className="flex h-16 w-72 cursor-pointer items-center justify-center rounded bg-blue-500 py-3 px-4 text-sm font-bold text-gray-100 shadow hover:bg-blue-600 hover:text-white"
           >
             <svg
@@ -106,7 +114,12 @@ const Navbar = () => {
           </Button>
 
           <Button
-            onClick={() => signIn("facebook")}
+            onClick={() => {
+              setLoading("facebook");
+              signIn("facebook");
+              setLoading("none");
+            }}
+            isLoading={loading == "facebook"}
             className="mt-2 flex h-16  w-72 cursor-pointer items-center justify-center rounded bg-indigo-600 py-3 px-4 text-sm font-bold text-gray-100 shadow hover:bg-indigo-700 hover:text-white"
           >
             <svg

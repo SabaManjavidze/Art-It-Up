@@ -89,7 +89,7 @@ export const CheckoutProvider = ({
     isLoading: shippingLoading,
   } = api.order.calculateOrderShipping.useMutation();
 
-  const totalPrice = useMemo(() => {
+  const subTotalPrice = useMemo(() => {
     const filteredProducts = filterProducts(products, selected, true);
     return filteredProducts.reduce((prev, curr) => {
       return prev + curr.price * curr.quantity;
@@ -155,6 +155,13 @@ export const CheckoutProvider = ({
   };
 
   useEffect(() => {
+    if (products.length > 0) {
+      setSelected(
+        products.map((item) => {
+          return item.productId;
+        })
+      );
+    }
     if (!addressesLoading && !addressError) {
       if (!userAddresses?.[0]) return;
       const { id, userId, title, ...address_to } =
@@ -162,11 +169,6 @@ export const CheckoutProvider = ({
       setAddress(userAddresses.find((addr) => !!addr.selected)?.id || "");
 
       if (products.length > 0) {
-        setSelected(
-          products.map((item) => {
-            return item.productId;
-          })
-        );
         calculateShippingCost({
           address_to: {
             ...address_to,
@@ -193,7 +195,7 @@ export const CheckoutProvider = ({
         {
           amount: {
             value: (
-              totalPrice / 100 +
+              subTotalPrice / 100 +
               (shippingCost?.standard as number) / 100
             ).toString(),
           },
@@ -215,7 +217,7 @@ export const CheckoutProvider = ({
         line_items: line_items,
         entityId: entity?.id,
         addressId: address,
-        totalPrice: totalPrice,
+        totalPrice: subTotalPrice,
         totalShipping: shippingCost?.standard as number,
       });
     return actions?.order?.capture().then((details) => {
@@ -254,7 +256,7 @@ export const CheckoutProvider = ({
         setValuesChanged,
 
         products,
-        totalPrice,
+        totalPrice: subTotalPrice,
         shippingCost,
 
         userDetails: userAddresses,

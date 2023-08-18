@@ -78,7 +78,7 @@ export default function PersonalDetailsSection() {
                   );
                 })}
           </div>
-          <div className="absolute right-5 bottom-0 flex justify-center">
+          <div className="absolute left-1/2 bottom-0 flex -translate-x-1/2 translate-y-full justify-center pt-6 md:right-5 md:translate-x-0 md:translate-y-0">
             <Button
               variant={"default"}
               className="text-secondary-foreground"

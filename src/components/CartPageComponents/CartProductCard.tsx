@@ -138,7 +138,7 @@ const CartProductCard = ({
                       ?.cost as number
                   );
                 }}
-                isLoading={isOpen ? sizesLoading : false}
+                isLoading={sizesLoading}
                 handleOpenClick={handleOpenClick}
                 options={
                   sizes?.map((item) => {

@@ -63,11 +63,22 @@ export const productRouter = createTRPCRouter({
         isInCart = !!record;
         isInWishList = !!record2;
       }
-      return Object.assign(product, {
-        isClothe: isClothingType,
-        isInCart,
-        isInWishList,
-      });
+      return Object.assign(
+        {
+          id: product.id,
+          images: product.images,
+          options: product.options,
+          title: product.title,
+          description: product.description,
+          tags: product.tags,
+          variants: product.variants,
+        },
+        {
+          isClothe: isClothingType,
+          isInCart,
+          isInWishList,
+        }
+      );
     }),
   getPrintifyProductSizes: publicProcedure
     .input(z.object({ id: z.string() }))
