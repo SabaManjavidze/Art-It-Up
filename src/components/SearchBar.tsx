@@ -49,7 +49,7 @@ const SearchBar = () => {
     }
   };
   return (
-    <div className="relative flex h-10 w-4/5">
+    <div className="relative flex h-10 w-full">
       <SearchTypeDropDown
         selected={searchType}
         handleSelectItem={setSearchType}
@@ -57,21 +57,21 @@ const SearchBar = () => {
           { id: "1", title: "Products" },
           { id: "2", title: "Users" },
         ]}
-        className="rounded-none"
+        className="rounded-none text-xs md:text-sm"
       />
       <form className="flex w-full" onSubmit={(e) => handleSearch(e)}>
         <Input
           type="text"
           placeholder="Search..."
-          className="w-full rounded-none border border-x-0 duration-150 focus-visible:ring-inset
-           focus-visible:ring-opacity-100 focus-visible:ring-offset-0"
+          className="w-full rounded-none border border-l-0 duration-150 focus-visible:ring-inset focus-visible:ring-opacity-100
+           focus-visible:ring-offset-0 md:border-x-0"
           value={searchTerm}
           required
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Button
           isLoading={usersLoading}
-          className="rounded-none text-secondary-foreground"
+          className="hidden rounded-none text-secondary-foreground md:block"
         >
           Search
         </Button>

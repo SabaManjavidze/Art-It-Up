@@ -13,7 +13,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { BsPersonDash } from "react-icons/bs";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
-const RowNames = ["Image", "Name", "Status"];
+const RowNames = ["Profile Pic", "Username", "Status"];
 const TabList = ["Friends", "Received Requests", "Sent Requests"] as const;
 function FriendsSection() {
   const [activeTab, setActiveTab] = useState("Friends");
@@ -60,7 +60,7 @@ function FriendsSection() {
         defaultValue="Friends"
         value={activeTab}
       >
-        <TabsList className="flex w-full justify-center rounded-lg p-2">
+        <TabsList className="flex w-full justify-center rounded-lg p-2 py-0">
           {TabList.map((tab, i) => (
             <TabsTrigger
               key={nanoid()}
@@ -90,18 +90,18 @@ function FriendsSection() {
             )}
           </div>
         </TabsContent>
-        <TabsContent value="Received Requests" className="w-full pb-4">
-          <div className="flex items-center justify-around pb-12">
+        <TabsContent value="Received Requests" className="mt-0 w-full">
+          <div className="flex items-center justify-around">
             {RowNames.map((name) => (
               <div
-                className="text-md h-full flex-1 border-2 border-gray-300 text-center md:text-xl"
+                className="text-md h-full flex-1 border border-l-0 border-t-0 border-gray-300 text-center last-of-type:border-r-0 md:text-xl"
                 key={nanoid()}
               >
                 {name}
               </div>
             ))}
           </div>
-          <div className="px-3">
+          <div className="px-3 pt-12">
             {receivedRequestsLoading ? (
               <Loader2 size={20} />
             ) : receivedRequests && receivedRequests.length > 0 ? (
@@ -162,18 +162,18 @@ function FriendsSection() {
             )}
           </div>
         </TabsContent>
-        <TabsContent value="Sent Requests" className="w-full pb-4">
-          <div className="flex items-center justify-around pb-12">
+        <TabsContent value="Sent Requests" className="mt-0 w-full">
+          <div className="flex items-center justify-around">
             {RowNames.map((name) => (
               <div
-                className="h-full flex-1 border-2 border-gray-300 text-center text-xl"
+                className="text-md h-full flex-1 border border-l-0 border-t-0 border-gray-300 text-center last-of-type:border-r-0 md:text-xl"
                 key={nanoid()}
               >
                 {name}
               </div>
             ))}
           </div>
-          <div className="px-3">
+          <div className="px-3 pt-12">
             {sentRequestsLoading ? (
               <Loader2 size={20} color="white" />
             ) : sentRequests && sentRequests.length > 0 ? (

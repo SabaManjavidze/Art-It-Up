@@ -144,7 +144,11 @@ const Navbar = () => {
             <MenuIcon />
           </button>
         </div>
-        <div className="flex w-1/2 items-center justify-center text-center md:w-[15%]">
+        <div
+          className={`w-1/2 items-center ${
+            showSearchBar ? "hidden md:flex" : "flex"
+          } justify-center text-center md:w-[15%]`}
+        >
           <Link href="/" className="text-lg font-medium">
             Art It Up
           </Link>
@@ -221,7 +225,7 @@ const Navbar = () => {
         </div>
 
         {showSearchBar ? (
-          <div className="flex w-full justify-center">
+          <div className="flex w-full max-w-4xl justify-center md:px-10">
             <SearchBar />
           </div>
         ) : null}
