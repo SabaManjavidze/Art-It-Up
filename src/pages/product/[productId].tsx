@@ -37,36 +37,10 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 
   const [options, setOptions] = useState<OptionType>({
     quantity: 1,
-    size: product?.options.find((item) => item.type == "size")?.values[0]
-      ?.id as number,
-    variantId: product?.variants[0]?.id as number,
-    cost: product?.variants[0]?.cost as number,
+    size: product?.sizes[0]?.id as number,
+    variantId: product?.sizes[0]?.variantId as number,
+    cost: product?.sizes[0]?.cost as number,
   });
-  const variants = useMemo(() => {
-    if (product) {
-      if (product.isClothe) {
-        const defColor = product?.options?.find(
-          (item) => item?.name == "Colors"
-        )?.values[0]?.id as number;
-        return product.variants.filter(
-          (variant) =>
-            variant.options.find((option) => option == defColor) &&
-            variant.is_available
-        );
-      }
-      if (product.tags.find((item) => item == "Blankets")) {
-        return product.variants;
-      }
-      const defDepth = product?.options?.find((item) => item?.type == "depth")
-        ?.values[0]?.id as number;
-      return product.variants.filter(
-        (variant) =>
-          variant.options.find((option) => option == defDepth) &&
-          variant.is_available
-      );
-    }
-    return null;
-  }, [product]);
 
   useEffect(() => {
     if (descRef?.current) {
@@ -90,9 +64,8 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
         title: product.title,
         picture: product.images[0]?.src as string,
         sizeId: options.size,
-        sizeTitle: product.options
-          .find((item) => item.type == "size")
-          ?.values.find((size) => size.id == options.size)?.title as string,
+        sizeTitle: product.sizes.find((size) => size.id == options.size)
+          ?.title as string,
         variantId: options.variantId,
         price: options.cost / options.quantity,
         isInWishList: product.isInWishList,
@@ -119,9 +92,8 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
         title: product.title,
         picture: product.images[0]?.src as string,
         sizeId: options.size,
-        sizeTitle: product.options
-          .find((item) => item.type == "size")
-          ?.values.find((size) => size.id == options.size)?.title as string,
+        sizeTitle: product.sizes.find((size) => size.id == options.size)
+          ?.title as string,
         variantId: options.variantId,
         quantity: options.quantity,
         price: options.cost / options.quantity,
@@ -138,8 +110,8 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
   };
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = parseInt(event.target.value);
-    const originalCost = product.variants.find(
-      (variant) => variant.id == options.variantId
+    const originalCost = product.sizes.find(
+      (size) => size.variantId == options.variantId
     )?.cost as number;
     setOptions({
       ...options,
@@ -150,9 +122,8 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
 
   const handleSizeChange = (id: string) => {
     const intId = parseInt(id);
-    console.log({ intId });
-    const variant = variants?.find((varItem) => {
-      return varItem.options.find((item) => item == intId);
+    const variant = product?.sizes?.find((size) => {
+      return size.id == intId;
     });
     setOptions({
       ...options,
@@ -274,35 +245,28 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                       : "grid-cols-2 lg:grid-cols-2"
                   } mt-5 sm:grid-cols-4 `}
                 >
-                  {product.options
-                    .find((item) => item.type == "size")
-                    ?.values.map((option) => (
-                      <div
-                        key={option.id}
-                        className="flex w-full justify-center"
-                      >
-                        <Button
-                          // disabled={!size.inStock}
-                          className={`flex border-2 text-primary-foreground ${
-                            options.size == option.id
-                              ? "border-indigo-500"
-                              : null
-                          }
+                  {product.sizes.map((option) => (
+                    <div key={option.id} className="flex w-full justify-center">
+                      <Button
+                        // disabled={!size.inStock}
+                        className={`flex border-2 text-primary-foreground ${
+                          options.size == option.id ? "border-indigo-500" : null
+                        }
                     items-center justify-center overflow-hidden ${
                       product.isClothe ? "h-10 w-16" : "h-16 w-36"
                     }`}
-                          onClick={() => handleSizeChange(option.id.toString())}
+                        onClick={() => handleSizeChange(option.id.toString())}
+                      >
+                        <Label
+                          className={`text-lg text-secondary-foreground ${
+                            product.isClothe ? "whitespace-nowrap" : ""
+                          }`}
                         >
-                          <Label
-                            className={`text-lg text-secondary-foreground ${
-                              product.isClothe ? "whitespace-nowrap" : ""
-                            }`}
-                          >
-                            {option.title}
-                          </Label>
-                        </Button>
-                      </div>
-                    ))}
+                          {option.title}
+                        </Label>
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="mt-10 flex flex-col">

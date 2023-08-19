@@ -84,14 +84,16 @@ export default function ProfilePageContainer() {
         <label className="block py-10 text-3xl font-medium">
           Your Addresses
         </label>
-        <div className="grid grid-cols-5 gap-4 gap-x-20">
+        <div className="grid grid-cols-1 gap-x-10 sm:grid-cols-2 md:grid-cols-2  md:gap-x-20 lg:grid-cols-3 xl:grid-cols-4">
           {userAddresses?.map((details) => (
-            <AddressCard
-              key={details.id}
-              expanded={expanded == details.id}
-              handleHeaderClick={() => handleHeaderClick(details.id)}
-              details={details}
-            />
+            <div className="mt-2 flex justify-center first-of-type:mt-0 sm:mt-0">
+              <AddressCard
+                key={details.id}
+                expanded={expanded == details.id}
+                handleHeaderClick={() => handleHeaderClick(details.id)}
+                details={details}
+              />
+            </div>
           ))}
         </div>
         <div className="mt-4">

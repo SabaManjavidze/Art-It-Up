@@ -91,7 +91,7 @@ export default function SummarySection({
             {shippingLoading ? (
               <Loader2 className="text-primary-foreground" />
             ) : (
-              `\$${(shippingCost?.standard || 0 + totalPrice) / 100}`
+              `\$${((shippingCost?.standard || 0) + totalPrice) / 100}`
             )}
           </p>
         </div>

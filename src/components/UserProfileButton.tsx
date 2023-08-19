@@ -29,7 +29,7 @@ const UserProfileButton = ({
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className="m-0 p-0 !outline-none">
+        <button className="p-0 !outline-none">
           <div className="flex items-center justify-center">
             <Image
               src={userPicture}

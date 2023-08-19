@@ -97,8 +97,12 @@ export const CheckoutProvider = ({
   }, [selected, products]);
 
   const handleUpdateShippingCost = async () => {
+    if (!userAddresses?.[0]) {
+      toast.error("Add a shipping address to reveal the cost");
+      return;
+    }
     const { id, userId, title, ...address_to } =
-      userAddresses?.[0] as UserAddress;
+      userAddresses[0] as UserAddress;
     if (products.length > 0) {
       await calculateShippingCost({
         address_to: {

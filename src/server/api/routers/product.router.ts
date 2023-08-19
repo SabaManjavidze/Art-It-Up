@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import type { PrintifyGetProductResponse } from "../../../utils/printify/printifyTypes";
+import type {
+  PrintifyGetProductResponse,
+  Variant,
+} from "../../../utils/printify/printifyTypes";
 
 import { prisma } from "../../db";
 import { TRPCError } from "@trpc/server";
@@ -47,9 +50,7 @@ export const productRouter = createTRPCRouter({
       const product = (await printify.getProduct(
         id
       )) as unknown as PrintifyGetProductResponse;
-      const HomeNLivingTag = "Home & Living";
-      const isClothingType =
-        product.tags.find((item) => item == HomeNLivingTag) === undefined;
+      const isClothe = ProductIsClothe(product);
       if (!product) throw new TRPCError({ code: "NOT_FOUND" });
       let isInCart = false;
       let isInWishList = false;
@@ -63,22 +64,17 @@ export const productRouter = createTRPCRouter({
         isInCart = !!record;
         isInWishList = !!record2;
       }
-      return Object.assign(
-        {
-          id: product.id,
-          images: product.images,
-          options: product.options,
-          title: product.title,
-          description: product.description,
-          tags: product.tags,
-          variants: product.variants,
-        },
-        {
-          isClothe: isClothingType,
-          isInCart,
-          isInWishList,
-        }
-      );
+      const sizes = extractSizesFromProduct(product);
+      return {
+        id: product.id,
+        images: product.images,
+        title: product.title,
+        description: product.description,
+        sizes,
+        isClothe,
+        isInCart,
+        isInWishList,
+      };
     }),
   getPrintifyProductSizes: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -87,35 +83,51 @@ export const productRouter = createTRPCRouter({
         id
       )) as unknown as PrintifyGetProductResponse;
       if (!product) throw new TRPCError({ code: "NOT_FOUND" });
-      const sizes = product.options.find((item) => item.type == "size")?.values;
-      if (!sizes) return [];
-      let factor = 0;
-      const HomeNLivingTag = "Home & Living";
-      const isClothingType =
-        product.tags.find((item) => item == HomeNLivingTag) === undefined;
-      if (isClothingType) {
-        factor = product.options.find((item) => item.type == "color")?.values[0]
-          ?.id as number;
-      } else {
-        factor = product.options.find((item) => item.type == "depth")?.values[0]
-          ?.id as number;
-      }
-      return sizes.map((item) => {
-        const variant = product.variants.find((item2) => {
-          return (
-            item2.options.includes(factor) && item2.options.includes(item.id)
-          );
-        });
-        return {
-          id: item.id,
-          title: item.title,
-          variantId: variant?.id,
-          cost: variant?.cost,
-        };
-      });
+      return extractSizesFromProduct(product);
     }),
   getPrintifyShopProducts: publicProcedure.query(async () => {
     const products = await printify.getProducts();
     return products;
   }),
 });
+
+function ProductIsClothe(product: PrintifyGetProductResponse) {
+  const HomeNLivingTag = "Home & Living";
+  return product.tags.find((item) => item == HomeNLivingTag) === undefined;
+}
+function extractSizesFromProduct(product: PrintifyGetProductResponse) {
+  const sizes = product.options.find((item) => item.type == "size")?.values;
+  if (!sizes) return [];
+  const defVar = product.variants[0] as Variant;
+  let factor = 0;
+  if (defVar.options.length > 1) {
+    const isClothingType = ProductIsClothe(product);
+    if (isClothingType) {
+      factor = product.options.find((item) => item.type == "color")?.values[0]
+        ?.id as number;
+    } else {
+      factor = product.options.find((item) => item.type == "depth")?.values[0]
+        ?.id as number;
+    }
+  }
+  return sizes.map((item) => {
+    let variant = {} as Variant;
+    if (factor) {
+      variant = product.variants.find((item2) => {
+        return (
+          item2.options.includes(factor) && item2.options.includes(item.id)
+        );
+      }) as Variant;
+    } else {
+      variant = product.variants.find((item2) => {
+        return item2.options.includes(item.id);
+      }) as Variant;
+    }
+    return {
+      id: item.id,
+      title: item.title,
+      variantId: variant.id,
+      cost: variant.cost,
+    };
+  });
+}

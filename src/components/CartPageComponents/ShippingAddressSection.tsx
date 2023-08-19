@@ -28,9 +28,9 @@ export const ShippingAddressSection = () => {
     }
   }, [isLoading]);
   return (
-    <section className="bg-background px-20">
+    <section className="bg-background px-5 md:px-20">
       <h2 className="text-3xl">Shipping Address</h2>
-      <div className="mt-5 grid grid-cols-1 gap-4 gap-x-10 px-8 md:grid-cols-2 md:gap-x-20 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="mt-5 grid grid-cols-1 gap-y-4 gap-x-10 md:grid-cols-2 md:gap-x-20 md:px-8 lg:grid-cols-3 xl:grid-cols-4">
         {isLoading ? (
           <div className="flex min-h-screen w-full items-center justify-center bg-background">
             <Loader2 size={200} color={"white"} />

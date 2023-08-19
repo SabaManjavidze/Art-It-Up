@@ -110,33 +110,36 @@ const CartProductCard = ({
           className="text-md mt-4 hidden w-3/4 leading-5 text-gray-600 dark:text-primary-foreground md:block"
         ></p>
         <div className="flex items-center justify-between pt-5">
-          <div className="flex items-center">
-            <Input
-              className="mr-6 w-12 border-2 py-2 px-1 outline-none"
-              value={quantity}
-              type="number"
-              min="1"
-              max="50"
-              onChange={(e) => {
-                handleChangeQuantity(
-                  productId,
-                  parseInt(e.currentTarget.value)
-                );
-              }}
-            />
-            <p className="text-lg leading-none text-gray-800 dark:text-primary-foreground">
-              Quantity
-            </p>
-            <div className="ml-4 flex items-center">
+          <div className="flex flex-col items-center justify-center sm:flex-row ">
+            <div className="flex w-full items-center">
+              <Input
+                className="w-12 border py-2 px-1 pr-3 text-center outline-none"
+                value={quantity}
+                type="number"
+                min="1"
+                max="50"
+                onChange={(e) => {
+                  handleChangeQuantity(
+                    productId,
+                    parseInt(e.currentTarget.value)
+                  );
+                }}
+              />
+              <p className="ml-4 text-lg leading-none text-gray-800 sm:ml-0">
+                Quantity
+              </p>
+            </div>
+            <div className="mt-2 flex w-full items-center sm:mt-0">
               <SearchTypeDropDown
                 selected={selectedSize}
                 handleSelectItem={(option) => {
                   setSize(option);
-                  handleChangeSize(
-                    productId,
-                    sizes?.find((item) => item.id.toString() == option.id)
-                      ?.cost as number
-                  );
+                  const item = sizes?.find((item) => {
+                    return item.id.toString() == option.id;
+                  });
+                  const cost = item?.cost as number;
+                  console.log({ item });
+                  handleChangeSize(productId, cost);
                 }}
                 isLoading={sizesLoading}
                 handleOpenClick={handleOpenClick}
@@ -149,9 +152,7 @@ const CartProductCard = ({
                   }) as any
                 }
               />
-              <p className="ml-3 text-lg leading-none text-gray-800 dark:text-primary-foreground">
-                Size
-              </p>
+              <p className="ml-4 text-lg leading-none text-gray-800">Size</p>
             </div>
           </div>
           <p className="text-base font-black leading-none text-gray-800 dark:text-primary-foreground">

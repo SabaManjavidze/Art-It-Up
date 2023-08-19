@@ -255,7 +255,7 @@ const Navbar = () => {
                 {button.icon}
               </Link>
             ))}
-            <div className={`flex-col items-center`}>
+            <div className="flex flex-col items-center">
               {status === "loading" ? (
                 <Loader2 className="text-primary-foreground" />
               ) : session?.user ? (

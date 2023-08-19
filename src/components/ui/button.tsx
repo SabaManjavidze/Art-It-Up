@@ -61,12 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Loader2 size={20} className={`${isLoading ? "block" : "hidden"}`} />
-        </div>
-        <div className={`${isLoading ? "hidden" : "block"} flex items-center`}>
-          {children}
-        </div>
+        {isLoading ? <Loader2 size={20} /> : children}
       </Comp>
     );
   }
