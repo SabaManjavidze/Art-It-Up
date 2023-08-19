@@ -28,25 +28,24 @@ export const MultipleSelect = ({
   const tagIsChecked = (tagId: string) =>
     !!selectedTags.find((tag) => tag == tagId);
   return (
-    <DropdownMenu modal={false}>
+    <DropdownMenu modal={true}>
       <DropdownMenuTrigger asChild>
         <Button className={twMerge("", className)} variant={"outline"}>
-          <p className="mr-1 rounded-full bg-muted-foreground/80 px-2 py-[3px] text-secondary-foreground">
+          <p className="mr-0 rounded-full bg-muted-foreground/80 px-2 py-[3px] text-secondary-foreground sm:mr-1">
             {selectedTags.length}
           </p>
-          Tags
-          <div className="ml-3">
-            <HiChevronUpDown className="-mr-1 h-4 w-4 " aria-hidden="true" />
-          </div>
+          <p className="hidden sm:block">Tags</p>
+          <HiChevronUpDown className="h-4 w-4 sm:ml-3 " aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-h-52 w-56 overflow-y-scroll">
+      <DropdownMenuContent className="mr-3 max-h-52 w-48 overflow-y-auto md:w-56 lg:mr-0">
         <DropdownMenuLabel>Tags</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {tags.map((item) => (
           <DropdownMenuCheckboxItem
             checked={!!tagIsChecked(item.id)}
             key={item.id}
+            className="px-4"
             onClick={(e) =>
               tagIsChecked(item.id)
                 ? setSelectedTags(selectedTags.filter((tag) => tag !== item.id))

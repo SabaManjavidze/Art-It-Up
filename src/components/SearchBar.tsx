@@ -63,10 +63,11 @@ const SearchBar = () => {
         <Input
           type="text"
           placeholder="Search..."
-          className="w-full rounded-none border border-l-0 duration-150 focus-visible:ring-inset focus-visible:ring-opacity-100
-           focus-visible:ring-offset-0 md:border-x-0"
+          className="z-10 w-full rounded-none border border-l-0 duration-150
+           focus-visible:ring-opacity-100 focus-visible:ring-offset-0 md:border-x-0"
           value={searchTerm}
           required
+          autoFocus
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Button

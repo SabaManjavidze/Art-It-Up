@@ -46,10 +46,11 @@ export default function SearchTypeDropDown({
             className
           )}
         >
-          {Capitalize(selected?.title)}
-          <div className="ml-3">
-            <HiChevronUpDown className="-mr-1 h-4 w-4 " aria-hidden="true" />
-          </div>
+          <p className="hidden sm:block">{Capitalize(selected?.title)}</p>
+          <HiChevronUpDown
+            className="ml-0 h-4 w-4 sm:ml-4 "
+            aria-hidden="true"
+          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-32">

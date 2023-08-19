@@ -84,9 +84,20 @@ const Navbar = () => {
 
   return (
     <nav
-      className="sticky top-0 z-20 flex w-full flex-col items-center justify-around border 
-    border-l-0 border-r-0 border-primary/20 bg-background p-4 py-2 text-foreground"
+      className="h-18 sticky top-0 z-20 flex w-full flex-col items-center 
+    justify-around border border-l-0 border-r-0 border-primary/20 bg-background p-4 py-2 text-foreground"
     >
+      <Modal
+        isOpen={showSearchBar}
+        closeModal={() => setShowSearchBar(false)}
+        className="h-18 top-0 left-0 right-0 flex w-full max-w-none translate-x-0 translate-y-0 
+        items-center justify-center py-4 px-10 data-[state=closed]:slide-out-to-left-0 data-[state=open]:slide-in-from-left-0
+        md:px-0"
+      >
+        <div className="flex w-full max-w-4xl justify-center md:px-10">
+          <SearchBar />
+        </div>
+      </Modal>
       <Modal
         isOpen={modalOpen}
         title="Sign In"
@@ -145,23 +156,17 @@ const Navbar = () => {
           </button>
         </div>
         <div
-          className={`w-1/2 items-center ${
-            showSearchBar ? "hidden md:flex" : "flex"
-          } justify-center text-center md:w-[15%]`}
+          className={`flex w-1/2 items-center justify-center text-center md:w-[15%]`}
         >
           <Link href="/" className="text-lg font-medium">
             Art It Up
           </Link>
         </div>
-        <div
-          className={`hidden w-1/2 justify-center md:${
-            showSearchBar ? "hidden" : "flex"
-          }`}
-        >
+        <div className={`hidden w-1/2 justify-center md:flex`}>
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+                <NavigationMenuTrigger>Catalog</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                     <li className="row-span-3">
@@ -172,11 +177,10 @@ const Navbar = () => {
                         >
                           {/* <Icons.logo className="h-6 w-6" /> */}
                           <div className="mb-2 mt-4 text-lg font-medium">
-                            shadcn/ui
+                            Hoodies
                           </div>
                           <p className="text-sm leading-tight text-muted-foreground">
-                            Beautifully designed components built with Radix UI
-                            and Tailwind CSS.
+                            T-Shirts
                           </p>
                         </Link>
                       </NavigationMenuLink>
@@ -224,11 +228,6 @@ const Navbar = () => {
           </NavigationMenu>
         </div>
 
-        {showSearchBar ? (
-          <div className="flex w-full max-w-4xl justify-center md:px-10">
-            <SearchBar />
-          </div>
-        ) : null}
         {/* Buttons */}
         <div
           className={`flex w-[25%] items-center justify-between md:w-[15%] `}
@@ -243,26 +242,20 @@ const Navbar = () => {
             >
               <FiSearch size={20} />
             </button>
-            {showSearchBar
-              ? null
-              : buttons.map((button) => (
-                  <Link
-                    href={button.href}
-                    key={button.href}
-                    className={`hover:text-skin-secondary ${
-                      status == "unauthenticated"
-                        ? "pointer-events-none text-muted-foreground"
-                        : ""
-                    } duration-150 hover:scale-110`}
-                  >
-                    {button.icon}
-                  </Link>
-                ))}
-            <div
-              className={`${
-                showSearchBar ? "hidden" : "flex"
-              } flex-col items-center`}
-            >
+            {buttons.map((button) => (
+              <Link
+                href={button.href}
+                key={button.href}
+                className={`hover:text-skin-secondary ${
+                  status == "unauthenticated"
+                    ? "pointer-events-none text-muted-foreground"
+                    : ""
+                } duration-150 hover:scale-110`}
+              >
+                {button.icon}
+              </Link>
+            ))}
+            <div className={`flex-col items-center`}>
               {status === "loading" ? (
                 <Loader2 className="text-primary-foreground" />
               ) : session?.user ? (
