@@ -102,9 +102,10 @@ const CartProductCard = ({
             )}
           </button>
         </div>
-        <p className="py-4 text-lg leading-3 text-gray-600 dark:text-primary-foreground">
-          Size: {selectedSize.title}
-        </p>
+        <div className="flex items-center py-4 text-lg">
+          <p className="leading-3 text-gray-600">Size: </p>
+          <p className="fontb-old">{selectedSize.title}</p>
+        </div>
         <p
           ref={descRef}
           className="text-md mt-4 hidden w-3/4 leading-5 text-gray-600 dark:text-primary-foreground md:block"

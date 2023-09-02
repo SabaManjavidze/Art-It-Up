@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { MAX_WISHLIST_PRODUCT } from "@/utils/constants";
 
 export const wishListRouter = createTRPCRouter({
   getWishList: protectedProcedure.query(async ({ ctx: { session } }) => {
@@ -97,6 +98,15 @@ export const wishListRouter = createTRPCRouter({
               },
             });
           } else {
+            const { length } = await prisma.userWishListProducts.findMany({
+              select: { productId: true },
+            });
+            if (length > MAX_WISHLIST_PRODUCT) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: `Cannot add more than ${MAX_WISHLIST_PRODUCT} products in your WishList`,
+              });
+            }
             await prisma.userWishListProducts.create({
               data: {
                 product: {

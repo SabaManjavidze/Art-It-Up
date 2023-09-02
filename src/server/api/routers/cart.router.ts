@@ -6,6 +6,7 @@ import { z } from "zod";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { MAX_CART_PRODUCT } from "@/utils/constants";
 
 export const cartRouter = createTRPCRouter({
   getCart: protectedProcedure.query(async ({ ctx: { session } }) => {
@@ -77,6 +78,15 @@ export const cartRouter = createTRPCRouter({
               },
             });
           } else {
+            const { length } = await prisma.userCartProducts.findMany({
+              select: { productId: true },
+            });
+            if (length > MAX_CART_PRODUCT) {
+              throw new TRPCError({
+                code: "FORBIDDEN",
+                message: `Cannot add more than ${MAX_CART_PRODUCT} products in your Cart`,
+              });
+            }
             await prisma.userCartProducts.create({
               data: {
                 product: {

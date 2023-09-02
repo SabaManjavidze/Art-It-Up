@@ -1,5 +1,6 @@
 import React from "react";
-import { RouterOutputs, api } from "../../utils/api";
+import type { RouterOutputs} from "../../utils/api";
+import { api } from "../../utils/api";
 import Image from "next/image";
 import Link from "next/link";
 import { FiHeart } from "react-icons/fi";

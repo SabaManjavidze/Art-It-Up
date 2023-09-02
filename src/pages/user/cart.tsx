@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { RouterOutputs, api } from "../../utils/api";
+import type { RouterOutputs} from "../../utils/api";
+import { api } from "../../utils/api";
 import { CheckoutProvider, useCheckout } from "../../hooks/useCheckoutHooks";
 import PresentModal from "@/components/CartPageComponents/PresentModal";
 import SummarySection from "@/components/CartPageComponents/SummarySection";
