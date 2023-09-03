@@ -30,7 +30,7 @@ export default function index() {
             {products.length} Items
           </p>
         </div>
-        <div className=" mt-10 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-y-0">
+        <div className="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:mt-12 lg:grid-cols-3">
           {products.map(({ product, price, size }) => (
             <WishProductCard
               key={product.id}

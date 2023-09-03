@@ -19,6 +19,7 @@ import { Button } from "./ui/button";
 import { Loader2, MenuIcon } from "lucide-react";
 import { AiOutlineArrowsAlt } from "react-icons/ai";
 import Modal from "./ui/modal";
+import { SearchType } from "./ui/SearchTypeDropDown";
 
 const buttons = [
   {
@@ -73,6 +74,14 @@ const Navbar = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState<SearchType>({
+    id: "2",
+    title: "Users",
+  });
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   const [loading, setLoading] = useState<"google" | "facebook" | "none">(
     "none"
   );
@@ -90,12 +99,19 @@ const Navbar = () => {
       <Modal
         isOpen={showSearchBar}
         closeModal={() => setShowSearchBar(false)}
-        className="h-18 top-0 left-0 right-0 flex w-full max-w-none translate-x-0 translate-y-0 
-        items-center justify-center py-4 px-10 data-[state=closed]:slide-out-to-left-0 data-[state=open]:slide-in-from-left-0
+        className="h-18 top-0 left-0 right-0 flex w-full max-w-none 
+        translate-x-0 translate-y-0 items-center justify-center py-4 px-10
         md:px-0"
       >
         <div className="flex w-full max-w-4xl justify-center md:px-10">
-          <SearchBar />
+          <SearchBar
+            searchTerm={searchTerm}
+            searchType={searchType}
+            setSearchTerm={setSearchTerm}
+            setSearchType={setSearchType}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
         </div>
       </Modal>
       <Modal

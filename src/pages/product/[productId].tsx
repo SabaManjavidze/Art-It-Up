@@ -174,7 +174,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
             </div>
             <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
               <Image
-                src={product.images?.[2]?.src || ""}
+                src={product.images?.[2]?.src || product.images?.[1]?.src || ""}
                 alt={product.images?.[2]?.src || ""}
                 className="h-full w-full object-cover object-center"
                 fill
@@ -183,7 +183,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
           </div>
           <div className="aspect-h-5 aspect-w-4 sm:overflow-hidden sm:rounded-lg lg:aspect-h-4 lg:aspect-w-3">
             <Image
-              src={product.images?.[3]?.src || ""}
+              src={product.images?.[3]?.src || product.images?.[0]?.src || ""}
               alt={product.images?.[3]?.src || ""}
               className="h-full w-full object-cover object-center"
               fill

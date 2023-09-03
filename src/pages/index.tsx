@@ -16,9 +16,21 @@ import {
 } from "react-icons/bs";
 
 const categories = [
-  { title: "Hoodies", href: "/search-results/_?tags=hoodies" },
-  { title: "Blankets", href: "/search-results/_?tags=Blankets" },
-  { title: "Puzzles", href: "/search-results/_tags=Puzzles" },
+  {
+    title: "Hoodies",
+    href: "/search-results/_?tags=hoodies",
+    src: "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+  },
+  {
+    title: "Blankets",
+    href: "/search-results/_?tags=Blankets",
+    src: "https://images-api.printify.com/mockup/6496bec0143df791e501b7c6/61281/2907/hooded-blanket.jpg?camera_label=front",
+  },
+  {
+    title: "Puzzles",
+    href: "/search-results/_tags=Puzzles",
+    src: "https://images-api.printify.com/mockup/63efe2a05b70b9af05008ed9/72664/16363/puzzle-120-252-500-piece.jpg?camera_label=front",
+  },
 ];
 const Home: NextPage = () => {
   const [selectedItem, setSelectedItem] = useState(0);
@@ -137,15 +149,13 @@ const Home: NextPage = () => {
         {/* Second section - Categories of clothing */}
         <div className="py-20">
           <h2 className="text-center text-3xl font-medium ">Categories</h2>
-          <div className="flex flex-wrap justify-center">
+          <div className="mt-5 flex flex-wrap justify-center">
             {categories.map((category) => (
               <CategoryCard
                 key={category.title}
                 href={category.href}
                 title={category.title}
-                src={
-                  "https://images-api.printify.com/mockup/63efefd567339f06780ed876/75760/54942/canvas-gallery-wraps.jpg"
-                }
+                src={category.src}
               />
             ))}
           </div>

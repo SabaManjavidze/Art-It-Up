@@ -1,25 +1,31 @@
 import type { FormEvent } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { api } from "../utils/api";
 import type { SearchType } from "./ui/SearchTypeDropDown";
 import SearchTypeDropDown from "./ui/SearchTypeDropDown";
-import { Loader2 } from "lucide-react";
 import SearchResults from "./SearchResults";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { MultipleSelect } from "./ui/MultipleSelect";
 import type { Tags } from "@prisma/client";
-import { nanoid } from "nanoid";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
-const SearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchType, setSearchType] = useState<SearchType>({
-    id: nanoid(),
-    title: "Users",
-  });
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+const SearchBar = ({
+  searchTerm,
+  setSearchTerm,
+  searchType,
+  setSearchType,
+  selectedTags,
+  setSelectedTags,
+}: {
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<string>;
+  searchType: SearchType;
+  setSearchType: React.Dispatch<SearchType>;
+  selectedTags: string[];
+  setSelectedTags: React.Dispatch<string[]>;
+}) => {
   const { data: tags, isLoading: tagsLoading } = api.getTags.useQuery();
   const {
     data: users,

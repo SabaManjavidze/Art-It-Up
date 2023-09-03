@@ -8,13 +8,13 @@ type CategoryCardPropType = {
 };
 const CategoryCard = ({ href, title, src }: CategoryCardPropType) => {
   return (
-    <Link href={href} className="w-1/3 p-4">
+    <Link href={href} className="flex w-1/3 flex-col items-center p-4">
       <Image
         src={src}
         alt={title}
         width={500}
         height={500}
-        className="h-64 w-full object-cover"
+        className="h-96 w-72 object-cover"
       />
       <h3 className="text-center text-xl font-medium ">{title}</h3>
     </Link>

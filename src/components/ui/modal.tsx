@@ -20,6 +20,7 @@ export default function Modal({
   return (
     <Dialog
       open={isOpen}
+      modal
       onOpenChange={(open) => {
         if (!open) closeModal();
       }}
