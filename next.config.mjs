@@ -27,6 +27,8 @@ const config = {
       "lh3.googleusercontent.com",
       "images-api.printify.com",
       "cdn.pixabay.com",
+      "img.freepik.com",
+      "st3.depositphotos.com",
     ],
   },
   i18n: {

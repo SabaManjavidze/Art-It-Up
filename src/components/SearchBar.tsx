@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../utils/api";
 import type { SearchType } from "./ui/SearchTypeDropDown";
 import SearchTypeDropDown from "./ui/SearchTypeDropDown";
@@ -33,7 +33,12 @@ const SearchBar = ({
     isLoading: usersLoading,
   } = api.user.searchUsers.useMutation();
   const router = useRouter();
-
+  useEffect(() => {
+    const { query } = router.query;
+    if (query) {
+      setSearchTerm(query as string);
+    }
+  }, []);
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchType.title == "Users") {

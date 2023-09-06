@@ -23,7 +23,7 @@ const UserProfileButton = ({
 }: UserProfileButtonPropTypes) => {
   const profileOptions = [
     { title: "Profile", path: "/user/profile" },
-    { title: "Gallery", path: "/user/entities" },
+    { title: "Gallery", path: "/user/gallery" },
     { title: "My Orders", path: "/user/orders" },
   ];
   return (

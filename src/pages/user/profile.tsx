@@ -6,7 +6,7 @@ import { BsPeople } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-export default function ProfilePageContainer() {
+export default function Profile() {
   const {
     data: userAddresses,
     isLoading,

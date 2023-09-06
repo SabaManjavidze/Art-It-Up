@@ -243,7 +243,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                     product.isClothe
                       ? "grid-cols-4 lg:grid-cols-2"
                       : "grid-cols-2 lg:grid-cols-2"
-                  } mt-5 sm:grid-cols-4 `}
+                  } mt-5 max-h-64 gap-3 gap-x-0 overflow-y-auto sm:grid-cols-4 `}
                 >
                   {product.sizes.map((option) => (
                     <div key={option.id} className="flex w-full justify-center">
@@ -273,30 +273,24 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                 <Button
                   type="submit"
                   variant={"destructive"}
-                  className="text-base"
+                  className="mt-5 text-base"
+                  isLoading={addToWishListLoading}
                   onClick={handleAddToWishList}
                 >
-                  {addToWishListLoading ? (
-                    <Loader2 size={20} color="white" />
-                  ) : product.isInWishList ? (
-                    "Remove Product From WishList"
-                  ) : (
-                    "Add To WishList"
-                  )}
+                  {product.isInWishList
+                    ? "Remove Product From WishList"
+                    : "Add To WishList"}
                 </Button>
                 <Button
                   type="submit"
                   variant={"secondary"}
                   className="mt-5 text-base"
                   onClick={handleAddToCart}
+                  isLoading={addToCartLoading}
                 >
-                  {addToCartLoading ? (
-                    <Loader2 size={20} color="white" />
-                  ) : product.isInCart ? (
-                    "Remove Product From Cart"
-                  ) : (
-                    "Add To Cart"
-                  )}
+                  {product.isInCart
+                    ? "Remove Product From Cart"
+                    : "Add To Cart"}
                 </Button>
               </div>
             </div>
@@ -332,6 +326,8 @@ import { createContextInner } from "../../server/api/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { SIGNIN_ROUTE } from "@/utils/constants";
+import { BLANK_PROFILE_URL } from "../_app";
+import { AiOutlinePlusSquare } from "react-icons/ai";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({

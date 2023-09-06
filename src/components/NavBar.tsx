@@ -77,8 +77,8 @@ const Navbar = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState<SearchType>({
-    id: "2",
-    title: "Users",
+    id: "1",
+    title: "Products",
   });
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 

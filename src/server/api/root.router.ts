@@ -1,9 +1,8 @@
 import { createTRPCRouter, publicProcedure } from "./trpc";
-import { servicesRouter } from "./routers/services.router";
 import { productRouter } from "./routers/product.router";
 import { userRouter } from "./routers/user.router";
 import { orderRouter } from "./routers/order.router";
-import { entityRouter } from "./routers/entity.router";
+import { galleryRouter } from "./routers/gallery.router";
 import { cartRouter } from "./routers/cart.router";
 import { friendsRouter } from "./routers/friends.router";
 import { prisma } from "../db";
@@ -16,10 +15,9 @@ import { wishListRouter } from "./routers/wishList.router";
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
-  services: servicesRouter,
   product: productRouter,
   user: userRouter,
-  entity: entityRouter,
+  gallery: galleryRouter,
   address: addressRouter,
   order: orderRouter,
   cart: cartRouter,
