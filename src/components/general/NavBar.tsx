@@ -2,8 +2,8 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { FiShoppingCart, FiHeart, FiLogIn, FiSearch } from "react-icons/fi";
-import UserProfileButton from "./UserProfileButton";
-import SearchBar from "./SearchBar";
+import UserProfileButton from "../UserProfileButton";
+import SearchBar from "../SearchBar";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import {
   ListItem,
@@ -15,11 +15,11 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Loader2, MenuIcon } from "lucide-react";
 import { AiOutlineArrowsAlt } from "react-icons/ai";
-import Modal from "./ui/modal";
-import { SearchType } from "./ui/SearchTypeDropDown";
+import Modal from "../ui/modal";
+import { SearchType } from "../ui/SearchTypeDropDown";
 
 const buttons = [
   {

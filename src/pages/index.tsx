@@ -9,7 +9,6 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import {
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
@@ -40,7 +39,7 @@ const Home: NextPage = () => {
   if (isLoading)
     return (
       <div className="flex min-h-screen w-full items-center justify-center bg-background">
-        <Loader2 size={200} color={"white"} />
+        <Loader2 size={200} />
       </div>
     );
   return (
@@ -140,7 +139,7 @@ const Home: NextPage = () => {
               </Carousel>
             ) : (
               <div className="w-1/3 p-4">
-                <Loader2 color="white" />
+                <Loader2 />
               </div>
             )}
           </div>

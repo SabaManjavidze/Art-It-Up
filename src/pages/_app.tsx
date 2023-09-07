@@ -6,10 +6,10 @@ import { api } from "../utils/api";
 
 import "../styles/globals.css";
 import "../styles/selectSearch.css";
-import Navbar from "../components/NavBar";
+import Navbar from "../components/general/NavBar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Layout from "@/components/Layout";
+import Layout from "@/components/general/Layout";
 
 export const BLANK_PROFILE_URL =
   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";

@@ -8,7 +8,7 @@ import { MAX_ENTITY_COUNT } from "../../../utils/constants";
 
 export const galleryRouter = createTRPCRouter({
   getStyle: protectedProcedure
-    .input(z.object({ styleId: z.string().cuid() }))
+    .input(z.object({ styleId: z.string() }))
     .query(async ({ input: { styleId }, ctx: { session } }) => {
       return await prisma.userImage.findFirst({
         where: {
@@ -42,7 +42,7 @@ export const galleryRouter = createTRPCRouter({
   deleteStyle: protectedProcedure
     .input(
       z.object({
-        styleId: z.string().cuid(),
+        styleId: z.string(),
       })
     )
     .mutation(async ({ input: { styleId } }) => {

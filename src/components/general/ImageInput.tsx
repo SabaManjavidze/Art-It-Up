@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { useDropzone, Accept } from "react-dropzone";
 import { AiFillPlusCircle as PlusCircleIcon } from "react-icons/ai";
 import { nanoid } from "nanoid";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 interface Props {
   onImagesSelected: (images: File[]) => void;

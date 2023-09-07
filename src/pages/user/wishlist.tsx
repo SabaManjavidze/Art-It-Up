@@ -1,4 +1,4 @@
-import WishProductCard from "@/components/WishListPageComponents/WishProductCard";
+import WishProductCard from "@/components/wishListPageComponents/WishProductCard";
 import { api } from "@/utils/api";
 import React from "react";
 

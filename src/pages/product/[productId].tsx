@@ -88,9 +88,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
     try {
       await addToCart({
         productId: product.id,
-        description: product.description,
-        title: product.title,
-        picture: product.images[0]?.src as string,
+        styleId: "",
         sizeId: options.size,
         sizeTitle: product.sizes.find((size) => size.id == options.size)
           ?.title as string,

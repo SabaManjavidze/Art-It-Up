@@ -1,6 +1,6 @@
 import React from "react";
 import { Loader2 } from "lucide-react";
-import OrderCard from "../../components/OrdersPageComponents/OrderCard";
+import OrderCard from "../../components/ordersPageComponents/OrderCard";
 import { api } from "../../utils/api";
 
 export default function OrdersPage() {

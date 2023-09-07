@@ -28,7 +28,7 @@ export const lineItemsZT = z.array(
   z.object({
     productId: z.string(),
     variantId: z.number(),
-    styleId: z.string().cuid(),
+    styleId: z.string(),
     quantity: z.number(),
     cost: z.number(),
   })

@@ -3,7 +3,7 @@ import { api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import ImageInput from "@/components/ImageInput";
+import ImageInput from "@/components/general/ImageInput";
 import { toBase64 } from "@/utils/convertToBase64";
 
 export default function Gallery() {

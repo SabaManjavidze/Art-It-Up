@@ -8,14 +8,14 @@ import { addressToSchema } from "@/utils/zodTypes";
 
 export const addressRouter = createTRPCRouter({
   removeAddress: protectedProcedure
-    .input(z.object({ addressId: z.string().cuid() }))
+    .input(z.object({ addressId: z.string() }))
     .mutation(async ({ input: { addressId }, ctx: { session } }) => {
       await prisma.userAddress.delete({
         where: { id: addressId },
       });
     }),
   editAddress: protectedProcedure
-    .input(addressToSchema.and(z.object({ addressId: z.string().cuid() })))
+    .input(addressToSchema.and(z.object({ addressId: z.string() })))
     .mutation(async ({ input: { addressId, ...fields }, ctx: { session } }) => {
       await prisma.userAddress.update({
         where: { id: addressId },
@@ -25,7 +25,7 @@ export const addressRouter = createTRPCRouter({
   selectAddress: protectedProcedure
     .input(
       z.object({
-        addressId: z.string().cuid(),
+        addressId: z.string(),
       })
     )
     .mutation(async ({ input: { addressId }, ctx: { session } }) => {

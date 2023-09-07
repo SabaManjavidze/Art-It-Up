@@ -3,8 +3,8 @@ import { Loader2 } from "lucide-react";
 import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import { CheckoutProvider, useCheckout } from "../../hooks/useCheckoutHooks";
-import SummarySection from "@/components/CartPageComponents/SummarySection";
-import { ShippingAddressSection } from "@/components/CartPageComponents/ShippingAddressSection";
+import SummarySection from "@/components/cartPageComponents/SummarySection";
+import { ShippingAddressSection } from "@/components/cartPageComponents/ShippingAddressSection";
 
 const UserCart = () => {
   const { data: products, isLoading, error } = api.cart.getCart.useQuery();
@@ -74,7 +74,7 @@ import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
 import { SIGNIN_ROUTE } from "@/utils/constants";
 import { SelectableCard } from "@/components/ui/SelectableCard";
-import CartProductCard from "@/components/CartPageComponents/CartProductCard";
+import CartProductCard from "@/components/cartPageComponents/CartProductCard";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({
