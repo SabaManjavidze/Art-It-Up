@@ -13,9 +13,7 @@ import { TRPCClientError } from "@trpc/client";
 
 type MinimalEntityType = { id: string; picture: string | null; name: string };
 type CheckoutContextProps = {
-  createOrder: (
-    props: RouterInputs["order"]["createPrintifyOrder"]
-  ) => Promise<void>;
+  createOrder: (props: RouterInputs["order"]["createOrder"]) => Promise<void>;
   detailsLoading: boolean;
   shippingLoading: boolean;
   userDetails?: RouterOutputs["user"]["getUserAddress"];
@@ -75,7 +73,7 @@ export const CheckoutProvider = ({
   const context = api.useContext();
 
   const { mutateAsync: createOrder, isLoading: orderLoading } =
-    api.order.createPrintifyOrder.useMutation();
+    api.order.createOrder.useMutation();
 
   const {
     data: userAddresses,
@@ -104,18 +102,13 @@ export const CheckoutProvider = ({
     const { id, userId, title, ...address_to } =
       userAddresses[0] as UserAddress;
     if (products.length > 0) {
+      const line_items = formatLineItems(products, selected, "printify");
       await calculateShippingCost({
         address_to: {
           ...address_to,
           address2: address_to?.address2 || undefined,
         },
-        line_items: products.map((product) => {
-          return {
-            product_id: product.productId,
-            variant_id: product.variantId,
-            quantity: product.quantity,
-          };
-        }),
+        line_items,
       });
     }
     setValuesChanged(false);
@@ -212,14 +205,14 @@ export const CheckoutProvider = ({
     data,
     actions
   ) => {
-    const line_items = await formatLineItems(
+    const line_items = formatLineItems(
       products as NonNullable<typeof products>,
-      selected
+      selected,
+      "default"
     );
     if (line_items && line_items.length > 0 && address)
       await createOrder({
         line_items: line_items,
-        entityId: entity?.id,
         addressId: address,
         totalPrice: subTotalPrice,
         totalShipping: shippingCost?.standard as number,

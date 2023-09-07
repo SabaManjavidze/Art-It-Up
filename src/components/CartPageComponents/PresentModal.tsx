@@ -26,14 +26,13 @@ export default function PresentModal({
     isLoading: usersLoading,
   } = api.user.searchFriends.useMutation();
 
-  const { data: entities, isLoading: entitiesLoading } =
-    api.entity.getEntities.useQuery(
-      { userId: expandedUser.userId },
-      {
-        queryKey: ["entity.getEntities", { userId: expandedUser.userId }],
-      }
-    );
-  const { setEntity } = useCheckout();
+  // const { data: entities, isLoading: entitiesLoading } =
+  //   api.gallery.getUserGallery.useQuery(
+  //     { userId: expandedUser.userId },
+  //     {
+  //       queryKey: ["entity.getEntities", { userId: expandedUser.userId }],
+  //     }
+  //   );
 
   const debouncedSearchUsers = useCallback(
     debounce((value) => {
@@ -97,7 +96,7 @@ export default function PresentModal({
               <h3 className="text-skin-base text-lg">{user.name}</h3>
             </button>
             <div className="mt-3 flex w-full justify-end">
-              {expandedUser.userId === user.id &&
+              {/* {expandedUser.userId === user.id &&
                 expandedUser.expanded &&
                 entities?.map((entity) => (
                   <button
@@ -107,7 +106,6 @@ export default function PresentModal({
                     key={entity.id}
                     onClick={() => {
                       const { creatorId, ...minEntity } = entity;
-                      setEntity(minEntity);
                       setShowPresentModal(false);
                     }}
                   >
@@ -120,7 +118,7 @@ export default function PresentModal({
                     />
                     <h3 className="text-skin-base text-lg">{entity.name}</h3>
                   </button>
-                ))}
+                ))} */}
             </div>
           </div>
         ))

@@ -6,9 +6,11 @@ import { printify } from "../../PrintifyClient";
 import {
   addressToSchema,
   createOrderItemSchema,
-  lineItemsZodType,
+  lineItemsZT,
   personalDetailsSchema,
+  printifyLineItemsZT,
 } from "@/utils/zodTypes";
+import { LineItems } from "@prisma/client";
 
 export const orderRouter = createTRPCRouter({
   getMyOrders: protectedProcedure.query(async ({ ctx: { session } }) => {
@@ -22,7 +24,7 @@ export const orderRouter = createTRPCRouter({
     .input(
       z.object({
         address_to: addressToSchema.omit({ title: true }),
-        line_items: lineItemsZodType,
+        line_items: printifyLineItemsZT,
       })
     )
     .mutation(
@@ -41,7 +43,7 @@ export const orderRouter = createTRPCRouter({
         });
       }
     ),
-  createPrintifyOrder: protectedProcedure
+  createOrder: protectedProcedure
     .input(createOrderItemSchema)
     .mutation(async ({ input, ctx: { session } }) => {
       const user = await prisma.user.findFirst({
@@ -72,27 +74,21 @@ export const orderRouter = createTRPCRouter({
         data: {
           addressId: input.addressId,
           creatorId: session.user.id,
-          entityId: input.entityId,
           totalPrice: input.totalPrice,
           totalShipping: input.totalShipping,
         },
       });
+      await prisma.lineItems.createMany({
+        data: input.line_items.map((item) => {
+          return Object.assign(item, { orderId });
+        }),
+      });
       const formatedLineItems = input.line_items.map((item) => {
         return {
-          productId: item.product_id,
-          variantId: item.variant_id,
+          variant_id: item.variantId,
+          product_id: item.productId,
           quantity: item.quantity,
         };
-      });
-      await prisma.lineItems.createMany({
-        data: formatedLineItems.map((item) => {
-          return {
-            orderId,
-            ...item,
-            cost: 0,
-            shippingCost: 0,
-          };
-        }),
       });
       const createOrderObj = {
         address_to: {
@@ -107,10 +103,10 @@ export const orderRouter = createTRPCRouter({
           region: address.region as "",
           country: address.country,
         },
-        line_items: input.line_items as [(typeof input.line_items)[number]],
+        line_items: formatedLineItems as [(typeof formatedLineItems)[number]],
         send_shipping_notification: false,
         shipping_method: 1,
-        external_id: input?.entityId ?? "",
+        external_id: "",
       };
       await printify.createOrder(createOrderObj);
     }),

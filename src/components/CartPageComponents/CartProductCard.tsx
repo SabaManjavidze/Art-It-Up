@@ -74,7 +74,7 @@ const CartProductCard = ({
     }
   }, [descRef]);
   return (
-    <div className="items-strech border-t border-primary py-8 md:flex md:py-10 lg:py-8">
+    <div className="items-strech border-b border-primary/20 py-8 md:flex md:py-10 lg:py-8">
       <div className="relative h-72 w-full border-2 border-primary/30 md:w-4/12 2xl:w-1/4">
         <Link href={href}>
           <Image
@@ -103,15 +103,15 @@ const CartProductCard = ({
           </button>
         </div>
         <div className="flex items-center py-4 text-lg">
-          <p className="leading-3 text-gray-600">Size: </p>
-          <p className="fontb-old">{selectedSize.title}</p>
+          <p className="leading-3 text-gray-600">Size:</p>
+          <p className="fontb-old ml-2">{selectedSize.title}</p>
         </div>
         <p
           ref={descRef}
           className="text-md mt-4 hidden w-3/4 leading-5 text-gray-600 dark:text-primary-foreground md:block"
         ></p>
         <div className="flex items-center justify-between pt-5">
-          <div className="flex flex-col items-center justify-center sm:flex-row ">
+          <div className="flex w-3/5 flex-col items-center justify-center sm:flex-row">
             <div className="flex w-full items-center">
               <Input
                 className="w-12 border py-2 px-1 pr-3 text-center outline-none"
@@ -133,15 +133,7 @@ const CartProductCard = ({
             <div className="mt-2 flex w-full items-center sm:mt-0">
               <SearchTypeDropDown
                 selected={selectedSize}
-                handleSelectItem={(option) => {
-                  setSize(option);
-                  const item = sizes?.find((item) => {
-                    return item.id.toString() == option.id;
-                  });
-                  const cost = item?.cost as number;
-                  console.log({ item });
-                  handleChangeSize(productId, cost);
-                }}
+                handleSelectItem={handleSelectItem()}
                 isLoading={sizesLoading}
                 handleOpenClick={handleOpenClick}
                 options={
@@ -163,5 +155,16 @@ const CartProductCard = ({
       </div>
     </div>
   );
+
+  function handleSelectItem(): (option: SearchType) => void {
+    return (option) => {
+      setSize(option);
+      const item = sizes?.find((item) => {
+        return item.id.toString() == option.id;
+      });
+      const cost = item?.cost as number;
+      handleChangeSize(productId, cost);
+    };
+  }
 };
 export default CartProductCard;

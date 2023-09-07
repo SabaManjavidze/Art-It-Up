@@ -80,7 +80,7 @@ model UserCartProducts {
   price Int
   size String
 
-  styleId String?
+  styleId String
   style UserImage? @relation(references: [id],fields: [styleId])
 
   @@id([userId, productId])
@@ -144,7 +144,6 @@ model LineItems{
   product Product @relation(fields: [productId],references: [id])
   variantId Int
   cost    Int  
-  shippingCost Int
   quantity Int
 
   styleId String?

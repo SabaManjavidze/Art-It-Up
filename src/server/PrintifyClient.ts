@@ -1,6 +1,6 @@
 import PrintifyClient from "@kastlabs/printify-client";
 import type { z } from "zod";
-import type { lineItemsZodType } from "../utils/zodTypes";
+import type { lineItemsZT, printifyLineItemsZT } from "../utils/zodTypes";
 import { addressToSchema } from "../utils/zodTypes";
 const addressWithoutTitle = addressToSchema.omit({ title: true });
 type userDetails = {
@@ -13,7 +13,7 @@ type userDetails = {
 export class Printify extends PrintifyClient {
   public async calculateShipping(
     address_to: z.infer<typeof addressWithoutTitle>,
-    line_items: z.infer<typeof lineItemsZodType>,
+    line_items: z.infer<typeof printifyLineItemsZT>,
     userDetails: userDetails
   ): Promise<{ standard: number; express: number }> {
     return this.invoke(

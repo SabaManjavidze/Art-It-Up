@@ -17,17 +17,25 @@ export const AddressObjectKeys = Object.keys(
 
 export type UserAddressSchemaType = z.infer<typeof addressToSchema>;
 
-export const lineItemsZodType = z.array(
+export const printifyLineItemsZT = z.array(
   z.object({
     product_id: z.string(),
     variant_id: z.number(),
     quantity: z.number(),
   })
 );
+export const lineItemsZT = z.array(
+  z.object({
+    productId: z.string(),
+    variantId: z.number(),
+    styleId: z.string().cuid(),
+    quantity: z.number(),
+    cost: z.number(),
+  })
+);
 export const createOrderItemSchema = z.object({
   // external_id: z.string(),
-  line_items: lineItemsZodType,
-  entityId: z.string().optional(),
+  line_items: lineItemsZT,
   addressId: z.string(),
   totalShipping: z.number(),
   totalPrice: z.number(),
