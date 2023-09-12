@@ -10,6 +10,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./db";
 import type { GoogleProfile } from "next-auth/providers/google";
+import axios from "axios";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -44,9 +45,15 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID?.toString() as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET?.toString() as string,
+      authorization:{},
       allowDangerousEmailAccountLinking: true,
-
-      profile(prof: GoogleProfile, tokens) {
+      async profile(prof: GoogleProfile, tokens) {
+        try{
+          const {data}=await axios.get(`https://people.googleapis.com/v1/people/${prof.sub}?personFields=birthdays&key=${process.env.GOOGLE_CLIENT_ID as string}&access_token=${tokens.access_token}`)
+          console.log({data})
+        }catch(e){
+          console.log("erori xdebbaaaa",JSON.stringify(e))
+        }
         return {
           firstName: prof.given_name,
           lastName: prof.family_name,
@@ -66,10 +73,9 @@ export const authOptions: NextAuthOptions = {
         "https://www.facebook.com/v11.0/dialog/oauth?scope=email,public_profile",
       userinfo: {
         url: "https://graph.facebook.com/me",
-        params: { fields: "first_name,last_name,id,name,email,picture" },
+        params: { fields: "first_name,last_name,id,name,email,picture,birthday" },
       },
       profile(profile: FacebookProfile, tokens) {
-        console.log({ profile, tokens });
         return {
           id: profile.id,
           firstName: profile.first_name,

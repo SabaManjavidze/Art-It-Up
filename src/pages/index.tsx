@@ -39,7 +39,7 @@ const Home: NextPage = () => {
   if (isLoading)
     return (
       <div className="flex min-h-screen w-full items-center justify-center bg-background">
-        <Loader2 size={200} />
+        <Loader2 size={120} />
       </div>
     );
   return (
