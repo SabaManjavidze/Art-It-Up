@@ -19,10 +19,11 @@ export const wishListRouter = createTRPCRouter({
   moveProductToCart: protectedProcedure
     .input(
       z.object({
-        productId: z.string().min(1),
+        productId: z.string(),
+        styleId: z.string(),
       })
     )
-    .mutation(async ({ input: { productId }, ctx: { session } }) => {
+    .mutation(async ({ input: { styleId, productId }, ctx: { session } }) => {
       const wishListRec = await prisma.userWishListProducts.findFirst({
         where: {
           AND: [{ userId: session.user.id }, { productId }],
@@ -43,6 +44,7 @@ export const wishListRouter = createTRPCRouter({
           variantId: wishListRec.variantId,
           price: wishListRec.price,
           quantity: 1,
+          styleId,
           size: wishListRec.size,
         },
       });

@@ -80,8 +80,12 @@ model UserCartProducts {
   price Int
   size String
 
+  styleId String
+  style UserImage? @relation(references: [id],fields: [styleId])
+
   @@id([userId, productId])
   @@index([productId])
+  @@index([styleId])
   @@index([userId])
 }
 
@@ -103,25 +107,14 @@ model UserAddress {
     @@unique([userId, selected], name: "selectedAddress")
 }
 
-model Entity {
-id String @id @default(cuid())
-creatorId String 
-creator User @relation(references:[id],fields:[creatorId],onDelete: Cascade)
-name String
-picture String?
-gallery UserImage[] 
-presents Order[]
-@@index([creatorId])
-@@unique([creatorId,name])
-
-}
 model UserImage {
     id            String    @id @default(cuid())
     url           String    
-    entityId        String 
-    user          Entity  @relation(fields: [entityId], references: [id],onDelete: Cascade)
     createdAt  DateTime @default(now())
-    @@index(entityId)
+    cartProducts UserCartProducts[]
+    lineItems LineItems[]
+    ownerId String
+    owner User? @relation(fields:[id],references: [id])
     @@index(id)
 }
 enum Status {
@@ -151,10 +144,13 @@ model LineItems{
   product Product @relation(fields: [productId],references: [id])
   variantId Int
   cost    Int  
-  shippingCost Int
   quantity Int
 
+  styleId String?
+  style UserImage? @relation(references: [id],fields: [styleId])
+
   @@index([orderId])
+  @@index([styleId])
   @@index([productId])
 }
 model Order{
@@ -162,9 +158,6 @@ model Order{
 
     creatorId String 
     creator User @relation(references:[id],fields:[creatorId])
-
-    entityId String?
-    entity Entity? @relation(references: [id],fields: [entityId])
 
     addressId String
     addressTo UserAddress @relation(references: [id],fields: [addressId])
@@ -177,7 +170,6 @@ model Order{
 
 
     @@index([creatorId])
-    @@index([entityId])
     @@index([addressId])
 }
 
@@ -190,7 +182,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    entities 	  Entity[]
+    gallery 	  UserImage[]
     userFriends       Friends[] @relation(name: "users")
     friendUserFriends Friends[] @relation(name: "friendUsers")
     accounts      Account[]

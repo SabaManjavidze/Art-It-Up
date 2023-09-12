@@ -44,7 +44,7 @@ const WishProductCard = ({
   const [show, setShow] = useState(false);
 
   const handleMoveToCart = async () => {
-    await moveToCart({ productId });
+    await moveToCart({ productId, styleId: "" });
   };
   const handleRemoveCartProduct = async () => {
     await removeWishListProduct({ productId });

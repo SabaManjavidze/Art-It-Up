@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { SearchResultsPage } from "../../components/WrappedPages/SearchResultsPage";
+import { SearchResultsPage } from "../../components/wrappedPages/SearchResultsPage";
 import React from "react";
 import { Loader2 } from "lucide-react";
 

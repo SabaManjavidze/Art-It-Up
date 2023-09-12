@@ -9,8 +9,8 @@ export const friendsRouter = createTRPCRouter({
   removeFriend: protectedProcedure
     .input(
       z.object({
-        friendId: z.string().cuid(),
-        userId: z.string().cuid(),
+        friendId: z.string(),
+        userId: z.string(),
       })
     )
     .mutation(async ({ input: { friendId, userId }, ctx: { session } }) => {

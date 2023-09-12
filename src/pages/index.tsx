@@ -9,7 +9,6 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { AiFillCaretLeft, AiFillCaretRight } from "react-icons/ai";
 import {
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
@@ -40,7 +39,7 @@ const Home: NextPage = () => {
   if (isLoading)
     return (
       <div className="flex min-h-screen w-full items-center justify-center bg-background">
-        <Loader2 size={200} color={"white"} />
+        <Loader2 size={120} />
       </div>
     );
   return (
@@ -140,7 +139,7 @@ const Home: NextPage = () => {
               </Carousel>
             ) : (
               <div className="w-1/3 p-4">
-                <Loader2 color="white" />
+                <Loader2 />
               </div>
             )}
           </div>
@@ -167,16 +166,18 @@ const Home: NextPage = () => {
           <div className="flex flex-col justify-center md:flex-row">
             <div className="p-4 md:w-1/3">
               <Image
-                src={data?.data[1]?.images[0]?.src as string}
+                src={
+                  "https://img.freepik.com/free-photo/portrait-dark-skinned-cheerful-woman-with-curly-hair-touches-chin-gently-laughs-happily-enjoys-day-off-feels-happy-enthusiastic-hears-something-positive-wears-casual-blue-turtleneck_273609-43443.jpg"
+                }
                 alt="User 1"
                 width={500}
                 height={500}
-                className="h-64 w-full object-cover"
+                className="h-64 w-full object-contain"
               />
             </div>
             <div className="p-4 md:w-2/3">
-              <h3 className="text-xl font-medium ">User 1</h3>
-              <p className="">
+              <h3 className="w-1/2 border-b pb-3 text-xl font-medium">Leila</h3>
+              <p className="mt-10 max-w-xl">
                 "I recently purchased a hoodie from this store and I am very
                 happy with the quality of the product. The material is soft and
                 comfortable, and the sizing was accurate. I would definitely
@@ -188,16 +189,20 @@ const Home: NextPage = () => {
           <div className="flex flex-col justify-center md:flex-row">
             <div className="p-4 md:w-1/3">
               <Image
-                src={data?.data[1]?.images[0]?.src as string}
+                src={
+                  "https://st3.depositphotos.com/1017228/18878/i/450/depositphotos_188781580-stock-photo-handsome-cheerful-young-man-standing.jpg"
+                }
                 alt="User 2"
                 height={500}
                 width={500}
-                className="h-64 w-full object-cover"
+                className="h-64 w-full object-contain"
               />
             </div>
             <div className="p-4 md:w-2/3">
-              <h3 className="text-xl font-medium ">User 2</h3>
-              <p className="">
+              <h3 className="w-1/2 border-b pb-3 text-xl font-medium">
+                Baxmaro
+              </h3>
+              <p className="mt-10 max-w-xl">
                 "I love shopping at this store! They always have the latest
                 styles and the prices are very reasonable. I have never had any
                 issues with their customer service and the shipping is always

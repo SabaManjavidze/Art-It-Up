@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import Layout from "../Layout";
+import Layout from "../general/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import type { Session } from "next-auth";

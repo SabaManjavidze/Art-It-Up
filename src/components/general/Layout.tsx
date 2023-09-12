@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Footer } from "./Footer";
 import { BarLoader } from "react-spinners";
 import { Router } from "next/router";
+import TabVisibility from "./TabVisibility";
+import { COMEBACK_MESSAGE } from "@/utils/constants";
 
 export default function Layout({
   title = "Art It Up",
@@ -12,23 +14,24 @@ export default function Layout({
   children: React.ReactElement | React.ReactElement[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const isTabVisible=TabVisibility()
   useEffect(() => {
-    Router.events.on("routeChangeStart", (url) => {
+    Router.events.on("routeChangeStart", () => {
       setIsLoading(true);
     });
 
-    Router.events.on("routeChangeComplete", (url) => {
+    Router.events.on("routeChangeComplete", () => {
       setIsLoading(false);
     });
 
-    Router.events.on("routeChangeError", (url) => {
+    Router.events.on("routeChangeError", () => {
       setIsLoading(false);
     });
   }, [Router]);
   return (
     <>
       <Head>
-        <title>{title ? title + " - Art It Up" : "Art It Up"}</title>
+        <title>{isTabVisible?title:COMEBACK_MESSAGE}</title>
         <meta name="description" content="Ecommerce Website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

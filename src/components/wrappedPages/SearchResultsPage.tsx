@@ -1,5 +1,5 @@
 import React from "react";
-import type { RouterOutputs} from "../../utils/api";
+import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,7 +23,7 @@ export const SearchResultsPage = ({
     api.product.searchProducts.useQuery({ name: query, tags });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="container-xl min-h-screen bg-background px-16 xl:px-0">
       {products
         ? products.map((product) => (
             <ResultProductCard key={product.id} product={product} />
@@ -79,13 +79,13 @@ function ResultProductCard({
     }
   };
   return (
-    <div className="container-xl my-16 flex h-64 justify-center rounded-lg border ">
+    <div className="my-16 flex h-64 flex-col items-center justify-center rounded-lg border md:flex-row md:items-stretch">
       <Link
         href={`/product/${product.id}`}
-        className="flex w-1/3 items-center border-r border-gray-200
-              bg-white shadow duration-150 hover:bg-gray-100"
+        className="relative flex w-full flex-1 items-center border-r border-gray-200
+              bg-white shadow duration-150 hover:bg-gray-100 md:w-1/3"
       >
-        <div className="relative h-full w-full">
+        <div className="h-full w-full">
           <Image
             className="h-96 w-full rounded-t-lg object-contain md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
             fill
@@ -94,8 +94,8 @@ function ResultProductCard({
           />
         </div>
       </Link>
-      <div className="flex max-h-[100%] w-2/3 flex-col justify-between p-4 leading-normal">
-        <div className="flex w-full items-center justify-between border-b pb-2">
+      <div className="flex w-full flex-col justify-between p-4 leading-normal md:w-2/3">
+        <div className="flex w-full items-center justify-between border-b px-3 pb-2 md:px-0">
           <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-primary-foreground">
             {product.title}
           </h5>
@@ -115,7 +115,7 @@ function ResultProductCard({
         </div>
         <p
           dangerouslySetInnerHTML={{ __html: product.description }}
-          className="my-3 h-4/5 overflow-y-auto font-normal text-gray-700 dark:text-gray-400"
+          className="my-3 hidden h-4/5 overflow-y-auto font-normal text-gray-700 dark:text-gray-400 md:block"
         ></p>
       </div>
     </div>

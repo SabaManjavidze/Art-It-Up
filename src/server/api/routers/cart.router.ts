@@ -40,10 +40,8 @@ export const cartRouter = createTRPCRouter({
     .input(
       z.object({
         productId: z.string().min(1),
-        title: z.string(),
-        picture: z.string(),
-        description: z.string(),
         variantId: z.number(),
+        styleId: z.string(),
         quantity: z.number(),
         sizeId: z.number(),
         sizeTitle: z.string(),
@@ -55,9 +53,7 @@ export const cartRouter = createTRPCRouter({
       async ({
         input: {
           productId,
-          picture,
-          title,
-          description,
+          styleId,
           quantity,
           sizeId,
           sizeTitle,
@@ -89,21 +85,12 @@ export const cartRouter = createTRPCRouter({
             }
             await prisma.userCartProducts.create({
               data: {
-                product: {
-                  connectOrCreate: {
-                    where: { id: productId },
-                    create: {
-                      id: productId,
-                      title,
-                      picture,
-                      description,
-                    },
-                  },
-                },
+                product: { connect: { id: productId } },
+                user: { connect: { id: session.user.id } },
+                style: { connect: { id: styleId } },
                 variantId,
                 quantity,
                 price,
-                user: { connect: { id: session.user.id } },
                 size: `${sizeId}:${sizeTitle}`,
               },
             });

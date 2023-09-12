@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useDropzone, Accept } from "react-dropzone";
 import { AiFillPlusCircle as PlusCircleIcon } from "react-icons/ai";
 import { nanoid } from "nanoid";
+import { Button } from "../ui/button";
 
 interface Props {
   onImagesSelected: (images: File[]) => void;
@@ -11,6 +12,7 @@ interface Props {
   setImages: Dispatch<SetStateAction<File[]>>;
   multiple?: boolean;
   showButton?: boolean;
+  isLoading?: boolean;
 }
 
 const ImageInput: React.FC<Props> = ({
@@ -19,6 +21,7 @@ const ImageInput: React.FC<Props> = ({
   setImages,
   multiple = true,
   showButton = true,
+  isLoading = false,
 }) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (multiple) {
@@ -73,22 +76,27 @@ const ImageInput: React.FC<Props> = ({
         </button>
       </div>
       {images.length > 0 && (
-        <div className="mt-4 grid grid-cols-4 gap-4">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           {multiple ? (
             images.map((image, index) => (
-              <div key={nanoid()} className="relative h-64 w-48">
-                <button
-                  className="absolute top-0 right-0 z-10 h-6 w-6 text-gray-400 hover:text-red-500"
-                  onClick={() => removeImage(index)}
+              <div key={nanoid()} className="flex w-full justify-center">
+                <div
+                  key={nanoid()}
+                  className="relative h-80 w-64 border-2 sm:h-64 sm:w-48"
                 >
-                  &#10005;
-                </button>
-                <Image
-                  src={URL.createObjectURL(image)}
-                  alt=""
-                  fill
-                  className="w-full rounded-md object-contain"
-                />
+                  <button
+                    className="absolute top-0 right-0 z-10 h-6 w-6 text-gray-400 hover:text-red-500"
+                    onClick={() => removeImage(index)}
+                  >
+                    &#10005;
+                  </button>
+                  <Image
+                    src={URL.createObjectURL(image)}
+                    alt=""
+                    fill
+                    className="w-full rounded-md object-contain"
+                  />
+                </div>
               </div>
             ))
           ) : (
@@ -110,12 +118,13 @@ const ImageInput: React.FC<Props> = ({
         </div>
       )}
       {showButton && images.length > 0 && (
-        <button
-          className="mt-4 rounded-md bg-black py-2 px-4 text-primary-foreground hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75"
+        <Button
+          isLoading={isLoading}
+          className="mt-10"
           onClick={handleImagesSelected}
         >
           Upload Images
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-import type { RouterOutputs} from "../../utils/api";
+import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import { CheckoutProvider, useCheckout } from "../../hooks/useCheckoutHooks";
-import PresentModal from "@/components/CartPageComponents/PresentModal";
-import SummarySection from "@/components/CartPageComponents/SummarySection";
-import { ShippingAddressSection } from "@/components/CartPageComponents/ShippingAddressSection";
+import SummarySection from "@/components/cartPageComponents/SummarySection";
+import { ShippingAddressSection } from "@/components/cartPageComponents/ShippingAddressSection";
 
 const UserCart = () => {
   const { data: products, isLoading, error } = api.cart.getCart.useQuery();
-  const [showPresentModal, setShowPresentModal] = useState(false);
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
@@ -27,12 +25,6 @@ const UserCart = () => {
   return (
     <CheckoutProvider products={products}>
       <div className="text-skin-base min-h-screen w-full bg-background ">
-        {showPresentModal && (
-          <PresentModal
-            showPresentModal={showPresentModal}
-            setShowPresentModal={setShowPresentModal}
-          />
-        )}
         <div className="py-12">
           <ShippingAddressSection />
         </div>
@@ -64,12 +56,7 @@ const UserCart = () => {
             </div>
           </div>
           <div className="mt-32 mr-5 h-full w-full bg-gray-100 dark:bg-gray-800 md:w-full lg:w-96">
-            {products.length > 0 && (
-              <SummarySection
-                setShowPresentModal={setShowPresentModal}
-                showPresentModal={showPresentModal}
-              />
-            )}
+            {products.length > 0 && <SummarySection />}
           </div>
         </div>
       </div>
@@ -87,7 +74,7 @@ import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
 import { SIGNIN_ROUTE } from "@/utils/constants";
 import { SelectableCard } from "@/components/ui/SelectableCard";
-import CartProductCard from "@/components/CartPageComponents/CartProductCard";
+import CartProductCard from "@/components/cartPageComponents/CartProductCard";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({

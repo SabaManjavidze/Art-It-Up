@@ -44,6 +44,7 @@ const seedProducts = async () => {
 
     const HomeNLivingTag = "Home & Living";
     const BlanketTag = "Blankets";
+    const PaperTag = "Paper";
     let defColor = 0;
     let defDepth = 0;
     const isClothingType =
@@ -61,7 +62,7 @@ const seedProducts = async () => {
             variant.options.find((option) => option == defColor) &&
             variant.is_available
         );
-      } else if (product.tags.find((item) => item == BlanketTag)) {
+      } else if (product.tags.find((item) => item == BlanketTag || PaperTag)) {
         variants = product.variants;
       } else {
         defDepth = product?.options?.find((item) => item?.type == "depth")
@@ -89,6 +90,7 @@ const seedProducts = async () => {
         defDepth: defDepth as number,
         title: product.title,
         tags: product.tags,
+        options: product.options,
         isClothingType,
       });
       throw new Error("haha");

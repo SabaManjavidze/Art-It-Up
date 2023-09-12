@@ -13,13 +13,7 @@ import { personalDetailsSchema } from "@/utils/zodTypes";
 import { toast } from "react-toastify";
 import { ZodError } from "zod";
 
-export default function SummarySection({
-  showPresentModal,
-  setShowPresentModal,
-}: {
-  showPresentModal: boolean;
-  setShowPresentModal: Dispatch<SetStateAction<boolean>>;
-}) {
+export default function SummarySection() {
   const {
     entity: friendEntity,
     handleOnApprove,
@@ -112,15 +106,6 @@ export default function SummarySection({
             <h3 className="text-skin-base text-lg">{friendEntity.name}</h3>
           </button>
         )}
-        <button
-          className="flex w-full items-center justify-center bg-red-500 py-5
-              text-base leading-none text-secondary-foreground duration-150 ease-in-out hover:bg-red-600 focus:outline-none 
-              focus:ring-2 focus:ring-offset-2"
-          onClick={() => setShowPresentModal(true)}
-        >
-          <SlPresent size={20} className="mr-4 text-secondary-foreground" />
-          Buy for a friend!
-        </button>
         <div className="mt-3">
           {showButtons ? (
             <div>

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
-import PersonalDetailsSection from "@/components/ProfilePageComponents/PersonalDetailsSection";
+import PersonalDetailsSection from "@/components/profilePageComponents/PersonalDetailsSection";
 import { BsPeople } from "react-icons/bs";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-export default function ProfilePageContainer() {
+export default function Profile() {
   const {
     data: userAddresses,
     isLoading,
@@ -122,10 +122,10 @@ import { getServerAuthSession } from "../../server/auth";
 import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
 import { SIGNIN_ROUTE } from "@/utils/constants";
-import AddressCard from "@/components/ProfilePageComponents/AddressCard";
+import AddressCard from "@/components/profilePageComponents/AddressCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import FriendsSection from "../../components/ProfilePageComponents/FriendsSection";
+import FriendsSection from "../../components/profilePageComponents/FriendsSection";
 import { Router } from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

@@ -1,6 +1,6 @@
 import { Loader2 } from "lucide-react";
 import { api } from "../../utils/api";
-import AddressCard from "../ProfilePageComponents/AddressCard";
+import AddressCard from "../profilePageComponents/AddressCard";
 import { SelectableCard } from "../ui/SelectableCard";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 import { useEffect, useState } from "react";

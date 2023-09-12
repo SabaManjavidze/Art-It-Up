@@ -54,12 +54,19 @@ export const productRouter = createTRPCRouter({
       if (!product) throw new TRPCError({ code: "NOT_FOUND" });
       let isInCart = false;
       let isInWishList = false;
+      let style: undefined | { id: string; url: string };
       if (session?.user) {
         const record = await prisma.userCartProducts.findFirst({
-          where: { userId: session.user.id, productId: id },
+          where: { AND: [{ userId: session.user.id }, { productId: id }] },
+          include: {
+            style: { select: { id: true, url: true } },
+          },
         });
+        if (record?.style) {
+          style = record.style;
+        }
         const record2 = await prisma.userWishListProducts.findFirst({
-          where: { userId: session.user.id, productId: id },
+          where: { AND: [{ userId: session.user.id }, { productId: id }] },
         });
         isInCart = !!record;
         isInWishList = !!record2;
@@ -73,6 +80,7 @@ export const productRouter = createTRPCRouter({
         sizes,
         isClothe,
         isInCart,
+        style,
         isInWishList,
       };
     }),
