@@ -7,8 +7,7 @@ import { FiHeart } from "react-icons/fi";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import { SIGNIN_ROUTE } from "@/utils/constants";
-import { PrintifyGetProductResponse } from "@/utils/printify/printifyTypes";
+import { SIGNIN_ROUTE } from "../../utils/constants"; 
 import { useRouter } from "next/router";
 
 type SearchResultsPagePropType = {
