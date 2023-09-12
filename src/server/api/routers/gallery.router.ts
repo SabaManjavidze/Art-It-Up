@@ -17,12 +17,12 @@ export const galleryRouter = createTRPCRouter({
 				},
 			});
 		}),
-	getUserGallery: protectedProcedure.input(z.object({ userId: z.string().optional() })).query(async ({ input: { userId }, ctx: { session } }) => {
-		if (userId) {
+	getUserGallery: protectedProcedure.input(z.object({ userId: z.string()}).optional()).query(async ({input,ctx:{session}}) => {
+		if (input?.userId) {
 			return await prisma.userImage.findMany({
 				where: {
-					ownerId: userId
-				},
+					ownerId: input.userId
+				}
 			});
 		}
 		return await prisma.userImage.findMany({
