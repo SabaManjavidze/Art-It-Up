@@ -1,4 +1,5 @@
-export const MAX_ENTITY_COUNT = 5;
+// export const MAX_ENTITY_COUNT = 5;
+export const MAX_IMAGE_COUNT = 15;
 export const MAX_CART_PRODUCT = 20;
 export const MAX_WISHLIST_PRODUCT = 30;
 export const SIGNIN_ROUTE = "/";

@@ -4,7 +4,7 @@ import { prisma } from "../../db";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { UploadApiResponse, v2 } from "cloudinary";
-import { MAX_ENTITY_COUNT } from "../../../utils/constants";
+import { MAX_IMAGE_COUNT } from "../../../utils/constants";
 
 export const galleryRouter = createTRPCRouter({
 	getStyle: protectedProcedure
@@ -38,12 +38,19 @@ export const galleryRouter = createTRPCRouter({
 				filename_override: session?.user.name as string,
 				image_metadata: true,
 			});
+			const arr=await prisma.userImage.findMany({where:{
+			ownerId:session.user.id,id:result.public_id
+		},
+			select:{ownerId:true}
+		})
+		if(arr.length>=MAX_IMAGE_COUNT)return
 			await prisma.userImage.create({
 				data: {
 					id: result.public_id,
 					ownerId: session.user.id,
 					url: result.url,
 				},
+			include:{_count:true}
 			});
 		}),
 	deleteStyle: protectedProcedure

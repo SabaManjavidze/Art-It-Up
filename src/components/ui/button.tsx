@@ -64,7 +64,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {/* {isLoading ? <Loader2 size={20} /> : children} */}
         <div className="inline-flex w-full justify-center">
           <div
-            className={`${isLoading ? "opacity-0" : "opacity-100"}`}
+            className={`${isLoading ? "opacity-0" : "opacity-100"} flex justify-center items-center`}
           >
             {children}
           </div>

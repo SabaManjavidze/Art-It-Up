@@ -3,6 +3,7 @@ import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
+  DefaultUser,
 } from "next-auth";
 import type { FacebookProfile } from "next-auth/providers/facebook";
 import FacebookProvider from "next-auth/providers/facebook";
@@ -21,9 +22,11 @@ import axios from "axios";
  **/
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      id: string;
-    } & DefaultSession["user"];
+    user:User; 
+  }
+  interface User extends DefaultUser{
+    id:string;
+    credits?:number
   }
 }
 
@@ -32,7 +35,7 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        // session.user.role = user.role; <-- put other properties on the session here
+        session.user.credits = user.credits;
       }
       return session;
     },
@@ -45,12 +48,14 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID?.toString() as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET?.toString() as string,
-      authorization:{},
       allowDangerousEmailAccountLinking: true,
       async profile(prof: GoogleProfile, tokens) {
+        let birthday:undefined|Date
         try{
-          const {data}=await axios.get(`https://people.googleapis.com/v1/people/${prof.sub}?personFields=birthdays&key=${process.env.GOOGLE_CLIENT_ID as string}&access_token=${tokens.access_token}`)
-          console.log({data})
+          const baseUrl="https://people.googleapis.com/v1/people"
+          const {data}=await axios.get(`${baseUrl}/${prof.sub}?personFields=birthdays&key=${process.env.GOOGLE_API_KEY as string}&access_token=${tokens.access_token}`)
+          const bd=data.birthdays[0].date
+          birthday=new Date(bd.year,bd.month-1,bd.day)
         }catch(e){
           console.log("erori xdebbaaaa",JSON.stringify(e))
         }
@@ -62,6 +67,7 @@ export const authOptions: NextAuthOptions = {
           id: prof.sub,
           image: prof.picture,
           name: prof.name,
+          birthday
         };
       },
     }),
@@ -84,6 +90,7 @@ export const authOptions: NextAuthOptions = {
           emailVerified: true,
           name: profile.name,
           image: profile.picture.data.url,
+          birthday:profile.birthday
         };
       },
     }),
