@@ -76,12 +76,12 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET?.toString() as string,
       allowDangerousEmailAccountLinking: true,
       authorization:
-        "https://www.facebook.com/v11.0/dialog/oauth?scope=email,public_profile",
+        "https://www.facebook.com/v11.0/dialog/oauth?scope=email,public_profile,user_birthday",
       userinfo: {
         url: "https://graph.facebook.com/me",
         params: { fields: "first_name,last_name,id,name,email,picture,birthday" },
       },
-      profile(profile: FacebookProfile, tokens) {
+      profile(profile: FacebookProfile) {
         return {
           id: profile.id,
           firstName: profile.first_name,
@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
           emailVerified: true,
           name: profile.name,
           image: profile.picture.data.url,
-          birthday:profile.birthday
+          birthday:new Date(profile.birthday)
         };
       },
     }),
