@@ -18,19 +18,21 @@ type MultipleSelectPropType = {
   selectedTags: string[];
   setSelectedTags: Dispatch<string[]>;
   className?: string;
+  isLoading?: boolean;
 };
 export const MultipleSelect = ({
   tags,
   selectedTags,
   setSelectedTags,
   className = "",
+  isLoading = false,
 }: MultipleSelectPropType) => {
   const tagIsChecked = (tagId: string) =>
     !!selectedTags.find((tag) => tag == tagId);
   return (
     <DropdownMenu modal={true}>
       <DropdownMenuTrigger asChild>
-        <Button className={twMerge("", className)} variant={"outline"}>
+        <Button isLoading={isLoading} className={twMerge("", className)} variant={"outline"}>
           <p className="mr-0 rounded-full bg-muted-foreground/80 px-2 py-[3px] text-secondary-foreground sm:mr-1">
             {selectedTags.length}
           </p>

@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import React, { useState } from "react";
 import { SlPresent } from "react-icons/sl";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
-import { BLANK_PROFILE_URL } from "../../pages/_app";
+import { BLANK_PROFILE_URL } from "@/utils/constants";
 import { IoClose, IoCloseCircle } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
@@ -72,8 +72,8 @@ export default function SummarySection() {
               {shippingLoading
                 ? "loading..."
                 : shippingCost
-                ? shippingCost.standard / 100
-                : "You need to add a shipping address"}
+                  ? shippingCost.standard / 100
+                  : "You need to add a shipping address"}
             </p>
           )}
         </div>

@@ -43,9 +43,13 @@ function ResultCard({
         height={50}
         className="w-[15%] rounded-full border border-primary-foreground/70"
         alt="user profile image"
+        tabIndex={2}
       />
-      <h3 className="text-skin-base w-1/2 pl-6 text-start text-lg">{name}</h3>
+      <h3 tabIndex={1} className="text-skin-base w-1/2 pl-6 text-start text-lg">
+        {name}
+      </h3>
       <Button
+        tabIndex={3}
         disabled={disabled}
         variant="outline"
         isLoading={isLoading}

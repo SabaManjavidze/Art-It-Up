@@ -48,10 +48,10 @@ export const SearchResultsPage = ({
     const lastPage = Number(pages?.[pages.length - 1]) - 1;
     if (nextPage == lastPage) {
       await fetchNextPage();
-      if (hasNextPage) setPages([...pages, nextPage + 2]);
+      if (data?.pages?.[nextPage]?.nextCursor)
+        setPages([...pages, nextPage + 2]);
     }
   };
-  if (error) return <h1>something went wrong</h1>;
   return (
     <div className="container-xl min-h-screen bg-background px-16 xl:px-0">
       {!productsLoading ? (

@@ -19,7 +19,7 @@ import { Button } from "../ui/button";
 import { Loader2, MenuIcon } from "lucide-react";
 import { AiOutlineArrowsAlt } from "react-icons/ai";
 import Modal from "../ui/modal";
-import { SearchType } from "../ui/SearchTypeDropDown";
+import { useSearch } from "@/hooks/useSearchHook";
 
 const buttons = [
   {
@@ -71,16 +71,9 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 const Navbar = () => {
   const { data: session, status } = useSession();
-  const [showSearchBar, setShowSearchBar] = useState(false);
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchType, setSearchType] = useState<SearchType>({
-    id: "1",
-    title: "Products",
-  });
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const { setShowSearchBar, showSearchBar, closeSearchBar } = useSearch();
 
   const [loading, setLoading] = useState<"google" | "facebook" | "none">(
     "none"
@@ -90,7 +83,6 @@ const Navbar = () => {
     components: false,
   });
   const [divRef] = useAutoAnimate<HTMLDivElement>();
-
   return (
     <nav
       className="h-18 sticky top-0 z-20 flex w-full flex-col items-center 
@@ -98,20 +90,13 @@ const Navbar = () => {
     >
       <Modal
         isOpen={showSearchBar}
-        closeModal={() => setShowSearchBar(false)}
+        closeModal={closeSearchBar}
         className="h-18 top-0 left-0 right-0 flex w-full max-w-none 
         translate-x-0 translate-y-0 items-center justify-center py-4 px-10
         md:px-0"
       >
         <div className="flex w-full max-w-4xl justify-center md:px-10">
-          <SearchBar
-            searchTerm={searchTerm}
-            searchType={searchType}
-            setSearchTerm={setSearchTerm}
-            setSearchType={setSearchType}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-          />
+          <SearchBar />
         </div>
       </Modal>
       <Modal
@@ -262,11 +247,10 @@ const Navbar = () => {
               <Link
                 href={button.href}
                 key={button.href}
-                className={`hover:text-skin-secondary ${
-                  status == "unauthenticated"
+                className={`hover:text-skin-secondary ${status == "unauthenticated"
                     ? "pointer-events-none text-muted-foreground"
                     : ""
-                } duration-150 hover:scale-110`}
+                  } duration-150 hover:scale-110`}
               >
                 {button.icon}
               </Link>
@@ -311,9 +295,8 @@ const Navbar = () => {
               <AiOutlineArrowsAlt className="absolute right-5" />
             </Button>
             <ul
-              className={`${
-                btnIsOpen.getStarted ? "grid" : "hidden"
-              } gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]`}
+              className={`${btnIsOpen.getStarted ? "grid" : "hidden"
+                } gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]`}
             >
               <li className="row-span-3">
                 <Link
@@ -354,9 +337,8 @@ const Navbar = () => {
               <AiOutlineArrowsAlt className="absolute right-5" />
             </Button>
             <ul
-              className={`${
-                btnIsOpen.components ? "grid" : "hidden"
-              } w-[400px] gap-3 p-4 sm:w-[500px] md:grid-cols-2 lg:w-[600px] `}
+              className={`${btnIsOpen.components ? "grid" : "hidden"
+                } w-[400px] gap-3 p-4 sm:w-[500px] md:grid-cols-2 lg:w-[600px] `}
             >
               {components.map((component) => (
                 <ListItem

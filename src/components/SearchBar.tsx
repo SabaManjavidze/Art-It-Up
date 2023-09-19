@@ -1,31 +1,25 @@
 import type { FormEvent } from "react";
 import React, { useEffect, useState } from "react";
 import { api } from "../utils/api";
-import type { SearchType } from "./ui/SearchTypeDropDown";
 import SearchTypeDropDown from "./ui/SearchTypeDropDown";
 import SearchResults from "./SearchResults";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { MultipleSelect } from "./ui/MultipleSelect";
 import type { Tags } from "@prisma/client";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useSearch } from "@/hooks/useSearchHook";
 
-const SearchBar = ({
-  searchTerm,
-  setSearchTerm,
-  searchType,
-  setSearchType,
-  selectedTags,
-  setSelectedTags,
-}: {
-  searchTerm: string;
-  setSearchTerm: React.Dispatch<string>;
-  searchType: SearchType;
-  setSearchType: React.Dispatch<SearchType>;
-  selectedTags: string[];
-  setSelectedTags: React.Dispatch<string[]>;
-}) => {
+const SearchBar = () => {
+  const {
+    searchTerm,
+    setSearchTerm,
+    searchType,
+    setSearchType,
+    selectedTags,
+    setSelectedTags,
+    closeSearchBar,
+  } = useSearch();
   const { data: tags, isLoading: tagsLoading } = api.getTags.useQuery();
   const {
     data: users,
@@ -35,26 +29,27 @@ const SearchBar = ({
   const router = useRouter();
   useEffect(() => {
     const { query } = router.query;
-    if (query) {
+    if (query && searchType.title == "Products") {
       setSearchTerm(query as string);
     }
   }, []);
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (searchType.title == "Products") closeSearchBar();
     if (searchType.title == "Users") {
       await searchUsers({ name: searchTerm });
     } else {
-      const names = [];
+      const names: string[] = [];
       if (tags) {
         for (let i = 0; i < tags.length; i++) {
           const element = tags[i] as Tags;
           if (selectedTags.find((tag) => tag == element.id))
-            names.push(element);
+            names.push(element.name);
         }
       }
+      console.log(names);
       router.push(
-        `/search-results/${searchTerm}?tags=${
-          selectedTags.length > 0 ? names.join(", ") : ""
+        `/search-results/${searchTerm}?tags=${selectedTags.length > 0 ? names.join(", ") : ""
         }`
       );
     }
@@ -93,6 +88,7 @@ const SearchBar = ({
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
             className="rounded-none"
+            isLoading={tagsLoading}
           />
         ) : null}
       </form>
