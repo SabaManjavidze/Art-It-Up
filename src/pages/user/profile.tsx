@@ -29,7 +29,7 @@ export default function Profile() {
   if (isLoading || detailsLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2 color="white" />
+        <Loader2 />
       </div>
     );
   }

@@ -10,9 +10,12 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
+  BsChevronLeft,
+  BsChevronRight,
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
 } from "react-icons/bs";
+import { SIZES_PROP } from "@/utils/constants";
 
 const categories = [
   {
@@ -67,11 +70,10 @@ const Home: NextPage = () => {
                   <button
                     type="button"
                     onClick={clickHandler}
-                    className={`${
-                      hasNext ? "block" : "hidden"
-                    } absolute top-1/2 bottom-0 right-0 z-10 mt-0 -translate-y-1/2 p-1`}
+                    className={`${hasNext ? "block" : "hidden"
+                      } absolute top-1/2 bottom-0 right-0 z-10 mt-0 -translate-y-1/2 p-1`}
                   >
-                    <BsFillArrowRightCircleFill
+                    <BsChevronRight
                       size={30}
                       className="text-primary duration-150 hover:scale-110"
                     />
@@ -81,11 +83,10 @@ const Home: NextPage = () => {
                   <button
                     type="button"
                     onClick={clickHandler}
-                    className={`${
-                      hasPrev ? "block" : "hidden"
-                    } absolute top-1/2 bottom-0 left-0 z-10 mt-0 -translate-y-1/2 p-1`}
+                    className={`${hasPrev ? "block" : "hidden"
+                      } absolute top-1/2 bottom-0 left-0 z-10 mt-0 -translate-y-1/2 p-1`}
                   >
-                    <BsFillArrowLeftCircleFill
+                    <BsChevronLeft
                       size={30}
                       className="text-primary duration-150 hover:scale-110"
                     />
@@ -99,9 +100,8 @@ const Home: NextPage = () => {
                       onClick={() => {
                         setSelectedItem(index);
                       }}
-                      className={`${
-                        isSelected ? "border-2 border-white" : null
-                      } mx-2 inline-block h-2 w-2 rounded-full bg-black duration-150`}
+                      className={`${isSelected ? "border-2 border-white" : null
+                        } mx-2 inline-block h-2 w-2 rounded-full bg-black duration-150`}
                     ></li>
                   );
                 }}
@@ -116,20 +116,22 @@ const Home: NextPage = () => {
                 {data.data.map((product) => (
                   <Link href={`/product/${product.id}`} key={product.id}>
                     <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
-                      <div className="aspect-h-4 aspect-w-5 hidden overflow-hidden rounded-lg lg:block">
+                      <div className="aspect-h-4 aspect-w-5 relative hidden overflow-hidden rounded-lg lg:block">
                         <Image
                           src={product.images?.[1]?.src || ""}
                           alt={product.images?.[1]?.src || ""}
                           className="h-full w-full object-contain object-center"
                           fill
+                          sizes={SIZES_PROP}
                         />
                       </div>
 
-                      <div className="aspect-h-5 aspect-w-4 sm:overflow-hidden sm:rounded-lg lg:aspect-h-4 lg:aspect-w-3">
+                      <div className="aspect-h-5 aspect-w-4 relative sm:overflow-hidden sm:rounded-lg lg:aspect-h-4 lg:aspect-w-3">
                         <Image
                           src={product.images?.[0]?.src || ""}
                           alt={product.images?.[0]?.src || ""}
                           className="h-full w-full object-contain object-center"
+                          sizes={SIZES_PROP}
                           fill
                         />
                       </div>

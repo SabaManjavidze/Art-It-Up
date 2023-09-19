@@ -34,6 +34,7 @@ function ResultCard({
     await sendFriendReq({ addressantId: userId });
     toast.success(`sent friend request to ${username}`);
   };
+
   return (
     <div className="mt-5 flex items-center justify-around text-primary-foreground">
       <Image

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { RouterOutputs } from "../../utils/api";
 import { api } from "../../utils/api";
 import Image from "next/image";
@@ -7,35 +7,83 @@ import { FiHeart } from "react-icons/fi";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import { SIGNIN_ROUTE } from "@/utils/constants";
-import { PrintifyGetProductResponse } from "@/utils/printify/printifyTypes";
+import { SIGNIN_ROUTE, SIZES_PROP } from "@/utils/constants";
 import { useRouter } from "next/router";
+import { Loader2 } from "lucide-react";
 
 type SearchResultsPagePropType = {
   query: string;
   tags?: string[];
 };
+const limit = 5;
 export const SearchResultsPage = ({
   query,
   tags,
 }: SearchResultsPagePropType) => {
-  const { data: products, isLoading: productsLoading } =
-    api.product.searchProducts.useQuery({ name: query, tags });
+  const {
+    data,
+    isFetching: productsLoading,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+  } = api.product.searchProducts.useInfiniteQuery(
+    {
+      name: query,
+      tags,
+      limit,
+    },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
+  const [page, setPage] = useState(0);
+  const [pages, setPages] = useState([1]);
 
+  useEffect(() => {
+    if (!isLoading && data?.pages[0]?.nextCursor) {
+      setPages([1, 2]);
+    }
+  }, [isLoading]);
+  const handlePageClick = async (nextPage: number) => {
+    setPage(nextPage);
+    const lastPage = Number(pages?.[pages.length - 1]) - 1;
+    if (nextPage == lastPage) {
+      await fetchNextPage();
+      if (hasNextPage) setPages([...pages, nextPage + 2]);
+    }
+  };
+  if (error) return <h1>something went wrong</h1>;
   return (
     <div className="container-xl min-h-screen bg-background px-16 xl:px-0">
-      {products
-        ? products.map((product) => (
-            <ResultProductCard key={product.id} product={product} />
-          ))
-        : null}
+      {!productsLoading ? (
+        data?.pages[page]?.products.map((product) => (
+          <ResultProductCard key={product.id} product={product} />
+        ))
+      ) : (
+        <div className="flex h-screen items-center justify-center bg-background">
+          <Loader2 size={15} />
+        </div>
+      )}
+      <div className="flex justify-center">
+        <div className="flex w-1/3 items-center justify-center">
+          {pages.map((item) => (
+            <Button
+              variant={item - 1 == page ? "default" : "outline"}
+              key={item}
+              onClick={() => handlePageClick(item - 1)}
+              className="mx-3 first-of-type:mx-0"
+            >
+              {item}
+            </Button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
 function ResultProductCard({
   product,
 }: {
-  product: RouterOutputs["product"]["searchProducts"][number];
+  product: RouterOutputs["product"]["searchProducts"]["products"][number];
 }) {
   const utils = api.useContext();
   const { mutateAsync: addToWishList, isLoading: addToWishListLoading } =
@@ -47,7 +95,7 @@ function ResultProductCard({
   const session = useSession();
   const router = useRouter();
   const handleAddToWishList = async (
-    product: RouterOutputs["product"]["searchProducts"][number]
+    product: RouterOutputs["product"]["searchProducts"]["products"][number]
   ) => {
     if (session.status == "unauthenticated") {
       toast.error("Unauthenticated. click here to sign in", {
@@ -85,10 +133,11 @@ function ResultProductCard({
         className="relative flex w-full flex-1 items-center border-r border-gray-200
               bg-white shadow duration-150 hover:bg-gray-100 md:w-1/3"
       >
-        <div className="h-full w-full">
+        <div className="relative h-full w-full">
           <Image
             className="h-96 w-full rounded-t-lg object-contain md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
             fill
+            sizes={SIZES_PROP}
             src={product.picture}
             alt={product.picture}
           />
@@ -101,15 +150,13 @@ function ResultProductCard({
           </h5>
           <button
             onClick={() => handleAddToWishList(product)}
-            className={`mr-4 duration-700 ${
-              addToWishListLoading ? "animate-ping" : ""
-            }`}
+            className={`mr-4 duration-700 ${addToWishListLoading ? "animate-ping" : ""
+              }`}
           >
             <FiHeart
               size={20}
-              className={`duration-150 ${
-                product.isInWishList ? "fill-red-500 text-red-500" : ""
-              } hover:fill-red-500 hover:text-red-500`}
+              className={`duration-150 ${product.isInWishList ? "fill-red-500 text-red-500" : ""
+                } hover:fill-red-500 hover:text-red-500`}
             />
           </button>
         </div>

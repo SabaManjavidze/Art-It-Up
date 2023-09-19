@@ -15,34 +15,52 @@ export const productRouter = createTRPCRouter({
       z.object({
         name: z.string(),
         tags: z.array(z.string()).nullish(),
+
+        limit: z.number().min(1).max(20).optional().default(20),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
       })
     )
-    .query(async ({ input: { name, tags }, ctx: { session } }) => {
-      const products = await prisma.product.findMany({
-        where: {
-          title: { contains: name },
-          tags:
-            tags && tags.length > 0
-              ? { some: { tag: { name: { in: tags } } } }
-              : undefined,
-        },
-        include: {
-          wishHolder: {
-            where: {
-              userId: session.user.id,
+    .query(
+      async ({
+        input: { name, tags, skip, limit, cursor },
+        ctx: { session },
+      }) => {
+        const products = await prisma.product.findMany({
+          take: limit + 1,
+          skip,
+          cursor: cursor ? { id: cursor } : undefined,
+          include: {
+            wishHolder: {
+              where: {
+                userId: session.user.id,
+              },
             },
           },
-        },
-      });
-      return products.map((product) => {
-        const isInWishList = product.wishHolder.length > 0;
-        const { wishHolder, ...newProduct } = product;
-        return {
-          ...newProduct,
-          isInWishList,
-        };
-      });
-    }),
+          where: {
+            title: { contains: name },
+            tags:
+              tags && tags.length > 0
+                ? { some: { tag: { name: { in: tags } } } }
+                : undefined,
+          },
+        });
+        const items = products.map((product) => {
+          const isInWishList = product.wishHolder.length > 0;
+          const { wishHolder, ...newProduct } = product;
+          return {
+            ...newProduct,
+            isInWishList,
+          };
+        });
+        let nextCursor: typeof cursor | undefined;
+        if (items.length > limit) {
+          const nextItem = items.pop();
+          nextCursor = nextItem?.id;
+        }
+        return { products: items, nextCursor };
+      }
+    ),
 
   getPrintifyProduct: publicProcedure
     .input(z.object({ id: z.string().min(1) }))

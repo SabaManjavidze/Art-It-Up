@@ -8,12 +8,14 @@ import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
 type OptionType = {
   quantity: number;
   size: number;
   variantId: number;
   cost: number;
 };
+
 const ProductPageContainer = ({ productId }: { productId: string }) => {
   const { data: product, error } = api.product.getPrintifyProduct.useQuery({
     id: productId,

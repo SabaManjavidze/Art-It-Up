@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import ImageInput from "@/components/general/ImageInput";
 import { toBase64 } from "@/utils/convertToBase64";
+import { SIZES_PROP } from "@/utils/constants";
 
 export default function Gallery() {
   const [images, setImages] = useState<File[]>([]);
@@ -43,6 +44,7 @@ export default function Gallery() {
                 <li key={image.id} className="relative m-4 flex h-72 w-48">
                   <Image
                     fill
+                    sizes={SIZES_PROP}
                     src={image.url}
                     alt={`user uploaded image ${index + 1}`}
                     className="rounded-lg object-contain"

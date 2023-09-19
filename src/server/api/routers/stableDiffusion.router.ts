@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import axios from "axios";
+import { IMG2IMG_COST } from "@/utils/constants";
+import {decreaseCredits} from "../utils/credits"
 
 const rateLimitMsg = "Rate limit exceeded";
 
@@ -48,7 +50,7 @@ export const stableDiffusionRouter = createTRPCRouter({
         prompt: z.string().optional(),
       })
     )
-    .mutation(async ({ input: { prompt, imageUrl, modelId } }) => {
+    .mutation(async ({ input: { prompt, imageUrl, modelId },ctx:{session} }) => {
       try {
         const res = await StableDiffusion.post("img2img", {
           key: apikey,
@@ -68,6 +70,8 @@ export const stableDiffusionRouter = createTRPCRouter({
           webhook: null,
           track_id: null,
         });
+      //decrease user credits
+      await decreaseCredits(session.user.id,IMG2IMG_COST)
         console.log({ res });
       } catch (error) {
         console.log(error);
