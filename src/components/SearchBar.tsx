@@ -47,7 +47,6 @@ const SearchBar = () => {
             names.push(element.name);
         }
       }
-      console.log(names);
       router.push(
         `/search-results/${searchTerm}?tags=${selectedTags.length > 0 ? names.join(", ") : ""
         }`

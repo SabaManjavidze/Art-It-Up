@@ -37,7 +37,7 @@ export default function index() {
               description={product.description}
               href={`/product/${product.id}`}
               title={product.title}
-              price={price}
+              price={price / 100}
               productId={product.id}
               size={size}
               src={product.picture}

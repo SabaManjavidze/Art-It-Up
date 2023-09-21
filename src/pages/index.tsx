@@ -30,7 +30,7 @@ const categories = [
   },
   {
     title: "Puzzles",
-    href: "/search-results/_tags=Puzzles",
+    href: "/search-results/_?tags=Puzzles",
     src: "https://images-api.printify.com/mockup/63efe2a05b70b9af05008ed9/72664/16363/puzzle-120-252-500-piece.jpg?camera_label=front",
   },
 ];
@@ -42,7 +42,7 @@ const Home: NextPage = () => {
   if (isLoading)
     return (
       <div className="flex min-h-screen w-full items-center justify-center bg-background">
-        <Loader2 size={120} />
+        <Loader2 size={50} />
       </div>
     );
   return (

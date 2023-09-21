@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { SIGNIN_ROUTE, SIZES_PROP } from "@/utils/constants";
 import { useRouter } from "next/router";
 import { Loader2 } from "lucide-react";
+import { limitTxt } from "@/utils/utils";
 
 type SearchResultsPagePropType = {
   query: string;
@@ -26,7 +27,6 @@ export const SearchResultsPage = ({
     isLoading,
     error,
     fetchNextPage,
-    hasNextPage,
   } = api.product.searchProducts.useInfiniteQuery(
     {
       name: query,
@@ -45,6 +45,7 @@ export const SearchResultsPage = ({
   }, [isLoading]);
   const handlePageClick = async (nextPage: number) => {
     setPage(nextPage);
+    window.scrollTo(0, 0);
     const lastPage = Number(pages?.[pages.length - 1]) - 1;
     if (nextPage == lastPage) {
       await fetchNextPage();
@@ -52,6 +53,12 @@ export const SearchResultsPage = ({
         setPages([...pages, nextPage + 2]);
     }
   };
+  if (data?.pages[page]?.products.length == 0)
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <h2 className="text-3xl">0 Results Found For "{query}"</h2>
+      </div>
+    );
   return (
     <div className="container-xl min-h-screen bg-background px-16 xl:px-0">
       {!productsLoading ? (
@@ -144,9 +151,9 @@ function ResultProductCard({
         </div>
       </Link>
       <div className="flex w-full flex-col justify-between p-4 leading-normal md:w-2/3">
-        <div className="flex w-full items-center justify-between border-b px-3 pb-2 md:px-0">
+        <div className="flex w-full items-center justify-between px-3 pb-2 md:border-b md:px-0">
           <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-primary-foreground">
-            {product.title}
+            {limitTxt(product.title, 20)}
           </h5>
           <button
             onClick={() => handleAddToWishList(product)}
