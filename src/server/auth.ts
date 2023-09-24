@@ -22,11 +22,11 @@ import axios from "axios";
  **/
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user:User; 
+    user: User;
   }
-  interface User extends DefaultUser{
-    id:string;
-    credits?:number
+  interface User extends DefaultUser {
+    id: string;
+    credits?: number
   }
 }
 
@@ -50,14 +50,14 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET?.toString() as string,
       allowDangerousEmailAccountLinking: true,
       async profile(prof: GoogleProfile, tokens) {
-        let birthday:undefined|Date
-        try{
-          const baseUrl="https://people.googleapis.com/v1/people"
-          const {data}=await axios.get(`${baseUrl}/${prof.sub}?personFields=birthdays&key=${process.env.GOOGLE_API_KEY as string}&access_token=${tokens.access_token}`)
-          const bd=data.birthdays[0].date
-          birthday=new Date(bd.year,bd.month-1,bd.day)
-        }catch(e){
-          console.log("erori xdebbaaaa",JSON.stringify(e))
+        let birthday: undefined | Date
+        try {
+          const baseUrl = "https://people.googleapis.com/v1/people"
+          const { data } = await axios.get(`${baseUrl}/${prof.sub}?personFields=birthdays&key=${process.env.GOOGLE_API_KEY as string}&access_token=${tokens.access_token}`)
+          const bd = data.birthdays[0].date
+          birthday = new Date(bd.year, bd.month - 1, bd.day)
+        } catch (e) {
+          console.log("erori xdebbaaaa", JSON.stringify(e))
         }
         return {
           firstName: prof.given_name,
@@ -82,6 +82,7 @@ export const authOptions: NextAuthOptions = {
         params: { fields: "first_name,last_name,id,name,email,picture,birthday" },
       },
       profile(profile: FacebookProfile) {
+        console.log({ profile })
         return {
           id: profile.id,
           firstName: profile.first_name,
@@ -90,7 +91,7 @@ export const authOptions: NextAuthOptions = {
           emailVerified: true,
           name: profile.name,
           image: profile.picture.data.url,
-          birthday:new Date(profile.birthday)
+          birthday: new Date(profile.birthday)
         };
       },
     }),

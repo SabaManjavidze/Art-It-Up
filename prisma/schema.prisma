@@ -1,202 +1,210 @@
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
     previewFeatures = ["clientExtensions"]
 }
 
 datasource db {
-    provider = "mysql"
+    provider     = "mysql"
     relationMode = "prisma"
-    url      = env("DATABASE_URL")
+    url          = env("DATABASE_URL")
 }
+
 model Review {
-    reviewId   String   @id @default(cuid())
-    title     String 
-    description String @db.Text() 
-    score Decimal
+    reviewId    String  @id @default(cuid())
+    title       String
+    description String  @db.Text()
+    score       Decimal
 
-    id String 
-    product Product     @relation(fields: [id], references: [id])
+    id      String
+    product Product @relation(fields: [id], references: [id])
 
-    creatorId String 
-    creator User     @relation(fields: [creatorId], references: [id])
+    creatorId String
+    creator   User   @relation(fields: [creatorId], references: [id])
 
     @@index([id])
     @@index([creatorId])
 }
+
 model Tags {
-    id        String   @id @default(cuid())
-    name     String  @unique
+    id       String        @id @default(cuid())
+    name     String        @unique
     products ProductTags[]
 }
 
-model ProductTags{
-    id String @id @default(cuid())
-   tagId String
-   tag Tags @relation(fields:[tagId], references: [id])
-   productId String
-   product Product @relation(fields:[productId], references: [id])
-   @@index([tagId])
-   @@index([productId])
+model ProductTags {
+    id        String  @id @default(cuid())
+    tagId     String
+    tag       Tags    @relation(fields: [tagId], references: [id])
+    productId String
+    product   Product @relation(fields: [productId], references: [id])
+
+    @@index([tagId])
+    @@index([productId])
 }
 
 model Product {
-    id        String   @id @default(cuid())
-    title     String 
-    description String @db.Text()
-    defautlSize String @default("") 
-    defaultPrice Int @default(0)
-    defaultVariantId Int @default(0)
-    picture String
-    created_at DateTime @default(now())
-    reviews Review[]
-    tags ProductTags[]
-    orders LineItems[]
-    cartHolder UserCartProducts[]
-    wishHolder UserWishListProducts[]
+    id               String                 @id @default(cuid())
+    title            String
+    description      String                 @db.Text()
+    defautlSize      String                 @default("")
+    defaultPrice     Int                    @default(0)
+    defaultVariantId Int                    @default(0)
+    picture          String
+    created_at       DateTime               @default(now())
+    reviews          Review[]
+    tags             ProductTags[]
+    orders           LineItems[]
+    cartHolder       UserCartProducts[]
+    wishHolder       UserWishListProducts[]
 }
 
 model UserWishListProducts {
-  product   Product  @relation(fields:[productId],references: [id])
-  productId String 
-  user   User @relation(fields: [userId], references: [id])
-  userId String 
-  assignedAt DateTime @default(now())
-  price Int
-  size String
-  variantId Int
+    product    Product  @relation(fields: [productId], references: [id])
+    productId  String
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId     String
+    assignedAt DateTime @default(now())
+    price      Int
+    size       String
+    variantId  Int
 
-  @@id([userId, productId])
-  @@index([productId])
-  @@index([userId])
+    @@id([userId, productId])
+    @@index([productId])
+    @@index([userId])
 }
+
 model UserCartProducts {
-  product   Product  @relation(fields:[productId],references: [id])
-  productId String 
-  user   User @relation(fields: [userId], references: [id])
-  userId String 
-  assignedAt DateTime @default(now())
-  quantity Int 
-  variantId Int
-  price Int
-  size String
+    product    Product  @relation(fields: [productId], references: [id])
+    productId  String
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId     String
+    assignedAt DateTime @default(now())
+    quantity   Int
+    variantId  Int
+    price      Int
+    size       String
 
-  styleId String
-  style UserImage? @relation(references: [id],fields: [styleId])
+    styleId String
+    style   UserImage? @relation(references: [id], fields: [styleId])
 
-  @@id([userId, productId])
-  @@index([productId])
-  @@index([styleId])
-  @@index([userId])
+    @@id([userId, productId])
+    @@index([productId])
+    @@index([styleId])
+    @@index([userId])
 }
-
 
 model UserAddress {
-    id        String   @id @default(cuid())
-    user   User @relation(fields: [userId],references: [id]) 
-    userId String 
-    country String
-    region String
+    id       String  @id @default(cuid())
+    user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId   String
+    country  String
+    region   String
     address1 String
     address2 String?
-    city String
-    zip String
-    title String
-    orders Order[]
+    city     String
+    zip      String
+    title    String
+    orders   Order[]
     selected Boolean @default(false)
+
     @@unique([userId, title], name: "addressIdentifier")
     @@unique([userId, selected], name: "selectedAddress")
 }
 
 model UserImage {
-    id            String    @id @default(cuid())
-    url           String    
-    createdAt  DateTime @default(now())
+    id           String             @id @default(cuid())
+    url          String
+    createdAt    DateTime           @default(now())
     cartProducts UserCartProducts[]
-    lineItems LineItems[]
-    ownerId String
-    owner User? @relation(fields:[id],references: [id])
+    lineItems    LineItems[]
+    ownerId      String
+    owner        User?              @relation(fields: [id], references: [id], onDelete: Cascade)
+
     @@index(id)
 }
+
 enum Status {
-	PENDING
-	ACCEPTED
-	REJECTED
+    PENDING
+    ACCEPTED
+    REJECTED
 }
+
 model Friends {
-  id        String      @id @default(cuid())
-  userId   String 
-  friendId String 
-  user      User    @relation(name: "users", fields: [userId], references: [id])
-  friend    User    @relation(name: "friendUsers", fields: [friendId], references: [id])
-  status    Status  @default(PENDING)
-  createdAt DateTime @default(now())
-
-  @@unique([userId, friendId])
-  @@index([friendId])
-}
-
-model LineItems{
-
-  id        String      @id @default(cuid())
-  orderId   String 
-  order Order @relation(fields: [orderId],references: [id])
-  productId String
-  product Product @relation(fields: [productId],references: [id])
-  variantId Int
-  cost    Int  
-  quantity Int
-
-  styleId String?
-  style UserImage? @relation(references: [id],fields: [styleId])
-
-  @@index([orderId])
-  @@index([styleId])
-  @@index([productId])
-}
-model Order{
-    id            String    @id @default(cuid())
-
-    creatorId String 
-    creator User @relation(references:[id],fields:[creatorId])
-
-    addressId String
-    addressTo UserAddress @relation(references: [id],fields: [addressId])
-    
-    line_items LineItems[]
-
-    totalPrice Int
-    totalShipping Int
+    id        String   @id @default(cuid())
+    userId    String
+    friendId  String
+    user      User     @relation(name: "users", fields: [userId], references: [id])
+    friend    User     @relation(name: "friendUsers", fields: [friendId], references: [id])
+    status    Status   @default(PENDING)
     createdAt DateTime @default(now())
 
+    @@unique([userId, friendId])
+    @@index([friendId])
+}
+
+model LineItems {
+    id        String  @id @default(cuid())
+    orderId   String
+    order     Order   @relation(fields: [orderId], references: [id])
+    productId String
+    product   Product @relation(fields: [productId], references: [id])
+    variantId Int
+    cost      Int
+    quantity  Int
+
+    styleId String?
+    style   UserImage? @relation(references: [id], fields: [styleId])
+
+    @@index([orderId])
+    @@index([styleId])
+    @@index([productId])
+}
+
+model Order {
+    id String @id @default(cuid())
+
+    creatorId String
+    creator   User   @relation(references: [id], fields: [creatorId])
+
+    addressId String
+    addressTo UserAddress @relation(references: [id], fields: [addressId])
+
+    line_items LineItems[]
+
+    totalPrice    Int
+    totalShipping Int
+    createdAt     DateTime @default(now())
 
     @@index([creatorId])
     @@index([addressId])
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name           String
-    firstName     String?   
-    lastName      String?   
-    phone         Int?   
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    birthday         DateTime @default(now())
-    credits	  Int  @default(30)
-    gallery 	  UserImage[]
-    userFriends       Friends[] @relation(name: "users")
-    friendUserFriends Friends[] @relation(name: "friendUsers")
-    accounts      Account[]
-    sessions      Session[]
-    cart          UserCartProducts[]   
-    wishList      UserWishListProducts[]   
-    reviews       Review[]    
-    orders       Order[]    
-    address       UserAddress[]
-    createdAt     DateTime @default(now())
+    id                String                 @id @default(cuid())
+    name              String
+    firstName         String?
+    lastName          String?
+    phone             Int?
+    email             String?                @unique
+    emailVerified     DateTime?
+    image             String?
+    birthday          DateTime?
+    credits           Int                    @default(30)
+    gallery           UserImage[]
+    userFriends       Friends[]              @relation(name: "users")
+    friendUserFriends Friends[]              @relation(name: "friendUsers")
+    accounts          Account[]
+    sessions          Session[]
+    cart              UserCartProducts[]
+    wishList          UserWishListProducts[]
+    reviews           Review[]
+    orders            Order[]
+    address           UserAddress[]
+    createdAt         DateTime               @default(now())
+
     @@index([id])
 }
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -204,22 +212,23 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String?  @db.Text
-    access_token      String?  @db.Text
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String?  @db.Text
+    id_token          String? @db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
     @@index([userId])
 }
+
 model Session {
     id           String   @id @default(cuid())
-    sessionToken String   @unique 
-    userId       String   
+    sessionToken String   @unique
+    userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -234,7 +243,7 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-enum ProfileType{
+enum ProfileType {
     Person
     Pet
 }

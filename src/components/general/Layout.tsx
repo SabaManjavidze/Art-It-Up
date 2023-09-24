@@ -14,7 +14,7 @@ export default function Layout({
   children: React.ReactElement | React.ReactElement[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const isTabVisible=TabVisibility()
+  const isTabVisible = TabVisibility()
   useEffect(() => {
     Router.events.on("routeChangeStart", () => {
       setIsLoading(true);
@@ -31,9 +31,10 @@ export default function Layout({
   return (
     <>
       <Head>
-        <title>{isTabVisible?title:COMEBACK_MESSAGE}</title>
+        <title>{isTabVisible ? title : COMEBACK_MESSAGE}</title>
         <meta name="description" content="Ecommerce Website" />
         <link rel="icon" href="/favicon.ico" />
+        <link href="https://fonts.cdnfonts.com/css/tt-firs-neue-trl" rel="stylesheet" />
       </Head>
       <div className="flex min-h-screen flex-col justify-between bg-background text-primary-foreground">
         <BarLoader

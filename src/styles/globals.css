@@ -22,7 +22,7 @@
     --primary: 222.2 0% 11.2%;
     --primary-foreground: 0 0% 0%;
 
-    --secondary: 232 20% 29%;
+    --secondary: 246 20% 22%;
     --secondary-foreground: 0 0% 100%;
 
     --accent: 201 100% 39%;
@@ -71,6 +71,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-family: "TT Firs Neue Trl", system-ui, sans-serif;
   }
   * {
     @apply border-border;
@@ -81,6 +82,16 @@
 }
 .control-dots {
   bottom: -10px !important;
+}
+.gradient-footer {
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(222, 214, 255, 1),
+    rgba(122, 95, 225, 1),
+    rgba(122, 95, 225, 1),
+    rgba(222, 214, 255, 1)
+  );
 }
 .container-xl {
   max-width: 1280px;

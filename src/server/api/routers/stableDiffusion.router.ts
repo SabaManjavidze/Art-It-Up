@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import axios from "axios";
 import { IMG2IMG_COST } from "@/utils/constants";
-import {decreaseCredits} from "../utils/credits"
+import { decreaseCredits } from "../utils/credits";
 
 const rateLimitMsg = "Rate limit exceeded";
 
@@ -50,31 +50,33 @@ export const stableDiffusionRouter = createTRPCRouter({
         prompt: z.string().optional(),
       })
     )
-    .mutation(async ({ input: { prompt, imageUrl, modelId },ctx:{session} }) => {
-      try {
-        const res = await StableDiffusion.post("img2img", {
-          key: apikey,
-          prompt,
-          model_id: modelId,
-          negative_prompt: null,
-          init_image: imageUrl,
-          width: "512",
-          height: "512",
-          samples: "1",
-          num_inference_steps: "30",
-          safety_checker: "yes",
-          enhance_prompt: "yes",
-          guidance_scale: 7.5,
-          strength: 0.7,
-          seed: null,
-          webhook: null,
-          track_id: null,
-        });
-      //decrease user credits
-      await decreaseCredits(session.user.id,IMG2IMG_COST)
-        console.log({ res });
-      } catch (error) {
-        console.log(error);
+    .mutation(
+      async ({ input: { prompt, imageUrl, modelId }, ctx: { session } }) => {
+        try {
+          const res = await StableDiffusion.post("img2img", {
+            key: apikey,
+            prompt,
+            model_id: modelId,
+            negative_prompt: null,
+            init_image: imageUrl,
+            width: "512",
+            height: "512",
+            samples: "1",
+            num_inference_steps: "30",
+            safety_checker: "yes",
+            enhance_prompt: "yes",
+            guidance_scale: 7.5,
+            strength: 0.7,
+            seed: null,
+            webhook: null,
+            track_id: null,
+          });
+          //decrease user credits
+          await decreaseCredits(session.user.id, IMG2IMG_COST);
+          console.log({ res });
+        } catch (error) {
+          console.log(error);
+        }
       }
-    }),
+    ),
 });
