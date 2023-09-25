@@ -9,29 +9,66 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  BsChevronLeft,
-  BsChevronRight,
-  BsFillArrowLeftCircleFill,
-  BsFillArrowRightCircleFill,
-} from "react-icons/bs";
-import { SIZES_PROP } from "@/utils/constants";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
+import { LOREM_IPSUM, SIZES_PROP } from "@/utils/constants";
+import UserReviewCard from "@/components/general/UserReviewCard";
+import { UserReview } from "@/utils/types/types";
+import { nanoid } from "nanoid";
 
-const categories = [
+const userReviews: UserReview[] = [
   {
-    title: "Hoodies",
-    href: "/search-results/_?tags=hoodies",
-    src: "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+    desc: LOREM_IPSUM,
+    rating: 5,
+    user: {
+      picture:
+        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+      name: "gela",
+    },
   },
   {
-    title: "Blankets",
-    href: "/search-results/_?tags=Blankets",
-    src: "https://images-api.printify.com/mockup/6496bec0143df791e501b7c6/61281/2907/hooded-blanket.jpg?camera_label=front",
+    desc: LOREM_IPSUM,
+    rating: 5,
+    user: {
+      picture:
+        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+      name: "gocha",
+    },
   },
   {
-    title: "Puzzles",
-    href: "/search-results/_?tags=Puzzles",
-    src: "https://images-api.printify.com/mockup/63efe2a05b70b9af05008ed9/72664/16363/puzzle-120-252-500-piece.jpg?camera_label=front",
+    desc: LOREM_IPSUM,
+    rating: 5,
+    user: {
+      picture:
+        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+      name: "geimeri",
+    },
+  },
+  {
+    desc: LOREM_IPSUM,
+    rating: 5,
+    user: {
+      picture:
+        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+      name: "geimeri",
+    },
+  },
+  {
+    desc: LOREM_IPSUM,
+    rating: 4,
+    user: {
+      picture:
+        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+      name: "geimeri",
+    },
+  },
+  {
+    desc: LOREM_IPSUM,
+    rating: 1,
+    user: {
+      picture:
+        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
+      name: "geimeri",
+    },
   },
 ];
 const Home: NextPage = () => {
@@ -53,7 +90,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="min-h-screen bg-background text-primary-foreground">
-        {/* First section - Gallery of products */}
+        {/* Second section - Gallery of products */}
         <div className="py-20">
           <h2 className="text-center text-3xl font-medium ">
             Featured Products
@@ -70,8 +107,9 @@ const Home: NextPage = () => {
                   <button
                     type="button"
                     onClick={clickHandler}
-                    className={`${hasNext ? "block" : "hidden"
-                      } absolute top-1/2 bottom-0 right-0 z-10 mt-0 -translate-y-1/2 p-1`}
+                    className={`${
+                      hasNext ? "block" : "hidden"
+                    } absolute top-1/2 bottom-0 right-0 z-10 mt-0 -translate-y-1/2 p-1`}
                   >
                     <BsChevronRight
                       size={30}
@@ -83,8 +121,9 @@ const Home: NextPage = () => {
                   <button
                     type="button"
                     onClick={clickHandler}
-                    className={`${hasPrev ? "block" : "hidden"
-                      } absolute top-1/2 bottom-0 left-0 z-10 mt-0 -translate-y-1/2 p-1`}
+                    className={`${
+                      hasPrev ? "block" : "hidden"
+                    } absolute top-1/2 bottom-0 left-0 z-10 mt-0 -translate-y-1/2 p-1`}
                   >
                     <BsChevronLeft
                       size={30}
@@ -100,8 +139,9 @@ const Home: NextPage = () => {
                       onClick={() => {
                         setSelectedItem(index);
                       }}
-                      className={`${isSelected ? "border-2 border-white" : null
-                        } mx-2 inline-block h-2 w-2 rounded-full bg-black duration-150`}
+                      className={`${
+                        isSelected ? "border-2 border-white" : null
+                      } mx-2 inline-block h-2 w-2 rounded-full bg-black duration-150`}
                     ></li>
                   );
                 }}
@@ -147,68 +187,30 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        {/* Second section - Categories of clothing */}
-        <div className="py-20">
-          <h2 className="text-center text-3xl font-medium ">Categories</h2>
-          <div className="mt-5 flex flex-wrap justify-center">
-            {categories.map((category) => (
-              <CategoryCard
-                key={category.title}
-                href={category.href}
-                title={category.title}
-                src={category.src}
-              />
-            ))}
+        {/* Third section - user reviews */}
+        <div className="gradient-section pb-10">
+          <div className="container">
+            <div className="flex w-full justify-start">
+              <h2 className="py-10 text-center text-4xl font-semibold text-primary-foreground">
+                Customer Feedback
+              </h2>
+            </div>
+            <div className="grid w-full grid-cols-3 grid-rows-2 gap-5">
+              {userReviews.map((review) => (
+                <UserReviewCard review={review} key={nanoid()} />
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Third section - User reviews */}
-        <div className="py-20">
-          <h2 className="text-center text-3xl font-medium ">User Reviews</h2>
-          <div className="flex flex-col justify-center md:flex-row">
-            <div className="p-4 md:w-1/3">
-              <Image
-                src={
-                  "https://img.freepik.com/free-photo/portrait-dark-skinned-cheerful-woman-with-curly-hair-touches-chin-gently-laughs-happily-enjoys-day-off-feels-happy-enthusiastic-hears-something-positive-wears-casual-blue-turtleneck_273609-43443.jpg"
-                }
-                alt="User 1"
-                width={500}
-                height={500}
-                className="h-64 w-full object-contain"
-              />
-            </div>
-            <div className="p-4 md:w-2/3">
-              <h3 className="w-1/2 border-b pb-3 text-xl font-medium">Leila</h3>
-              <p className="mt-10 max-w-xl">
-                "I recently purchased a hoodie from this store and I am very
-                happy with the quality of the product. The material is soft and
-                comfortable, and the sizing was accurate. I would definitely
-                recommend this store to anyone looking for great clothing
-                items."
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center md:flex-row">
-            <div className="p-4 md:w-1/3">
-              <Image
-                src={
-                  "https://st3.depositphotos.com/1017228/18878/i/450/depositphotos_188781580-stock-photo-handsome-cheerful-young-man-standing.jpg"
-                }
-                alt="User 2"
-                height={500}
-                width={500}
-                className="h-64 w-full object-contain"
-              />
-            </div>
-            <div className="p-4 md:w-2/3">
-              <h3 className="w-1/2 border-b pb-3 text-xl font-medium">
-                Baxmaro
-              </h3>
-              <p className="mt-10 max-w-xl">
-                "I love shopping at this store! They always have the latest
-                styles and the prices are very reasonable. I have never had any
-                issues with their customer service and the shipping is always
-                fast. I highly recommend this store!"
+        {/* Fourth section - pricing plans*/}
+        <div className="pb-10">
+          <div className="container-xl">
+            <div className="flex w-full flex-col items-center">
+              <h2 className="pt-10 text-center text-4xl font-semibold text-primary-foreground">
+                Pricing Plans
+              </h2>
+              <p className="mt-1 w-56 text-center text-sm text-muted-foreground">
+                Choose the type of payment that is more acceptable to you
               </p>
             </div>
           </div>

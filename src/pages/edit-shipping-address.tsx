@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
 import { api } from "../utils/api";
 import { countriesArr, countriesObj } from "../utils/countriesArray";
-import { AddressObjectKeys, addressToSchema } from "@/utils/zodTypes";
+import { AddressObjectKeys, addressToSchema } from "@/utils/types/zodTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

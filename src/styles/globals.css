@@ -83,6 +83,14 @@
 .control-dots {
   bottom: -10px !important;
 }
+.gradient-section {
+  background: linear-gradient(
+    90deg,
+    rgba(211, 175, 255, 0.4) 0%,
+    #f3ebff 48.2%,
+    rgba(158, 98, 254, 0.4) 100%
+  );
+}
 .gradient-footer {
   background: rgb(255, 255, 255);
   background: linear-gradient(

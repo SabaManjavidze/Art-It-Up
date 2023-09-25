@@ -1,7 +1,7 @@
 import PrintifyClient from "@kastlabs/printify-client";
 import type { z } from "zod";
-import type { lineItemsZT, printifyLineItemsZT } from "../utils/zodTypes";
-import { addressToSchema } from "../utils/zodTypes";
+import type { lineItemsZT, printifyLineItemsZT } from "../utils/types/zodTypes";
+import { addressToSchema } from "../utils/types/zodTypes";
 const addressWithoutTitle = addressToSchema.omit({ title: true });
 type userDetails = {
   first_name: string;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { addressToSchema } from "@/utils/zodTypes";
+import { addressToSchema } from "@/utils/types/zodTypes";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";

@@ -9,7 +9,7 @@ import { IoClose, IoCloseCircle } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { api } from "@/utils/api";
-import { personalDetailsSchema } from "@/utils/zodTypes";
+import { personalDetailsSchema } from "@/utils/types/zodTypes";
 import { toast } from "react-toastify";
 import { ZodError } from "zod";
 
@@ -72,8 +72,8 @@ export default function SummarySection() {
               {shippingLoading
                 ? "loading..."
                 : shippingCost
-                  ? shippingCost.standard / 100
-                  : "You need to add a shipping address"}
+                ? shippingCost.standard / 100
+                : "You need to add a shipping address"}
             </p>
           )}
         </div>

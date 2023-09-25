@@ -47,7 +47,7 @@ export const createContext = async (opts: CreateNextContextOptions) => {
   };
 };
 
-import type { inferAsyncReturnType} from "@trpc/server";
+import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
@@ -65,7 +65,7 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.session?.user?.email) {
+  if (!ctx.session?.user?.id) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
     });

@@ -9,7 +9,7 @@ import {
   lineItemsZT,
   personalDetailsSchema,
   printifyLineItemsZT,
-} from "@/utils/zodTypes";
+} from "@/utils/types/zodTypes";
 import { LineItems } from "@prisma/client";
 
 export const orderRouter = createTRPCRouter({
