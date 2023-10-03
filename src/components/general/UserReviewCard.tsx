@@ -1,4 +1,4 @@
-import { UserReview } from "@/utils/types/types";
+import type { UserReview } from "@/utils/types/types";
 import Image from "next/image";
 import { limitTxt } from "@/utils/utils";
 function UserReviewCard({ review }: { review: UserReview }) {
@@ -22,6 +22,7 @@ function UserReviewCard({ review }: { review: UserReview }) {
       <div className="flex items-center pb-4 pt-2">
         {[1, 2, 3, 4, 5].map((item) => (
           <svg
+            key={item}
             className={`mr-1 h-4 w-4 ${
               item <= review.rating ? "text-yellow-300" : "text-gray-300"
             }`}

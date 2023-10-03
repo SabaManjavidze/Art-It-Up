@@ -1,6 +1,6 @@
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { SearchType } from "@/components/ui/SearchTypeDropDown";
+import type { SearchType } from "@/components/ui/SearchTypeDropDown";
 
 type SearchContextProps = {
   setSelectedTags: Dispatch<string[]>;

@@ -1,4 +1,4 @@
-import { RouterOutputs } from "./api";
+import type { RouterOutputs } from "./api";
 
 type CartProduct = RouterOutputs["cart"]["getCart"][number];
 type lineItemsType = "default" | "printify";

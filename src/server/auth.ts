@@ -1,9 +1,10 @@
 import type { GetServerSidePropsContext } from "next";
+import type {
+  DefaultUser} from "next-auth";
 import {
   getServerSession,
   type NextAuthOptions,
-  type DefaultSession,
-  DefaultUser,
+  type DefaultSession
 } from "next-auth";
 import type { FacebookProfile } from "next-auth/providers/facebook";
 import FacebookProvider from "next-auth/providers/facebook";

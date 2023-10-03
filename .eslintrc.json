@@ -6,9 +6,9 @@
       ],
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": "tsconfig.eslint.json"
-        "tsconfigRootDir": __dirname,
-        "sourceType": 'module',
+        "project": "tsconfig.eslint.json",
+        "tsconfigRootDir": "./",
+        "sourceType": "module"
       },
       "rules": {
         "@typescript-eslint/consistent-type-imports": "warn",

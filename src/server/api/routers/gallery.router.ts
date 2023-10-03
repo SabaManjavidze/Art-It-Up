@@ -3,7 +3,8 @@ import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { UploadApiResponse, v2 } from "cloudinary";
+import type { UploadApiResponse} from "cloudinary";
+import { v2 } from "cloudinary";
 import { MAX_IMAGE_COUNT } from "../../../utils/constants";
 
 export const galleryRouter = createTRPCRouter({

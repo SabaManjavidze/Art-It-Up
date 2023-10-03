@@ -69,30 +69,26 @@ const components: { title: string; href: string; description: string }[] = [
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
   },
 ];
+type AuthProviders = "google" | "facebook";
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const { setShowSearchBar, showSearchBar, closeSearchBar } = useSearch();
 
-  const [loading, setLoading] = useState<"google" | "facebook" | "none">(
-    "none"
-  );
+  const [loading, setLoading] = useState<AuthProviders | "none">("none");
   const [btnIsOpen, setBtnIsOpen] = useState({
     getStarted: false,
     components: false,
   });
   const [divRef] = useAutoAnimate<HTMLDivElement>();
-  const logIn = (provider: "google" | "facebook") => {
+  const logIn = (provider: AuthProviders) => {
     setLoading(provider);
     signIn(provider);
     setLoading("none");
   };
   return (
-    <nav
-      className="h-18 sticky top-0 z-20 flex w-full flex-col items-center 
-    justify-around border border-l-0 border-r-0 border-primary/20 bg-background p-4 py-2 text-foreground"
-    >
+    <nav className="h-18 fixed top-0 z-20 flex w-full flex-col items-center justify-around bg-transparent p-4 py-2 text-foreground">
       <Modal
         isOpen={showSearchBar}
         closeModal={closeSearchBar}
@@ -158,7 +154,7 @@ const Navbar = () => {
           </button>
         </div>
         <div
-          className={`flex w-1/2 items-center justify-center text-center md:w-[15%]`}
+          className={`bold flex w-1/2 items-center justify-center text-center md:w-[15%]`}
         >
           <Link href="/" className="text-lg font-medium">
             Art It Up
@@ -168,7 +164,9 @@ const Navbar = () => {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Catalog</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="bg-transparent">
+                  Catalog
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                     <li className="row-span-3">
@@ -204,7 +202,9 @@ const Navbar = () => {
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="bg-transparent">
+                  Components
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                     {components.map((component) => (
@@ -221,7 +221,9 @@ const Navbar = () => {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/docs" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle() + " bg-transparent"}
+                  >
                     Documentation
                   </NavigationMenuLink>
                 </Link>
