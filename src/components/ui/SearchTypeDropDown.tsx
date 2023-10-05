@@ -10,7 +10,7 @@ import { HiChevronUpDown } from "react-icons/hi2";
 import { Loader2 } from "lucide-react";
 import { Button } from "./button";
 import { twMerge } from "tailwind-merge";
-import { Capitalize } from "@/utils/utils";
+import { Capitalize } from "@/utils/general/utils";
 
 // turn sizes array into hashmap where the id is the key and size is the value
 

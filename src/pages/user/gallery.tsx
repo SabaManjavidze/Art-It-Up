@@ -4,8 +4,8 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import ImageInput from "@/components/general/ImageInput";
-import { toBase64 } from "@/utils/convertToBase64";
-import { SIZES_PROP } from "@/utils/constants";
+import { toBase64 } from "@/utils/general/convertToBase64";
+import { SIZES_PROP } from "@/utils/general/constants";
 
 export default function Gallery() {
   const [images, setImages] = useState<File[]>([]);

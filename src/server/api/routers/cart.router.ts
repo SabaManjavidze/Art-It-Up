@@ -6,7 +6,7 @@ import { z } from "zod";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { MAX_CART_PRODUCT } from "@/utils/constants";
+import { MAX_CART_PRODUCT } from "@/utils/general/constants";
 
 export const cartRouter = createTRPCRouter({
   getCart: protectedProcedure.query(async ({ ctx: { session } }) => {

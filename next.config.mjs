@@ -12,6 +12,7 @@ const config = {
   env: {
     PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID?.toString() + "",
     PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET?.toString() + "",
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL?.toString() + "",
   },
 
   /**

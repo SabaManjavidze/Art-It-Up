@@ -1,6 +1,6 @@
 import type { UserReview } from "@/utils/types/types";
 import Image from "next/image";
-import { limitTxt } from "@/utils/utils";
+import { limitTxt } from "@/utils/general/utils";
 function UserReviewCard({ review }: { review: UserReview }) {
   return (
     <article className="rounded-3xl bg-background px-5">

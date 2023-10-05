@@ -4,7 +4,7 @@ import { z } from "zod";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { MAX_WISHLIST_PRODUCT } from "@/utils/constants";
+import { MAX_WISHLIST_PRODUCT } from "@/utils/general/constants";
 
 export const wishListRouter = createTRPCRouter({
   getWishList: protectedProcedure.query(async ({ ctx: { session } }) => {

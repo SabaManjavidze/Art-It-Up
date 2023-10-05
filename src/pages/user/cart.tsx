@@ -72,7 +72,7 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { getServerAuthSession } from "../../server/auth";
 import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
-import { SIGNIN_ROUTE } from "@/utils/constants";
+import { SIGNIN_ROUTE } from "@/utils/general/constants";
 import { SelectableCard } from "@/components/ui/SelectableCard";
 import CartProductCard from "@/components/cartPageComponents/CartProductCard";
 

@@ -4,7 +4,7 @@ import { Footer } from "./Footer";
 import { BarLoader } from "react-spinners";
 import { Router } from "next/router";
 import TabVisibility from "./TabVisibility";
-import { COMEBACK_MESSAGE } from "@/utils/constants";
+import { COMEBACK_MESSAGE } from "@/utils/general/constants";
 
 export default function Layout({
   title = "Art It Up",

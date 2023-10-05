@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import React, { useState } from "react";
 import { SlPresent } from "react-icons/sl";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
-import { BLANK_PROFILE_URL } from "@/utils/constants";
+import { BLANK_PROFILE_URL } from "@/utils/general/constants";
 import { IoClose, IoCloseCircle } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";

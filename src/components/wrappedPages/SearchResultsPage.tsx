@@ -7,7 +7,7 @@ import { FiHeart } from "react-icons/fi";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import { SIGNIN_ROUTE, SIZES_PROP } from "@/utils/constants";
+import { SIGNIN_ROUTE, SIZES_PROP } from "@/utils/general/constants";
 import { useRouter } from "next/router";
 import { Loader2 } from "lucide-react";
 import { limitTxt } from "@/utils/utils";
@@ -157,13 +157,15 @@ function ResultProductCard({
           </h5>
           <button
             onClick={() => handleAddToWishList(product)}
-            className={`mr-4 duration-700 ${addToWishListLoading ? "animate-ping" : ""
-              }`}
+            className={`mr-4 duration-700 ${
+              addToWishListLoading ? "animate-ping" : ""
+            }`}
           >
             <FiHeart
               size={20}
-              className={`duration-150 ${product.isInWishList ? "fill-red-500 text-red-500" : ""
-                } hover:fill-red-500 hover:text-red-500`}
+              className={`duration-150 ${
+                product.isInWishList ? "fill-red-500 text-red-500" : ""
+              } hover:fill-red-500 hover:text-red-500`}
             />
           </button>
         </div>

@@ -7,7 +7,7 @@ import type { Product, UserAddress } from "@prisma/client";
 import type { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
 import { formatLineItems } from "../utils/formatLineItems";
 import { toast } from "react-toastify";
-import { filterProducts } from "../utils/filterProducts";
+import { filterProducts } from "../utils/checkout/filterProducts";
 import { TRPCError } from "@trpc/server";
 import { TRPCClientError } from "@trpc/client";
 

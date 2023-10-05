@@ -14,7 +14,7 @@ import { api } from "@/utils/api";
 import { HiChevronUpDown } from "react-icons/hi2";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { PublicKeys } from "@/utils/constants";
+import { PublicKeys } from "@/utils/general/constants";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { limitTxt } from "@/utils/utils";
 

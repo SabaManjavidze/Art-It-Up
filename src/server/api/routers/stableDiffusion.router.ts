@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import axios from "axios";
-import { IMG2IMG_COST } from "@/utils/constants";
+import { IMG2IMG_COST } from "@/utils/general/constants";
 import { decreaseCredits } from "../utils/credits";
 
 const rateLimitMsg = "Rate limit exceeded";

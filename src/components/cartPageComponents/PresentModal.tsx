@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import React, { useCallback, useState } from "react";
-import { BLANK_PROFILE_URL } from "@/utils/constants";
+import { BLANK_PROFILE_URL } from "@/utils/general/constants";
 import Modal from "@/components/ui/modal";
 import { debounce } from "lodash";
 import { api } from "../../utils/api";

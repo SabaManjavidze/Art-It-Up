@@ -9,190 +9,27 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { LOREM_IPSUM, SIZES_PROP } from "@/utils/constants";
+import {
+  BsCheck2,
+  BsCheckLg,
+  BsChevronLeft,
+  BsChevronRight,
+} from "react-icons/bs";
+import { LOREM_IPSUM, SIZES_PROP } from "@/utils/general/constants";
 import UserReviewCard from "@/components/general/UserReviewCard";
 import type { UserReview } from "@/utils/types/types";
 import { nanoid } from "nanoid";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AiOutlineCloudUpload } from "react-icons/ai";
+import { creditPricing, styles, userReviews } from "@/utils/home/utils";
+import { useSession } from "next-auth/react";
 
-const pricingPlans = [
-  {
-    id: 1,
-    title: "Standart",
-    price: 10,
-    highlited: false,
-    features: [
-      {
-        id: 1,
-        title: "Unlimited Images",
-      },
-      {
-        id: 2,
-        title: "Unlimited Images",
-      },
-      {
-        id: 3,
-        title: "Unlimited Images",
-      },
-      {
-        id: 4,
-        title: "Unlimited Images",
-      },
-      {
-        id: 5,
-        title: "Unlimited Images",
-      },
-      {
-        id: 6,
-        title: "Unlimited Images",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "Proffesional",
-    price: 20,
-    highlited: true,
-    features: [
-      {
-        id: 1,
-        title: "Unlimited Images",
-      },
-      {
-        id: 2,
-        title: "Unlimited Images",
-      },
-      {
-        id: 3,
-        title: "Unlimited Images",
-      },
-      {
-        id: 4,
-        title: "Unlimited Images",
-      },
-      {
-        id: 5,
-        title: "Unlimited Images",
-      },
-      {
-        id: 6,
-        title: "Unlimited Images",
-      },
-    ],
-  },
-  {
-    id: 1,
-    title: "Expert",
-    price: 30,
-    highlited: false,
-    features: [
-      {
-        id: 1,
-        title: "Unlimited Images",
-      },
-      {
-        id: 2,
-        title: "Unlimited Images",
-      },
-      {
-        id: 3,
-        title: "Unlimited Images",
-      },
-      {
-        id: 4,
-        title: "Unlimited Images",
-      },
-      {
-        id: 5,
-        title: "Unlimited Images",
-      },
-      {
-        id: 6,
-        title: "Unlimited Images",
-      },
-    ],
-  },
-];
-const styles = [
-  {
-    title: "Creative",
-    id: 1,
-  },
-  {
-    title: "Space",
-    id: 2,
-  },
-  {
-    title: "Galaxy",
-    id: 3,
-  },
-  {
-    title: "Dog",
-    id: 4,
-  },
-];
-const userReviews: UserReview[] = [
-  {
-    desc: LOREM_IPSUM,
-    rating: 5,
-    user: {
-      picture:
-        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
-      name: "gela",
-    },
-  },
-  {
-    desc: LOREM_IPSUM,
-    rating: 5,
-    user: {
-      picture:
-        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
-      name: "gocha",
-    },
-  },
-  {
-    desc: LOREM_IPSUM,
-    rating: 5,
-    user: {
-      picture:
-        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
-      name: "geimeri",
-    },
-  },
-  {
-    desc: LOREM_IPSUM,
-    rating: 5,
-    user: {
-      picture:
-        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
-      name: "geimeri",
-    },
-  },
-  {
-    desc: LOREM_IPSUM,
-    rating: 4,
-    user: {
-      picture:
-        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
-      name: "geimeri",
-    },
-  },
-  {
-    desc: LOREM_IPSUM,
-    rating: 1,
-    user: {
-      picture:
-        "https://images-api.printify.com/mockup/63fe7544bdb6399f6f0c91a7/32912/98424/unisex-heavy-blend-hooded-sweatshirt.jpg?camera_label=front",
-      name: "geimeri",
-    },
-  },
-];
 const Home: NextPage = () => {
   const [selectedItem, setSelectedItem] = useState(0);
+  const [copyActive, setCopyActive] = useState(false);
   const router = useRouter();
+  const session = useSession();
   const { data, isLoading } = api.product.getPrintifyShopProducts.useQuery();
 
   if (isLoading)
@@ -201,6 +38,17 @@ const Home: NextPage = () => {
         <Loader2 size={50} />
       </div>
     );
+  const handleCopyAffiliate = () => {
+    if (session?.data) {
+      navigator.clipboard.writeText(
+        `${process.env.NEXTAUTH_URL}/affiliate/${session.data.user.id}`
+      );
+      setCopyActive(true);
+      setTimeout(() => {
+        setCopyActive(false);
+      }, 1000);
+    }
+  };
   return (
     <>
       <Head>
@@ -259,10 +107,10 @@ const Home: NextPage = () => {
         </div>
       </div>
       <div className="min-h-screen bg-background text-primary-foreground">
-        {/* Second section - Gallery of products */}
+        {/* Second section - Most popular products*/}
         <div className="py-20">
           <h2 className="py-10 text-center text-4xl font-semibold text-primary-foreground">
-            Featured Products
+            Most Popular
           </h2>
           <div className="bg-whiterst:w-full flex flex-wrap justify-center first:w-full">
             {!isLoading && data ? (
@@ -371,37 +219,39 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        {/* Fourth section - pricing plans*/}
+        {/* Fourth section - Credits*/}
         <div className="pb-10">
           <div className="container-xl">
-            <div className="flex w-full flex-col items-center">
+            <div className="flex w-full flex-col items-center justify-center">
               <h2 className="pt-10 text-center text-4xl font-semibold text-primary-foreground">
-                Pricing Plans
+                Credits
               </h2>
-              <p className="mt-1 w-56 text-center text-sm text-muted-foreground">
-                Choose the type of payment that is more acceptable to you
+              <p className="mt-5 text-center">
+                Invite a friend for{" "}
+                <p className="contents text-accent"> FREE </p>
+                Credits.
               </p>
+
+              {session.status == "authenticated" ? (
+                <div className="relative mt-2 mb-5 w-1/2">
+                  <Input
+                    className="rounded-3xl border-primary bg-background py-6 placeholder:text-base placeholder:text-primary"
+                    placeholder={`${process.env.NEXTAUTH_URL}/affiliate/${session.data.user.id}`}
+                  />
+                  <Button
+                    variant={"outline"}
+                    onClick={handleCopyAffiliate}
+                    className={`absolute right-5 top-1/2 w-16 -translate-y-1/2 rounded-xl bg-background text-primary ${
+                      copyActive ? "border-green-500" : null
+                    } duration-150 ease-in-out`}
+                  >
+                    {copyActive ? <BsCheck2 color="green" size={20} /> : "Copy"}
+                  </Button>
+                </div>
+              ) : null}
             </div>
             <div className="container mx-auto md:px-6">
               <section>
-                <div className="my-6 flex justify-center">
-                  <Button
-                    className="mr-1 rounded-xl px-6 font-light"
-                    size="slim"
-                    variant={"accent"}
-                  >
-                    Monthly
-                  </Button>
-                  <Button
-                    className="ml-1 rounded-xl border-primary"
-                    variant="outline"
-                    size="slim"
-                  >
-                    Annual
-                    <p className="pl-1 text-accent-foreground">-20%</p>
-                  </Button>
-                </div>
-
                 <div className="mt-10">
                   <div
                     className="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
@@ -410,29 +260,30 @@ const Home: NextPage = () => {
                     data-te-tab-active
                   >
                     <div className="grid gap-6 lg:grid-cols-3 lg:gap-x-12">
-                      {pricingPlans.map((plan) => (
-                        <div className="mb-6 lg:mb-0" key={plan.id}>
+                      {creditPricing.map((credit) => (
+                        <div className="mb-6 lg:mb-0" key={credit.id}>
                           <div
                             className={`relative block h-full rounded-[55px] bg-white dark:bg-neutral-700 ${
-                              plan.highlited
+                              credit.highlited
                                 ? "shadow-2xl shadow-accent/50"
                                 : "shadow-xl shadow-primary/20"
                             }`}
                           >
                             <div className="border-b-2 border-neutral-100 border-opacity-100 p-6 text-center dark:border-opacity-10">
                               <p className="mb-4 text-sm uppercase">
-                                <strong>{plan.title}</strong>
+                                <strong>{credit.title}</strong>
                               </p>
                               <h3 className="mb-6 text-3xl">
-                                <strong>$ {plan.price}</strong>
-                                <small className="text-base text-neutral-500 dark:text-neutral-300">
+                                <strong>$ {credit.price}</strong>
+                                {/* <small className="text-base text-neutral-500 dark:text-neutral-300">
                                   /mo
-                                </small>
+                                </small> */}
                               </h3>
                             </div>
                             <div className="p-6">
+                              {/* 
                               <ol className="mb-20 list-inside">
-                                {plan.features.map((feature) => (
+                                {credit.features.map((feature) => (
                                   <li className="mb-4 flex" key={feature.id}>
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
@@ -452,16 +303,17 @@ const Home: NextPage = () => {
                                   </li>
                                 ))}
                               </ol>
+*/}
 
                               <div className="absolute bottom-6 left-10 right-10">
                                 <Button
                                   type="button"
                                   variant={
-                                    plan.highlited ? "accent" : "outline"
+                                    credit.highlited ? "accent" : "outline"
                                   }
                                   className="w-full rounded-xl border-primary py-6"
                                 >
-                                  Upgrade to {plan.title}
+                                  Buy {credit.title}
                                 </Button>
                               </div>
                             </div>

@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 import React, { useEffect, useState } from "react";
-import { api } from "../utils/api";
+import { api } from "@/utils/api";
 import SearchTypeDropDown from "./ui/SearchTypeDropDown";
 import SearchResults from "./SearchResults";
 import { useRouter } from "next/router";
@@ -48,7 +48,8 @@ const SearchBar = () => {
         }
       }
       router.push(
-        `/search-results/${searchTerm}?tags=${selectedTags.length > 0 ? names.join(", ") : ""
+        `/search-results/${searchTerm}?tags=${
+          selectedTags.length > 0 ? names.join(", ") : ""
         }`
       );
     }

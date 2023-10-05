@@ -239,24 +239,28 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                   Choose a size
                 </Label>
                 <div
-                  className={`grid ${product.isClothe
+                  className={`grid ${
+                    product.isClothe
                       ? "grid-cols-4 lg:grid-cols-2"
                       : "grid-cols-2 lg:grid-cols-2"
-                    } mt-5 max-h-64 gap-3 gap-x-0 overflow-y-auto sm:grid-cols-4 `}
+                  } mt-5 max-h-64 gap-3 gap-x-0 overflow-y-auto sm:grid-cols-4 `}
                 >
                   {product.sizes.map((option) => (
                     <div key={option.id} className="flex w-full justify-center">
                       <Button
                         // disabled={!size.inStock}
-                        className={`flex border-2 text-primary-foreground ${options.size == option.id ? "border-indigo-500" : null
-                          }
-                    items-center justify-center overflow-hidden ${product.isClothe ? "h-10 w-16" : "h-16 w-36"
-                          }`}
+                        className={`flex border-2 text-primary-foreground ${
+                          options.size == option.id ? "border-indigo-500" : null
+                        }
+                    items-center justify-center overflow-hidden ${
+                      product.isClothe ? "h-10 w-16" : "h-16 w-36"
+                    }`}
                         onClick={() => handleSizeChange(option.id.toString())}
                       >
                         <Label
-                          className={`text-lg text-secondary-foreground ${product.isClothe ? "whitespace-nowrap" : ""
-                            }`}
+                          className={`text-lg text-secondary-foreground ${
+                            product.isClothe ? "whitespace-nowrap" : ""
+                          }`}
                         >
                           {option.title}
                         </Label>
@@ -321,7 +325,7 @@ import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { SIGNIN_ROUTE, BLANK_PROFILE_URL } from "@/utils/constants";
+import { SIGNIN_ROUTE, BLANK_PROFILE_URL } from "@/utils/general/constants";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

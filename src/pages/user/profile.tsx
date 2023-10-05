@@ -101,7 +101,7 @@ export default function Profile() {
         <div className="mt-4">
           <Link
             href="/shipping-address"
-            className="hover:text-accent-foreground"
+            className="text-accent-foreground duration-150 hover:text-accent-foreground/80"
           >
             + add address
           </Link>
@@ -121,7 +121,7 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { getServerAuthSession } from "../../server/auth";
 import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
-import { SIGNIN_ROUTE } from "@/utils/constants";
+import { SIGNIN_ROUTE } from "@/utils/general/constants";
 import AddressCard from "@/components/profilePageComponents/AddressCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
