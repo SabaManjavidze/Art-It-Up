@@ -16,7 +16,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { PublicKeys } from "@/utils/general/constants";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { limitTxt } from "@/utils/utils";
+import { limitTxt } from "@/utils/general/utils";
 
 const formatAddress = (details: UserAddress) => {
   const { selected, userId, ...realDetails } = details;

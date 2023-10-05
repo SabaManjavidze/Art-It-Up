@@ -5,7 +5,7 @@ import type { RouterInputs, RouterOutputs } from "../utils/api";
 import { api } from "../utils/api";
 import type { Product, UserAddress } from "@prisma/client";
 import type { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
-import { formatLineItems } from "../utils/formatLineItems";
+import { formatLineItems } from "@/utils/checkout/formatLineItems";
 import { toast } from "react-toastify";
 import { filterProducts } from "../utils/checkout/filterProducts";
 import { TRPCError } from "@trpc/server";

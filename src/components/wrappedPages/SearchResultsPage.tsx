@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { SIGNIN_ROUTE, SIZES_PROP } from "@/utils/general/constants";
 import { useRouter } from "next/router";
 import { Loader2 } from "lucide-react";
-import { limitTxt } from "@/utils/utils";
+import { limitTxt } from "@/utils/general/utils";
 
 type SearchResultsPagePropType = {
   query: string;
