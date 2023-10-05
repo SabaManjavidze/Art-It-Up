@@ -3,9 +3,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
-import { IoCloseCircle } from "react-icons/io5";
 import { Button } from "../ui/button";
-import { limitTxt } from "@/utils/utils";
+import { limitTxt } from "@/utils/general/utils";
 
 interface WishProductCardPropType {
   title: string;

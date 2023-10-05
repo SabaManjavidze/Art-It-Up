@@ -15,7 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Capitalize } from "@/utils/utils";
+import { Capitalize } from "@/utils/general/utils";
 import { countriesArr, countriesObj } from "@/utils/countriesArray";
 
 interface ComboboxPropType extends React.InputHTMLAttributes<HTMLInputElement> {

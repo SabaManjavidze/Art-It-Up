@@ -22,24 +22,28 @@ export function Footer() {
   return (
     <footer className="gradient-footer relative mt-[30vh] w-full text-secondary-foreground">
       <div className="container mt-10 mb-10 w-full px-8">
-        <div className="flex justify-between">
-          <div className="flex w-2/5 flex-col">
-            <h5 className="text-6xl font-semibold tracking-wide">
+        <div className="flex flex-col justify-between md:flex-row">
+          <div className="flex w-full flex-col md:w-2/5">
+            <h5 className="text-3xl font-semibold tracking-wide md:text-6xl">
               Start your 15 day free trial
             </h5>
-            <p className="w-4/5">
+            <p className="w-full text-sm md:w-4/5 md:text-base">
               Keep in mind that after 15 days, the gift will be automatically
               deactivated on your account.
             </p>
           </div>
-          <div className="flex items-center justify-center">
-            <Button variant={"secondary"} size="xl" className="text-2xl">
+          <div className="mt-4 flex items-center justify-center md:mt-0">
+            <Button
+              variant={"secondary"}
+              size="xl"
+              className="text-lg md:text-2xl"
+            >
               Try Now
             </Button>
           </div>
         </div>
-        <div className="mt-10 flex w-full flex-col items-center justify-center border-t py-4 pt-10 md:flex-row md:justify-between">
-          <h5 className="text-center font-normal md:mb-0">
+        <div className="mt-10 flex flex-col items-center justify-center border-t py-4 pt-10 md:flex-row">
+          <h5 className="text-center font-normal md:mb-0 md:mr-4">
             &copy; {currentYear}{" "}
             <Link href="https://material-tailwind.com/">Art It Up</Link>. All
             Rights Reserved.

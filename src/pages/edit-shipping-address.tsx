@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Capitalize } from "@/utils/utils";
+import { Capitalize } from "@/utils/general/utils";
 import { Combobox } from "@/components/ui/combobox";
 import type { UserAddress } from "@prisma/client";
 import Link from "next/link";

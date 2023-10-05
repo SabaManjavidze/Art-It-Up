@@ -87,6 +87,7 @@
   background-repeat: no-repeat;
   background-clip: padding-box;
   background-size: cover;
+  background-position: center;
   /* 
   background-image: radial-gradient(
     circle,
