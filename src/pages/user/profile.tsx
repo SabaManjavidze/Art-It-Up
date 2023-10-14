@@ -1,17 +1,31 @@
 import React, { useState } from "react";
-import { api } from "../../utils/api";
+import { RouterOutputs, api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
 import PersonalDetailsSection from "@/components/profilePageComponents/PersonalDetailsSection";
+import { SIGNIN_ROUTE } from "@/utils/general/constants";
 import { BsPeople } from "react-icons/bs";
+import { HiMail, HiPhone, HiCake, HiPlusCircle } from "react-icons/hi";
+import { TbPencil } from "react-icons/tb";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
+const ICON_SIZE = 22;
+const personalDetailsArr = [
+  { val: "email", title: "Email Address", icon: <HiMail size={ICON_SIZE} /> },
+  { title: "Phone Number", icon: <HiPhone size={ICON_SIZE} />, val: "phone" },
+  { title: "Birthday", icon: <HiCake size={ICON_SIZE} />, val: "birthday" },
+] as const;
 export default function Profile() {
   const {
     data: userAddresses,
     isLoading,
     error: addressesError,
   } = api.user.getUserAddress.useQuery();
+  const { data: friendRequests, isLoading: friendReqsLoading } =
+    api.friends.getRecievedRequests.useQuery();
+
+  const { data: gallery, isLoading: galleryLoading } =
+    api.gallery.getUserGallery.useQuery();
   const {
     data: personalDetails,
     isLoading: detailsLoading,
@@ -19,6 +33,7 @@ export default function Profile() {
   } = api.user.getPersonalDetails.useQuery();
 
   const [expanded, setExpanded] = useState("");
+  const [activeTab, setActiveTab] = useState("My Collections");
   const [clicked, setClicked] = useState(false);
 
   const handleHeaderClick = async (id: string) => {
@@ -33,84 +48,149 @@ export default function Profile() {
       </div>
     );
   }
-  if (addressesError || detailsError || session.status == "unauthenticated") {
+  if (
+    addressesError ||
+    detailsError ||
+    session.status == "unauthenticated" ||
+    !session.data
+  ) {
     return <div>{addressesError?.message}</div>;
   }
 
   return (
-    <div className="container-xl min-h-screen bg-background px-3 text-primary-foreground lg:px-5">
-      <div className="relative mt-8 flex flex-col items-center md:flex-row">
-        <div className="flex flex-col">
+    <div className="container flex min-h-screen w-full items-start bg-background px-3 pt-32 text-primary-foreground lg:px-5">
+      <div className="flex w-[25%] flex-col items-start">
+        <div className="flex w-4/5 flex-col items-center justify-start">
           <Image
-            src={session.data?.user.image || ""}
-            width={296}
-            height={296}
+            src={session.data.user.image || ""}
+            width={130}
+            height={130}
             quality={100}
             className="rounded-full border-2 border-primary-foreground/70 object-contain"
             alt="User Profile Picture rounded-full"
           />
-          <div className="mt-8 text-center md:text-start">
-            <h2 className="text-2xl font-bold">
-              {personalDetails.firstName} {personalDetails.lastName}
+          <h2 className="pt-3 text-2xl font-semibold">
+            {session.data.user.name}
+          </h2>
+          <div className="flex items-center">
+            <BsPeople size={20} />
+            <h2 className="ml-2">
+              {(personalDetails.friendCount <= 1 ? "Friend" : "Friends") + ": "}
             </h2>
-            <h2 className="text-xl font-normal text-muted-foreground">
-              {session.data?.user.name}
+            <h2 className="ml-2 text-center font-medium text-primary-foreground">
+              {personalDetails.friendCount}
             </h2>
           </div>
-          <div className="mt-4 flex items-center justify-center text-muted-foreground md:justify-start">
-            <div className="flex items-center">
-              <BsPeople size={20} />
-              <h2 className="mx-1 text-center font-medium text-primary-foreground">
-                {personalDetails.friendCount}
-              </h2>
-              <h2>{personalDetails.friendCount <= 1 ? "Friend" : "Friends"}</h2>
-            </div>
-          </div>
-          <Link href="/user/entities">
-            <Button
-              isLoading={clicked}
-              onClick={() => setClicked(true)}
-              className="mt-5 w-full"
-            >
-              Add New Entity
-            </Button>
-          </Link>
+          <Button variant={"accent"} className="mt-6 w-full" size="lg">
+            Add new entity
+          </Button>
+          <Button className="mt-2 w-full" size="lg">
+            Add friends
+          </Button>
         </div>
-        <div className="ml-0 w-[70%] md:ml-32">
-          <PersonalDetailsSection />
-        </div>
-      </div>
-      <section className="mt-12 flex flex-col border-b-2 border-white pb-10">
-        <label className="block py-10 text-3xl font-medium">
-          Your Addresses
-        </label>
-        <div className="grid grid-cols-1 gap-x-10 sm:grid-cols-2 md:grid-cols-2  md:gap-x-20 lg:grid-cols-3 xl:grid-cols-4">
-          {userAddresses?.map((details) => (
-            <div
-              key={details.id}
-              className="mt-2 flex justify-center first-of-type:mt-0 sm:mt-0"
-            >
-              <AddressCard
-                expanded={expanded == details.id}
-                handleHeaderClick={() => handleHeaderClick(details.id)}
-                details={details}
-              />
-            </div>
+        <div className="mt-6 w-full">
+          <h3 className="text-md font-medium">Friend requests</h3>
+          {friendRequests?.map((req) => (
+            <FriendReqCard req={req} key={req.id} />
           ))}
         </div>
-        <div className="mt-4">
-          <Link
-            href="/shipping-address"
-            className="text-accent-foreground duration-150 hover:text-accent-foreground/80"
+      </div>
+      <div className="w-[75%]">
+        <div className="flex w-full text-lg">
+          <Tabs
+            className="flex w-full flex-col items-center rounded-lg"
+            onValueChange={setActiveTab}
+            defaultValue="My Collections"
+            value={activeTab}
           >
-            + add address
-          </Link>
+            <TabsList className="flex w-full justify-start rounded-lg bg-muted p-2 py-0 pl-0">
+              <TabsTrigger
+                key={nanoid()}
+                value={"My Collections"}
+                className="sm:text-md rounded-l-lg border-primary-foreground/30 text-sm md:text-lg xl:text-xl"
+              >
+                My Collections
+              </TabsTrigger>
+              <TabsTrigger
+                key={nanoid()}
+                value={"Personal Information"}
+                className="sm:text-md rounded-none border-primary-foreground/30 text-sm md:text-lg"
+              >
+                Personal Information
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="My Collections" className="w-full pb-4">
+              <div className="grid gap-4 gap-x-10 p-10 sm:grid-cols-2 md:grid-cols-4">
+                {gallery
+                  ? gallery.map((picture) => (
+                      <div key={picture.id} className="w-58 relative h-64">
+                        <Image
+                          src={picture.url}
+                          fill
+                          quality={100}
+                          className="rounded-lg border-2 border-primary-foreground/70 object-contain"
+                          alt="User Profile Picture rounded-full"
+                        />
+                      </div>
+                    ))
+                  : null}
+              </div>
+            </TabsContent>
+            <TabsContent value="Personal Information" className="w-full pb-4">
+              <div className="flex flex-col">
+                <div className="p-10">
+                  <h2 className="text-2xl font-medium">Personal Details</h2>
+                  <div className="mt-4">
+                    {personalDetails
+                      ? personalDetailsArr.map((detail) => (
+                          <div
+                            className="flex items-center py-2"
+                            key={detail.val}
+                          >
+                            {detail.icon}
+                            <div className="ml-4 flex flex-col justify-center">
+                              <h4 className="text-muted-foreground">
+                                {detail.title}
+                              </h4>
+                              <h4>
+                                {personalDetails[detail.val] ?? "not provided"}
+                              </h4>
+                            </div>
+                          </div>
+                        ))
+                      : null}
+                  </div>
+                </div>
+                <div className="p-10">
+                  <h2 className="text-2xl font-medium">Your Address</h2>
+                  <div className="mt-4">
+                    {userAddresses
+                      ? userAddresses.map((userAddress) => {
+                          return (
+                            <AddressCard
+                              userAddress={userAddress}
+                              key={userAddress.id}
+                            />
+                          );
+                        })
+                      : null}
+                  </div>
+                  <Link href="/shipping-address">
+                    <Button className="mt-8 flex items-center">
+                      <HiPlusCircle size={20} />
+                      <h3 className="ml-1">
+                        {userAddresses?.length == 0
+                          ? "Add address"
+                          : "Add another address"}
+                      </h3>
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
-      </section>
-      <section>
-        <label className="block py-10 text-3xl font-medium">Your Friends</label>
-        <FriendsSection />
-      </section>
+      </div>
     </div>
   );
 }
@@ -121,12 +201,13 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { getServerAuthSession } from "../../server/auth";
 import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
-import { SIGNIN_ROUTE } from "@/utils/general/constants";
 import AddressCard from "@/components/profilePageComponents/AddressCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import FriendsSection from "../../components/profilePageComponents/FriendsSection";
-import { Router } from "next/router";
+import { TabsList } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import { nanoid } from "nanoid";
+import FriendReqCard from "@/components/profilePageComponents/FriendReqCard";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({
@@ -142,8 +223,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   await ssg.user.getPersonalDetails.prefetch();
   await ssg.user.getUserAddress.prefetch();
   await ssg.friends.getRecievedRequests.prefetch();
-  await ssg.friends.getRecievedRequests.prefetch();
-  await ssg.friends.getRecievedRequests.prefetch();
+  await ssg.gallery.getUserGallery.prefetch();
   let redirect: { permanent: boolean; destination: string } | undefined;
   if (!session) {
     redirect = {

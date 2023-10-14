@@ -56,46 +56,52 @@ export default function ShippingAddress() {
           className="flex flex-col items-center justify-center pb-20"
         >
           <div className="w-72">
-            <div className="flex w-full flex-col justify-center">
-              <FormLabel className="pb-4">Country</FormLabel>
-              <Combobox
-                setValue={setSelected}
-                searchResults={countriesArr.map(({ name }) => {
-                  return { label: name, value: name };
-                })}
-                value={selected}
-                defaultValue={""}
-                placeholder="Search country..."
-              />
-            </div>
-
             {AddressObjectKeys.map((key) => {
-              if (key !== "country")
+              if (key == "country") {
                 return (
-                  <div className="flex w-full justify-center pt-4" key={key}>
-                    <FormField
-                      control={form.control}
-                      name={key}
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <div className="flex items-center justify-between">
-                            <FormLabel>{Capitalize(key)}</FormLabel>
-                            <FormMessage />
-                          </div>
-                          <FormControl>
-                            <Input
-                              className="text-md w-full rounded-sm py-2"
-                              placeholder={key}
-                              type="text"
-                              {...field}
-                              defaultValue={""}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
+                  <div
+                    className="flex w-full flex-col justify-center pt-4"
+                    key={key}
+                  >
+                    <FormLabel className="pb-2">Country</FormLabel>
+                    <Combobox
+                      setValue={setSelected}
+                      searchResults={countriesArr.map(({ name }) => {
+                        return { label: name, value: name };
+                      })}
+                      contentPos="start"
+                      value={selected}
+                      defaultValue={""}
+                      placeholder="Search country..."
                     />
                   </div>
                 );
+              }
+              return (
+                <div className="flex w-full justify-center pt-4" key={key}>
+                  <FormField
+                    control={form.control}
+                    name={key}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <div className="flex items-center justify-between">
+                          <FormLabel>{Capitalize(key)}</FormLabel>
+                          <FormMessage />
+                        </div>
+                        <FormControl>
+                          <Input
+                            className="text-md w-full rounded-sm py-2"
+                            placeholder={key}
+                            type="text"
+                            {...field}
+                            defaultValue={""}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              );
             })}
           </div>
           <div className="flex justify-center">

@@ -160,7 +160,9 @@ const Navbar = () => {
             Art It Up
           </Link>
         </div>
-        <div className={`hidden w-1/2 justify-center md:flex`}>
+        <div
+          className={`hidden w-1/2 justify-center bg-background md:flex md:bg-transparent`}
+        >
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>

@@ -14,6 +14,8 @@ export const userRouter = createTRPCRouter({
         firstName: true,
         lastName: true,
         phone: true,
+        email: true,
+        birthday: true,
         friendUserFriends: {
           where: { status: "ACCEPTED" },
           select: { friendId: true },
@@ -29,9 +31,8 @@ export const userRouter = createTRPCRouter({
         code: "BAD_REQUEST",
       });
     return {
-      firstName: details.firstName,
-      lastName: details.lastName,
-      phone: details.phone,
+      ...details,
+      birthday: details.birthday?.toLocaleDateString(),
       friendCount:
         details.friendUserFriends.length + details.userFriends.length,
     };

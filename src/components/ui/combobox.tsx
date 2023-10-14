@@ -23,12 +23,14 @@ interface ComboboxPropType extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   value: string;
   setValue: React.Dispatch<string>;
+  contentPos?: "start" | "center" | "end";
 }
 export function Combobox({
   searchResults,
   placeholder,
   value,
   setValue,
+  contentPos = "center",
   ...inputArgs
 }: ComboboxPropType) {
   const [open, setOpen] = React.useState(false);
@@ -40,10 +42,13 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="text-md w-full justify-between border-2 font-normal text-primary-foreground"
+          contentPos={contentPos}
+          className="text-md -between w-full border-2 font-normal text-primary-foreground"
         >
-          {value ? Capitalize(value) : placeholder}
-          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <div className="flex w-full items-center justify-between">
+            {value ? Capitalize(value) : placeholder}
+            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="">

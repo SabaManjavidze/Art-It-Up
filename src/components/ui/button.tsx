@@ -18,7 +18,7 @@ const buttonVariants = cva(
           "border border-input bg-background hover:bg-muted hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/90",
-        ghost: "hover:bg-primary/10 hover:text-accent-foreground",
+        ghost: "hover:bg-primary/[8%] hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -42,6 +42,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isLoading?: boolean;
+  contentPos?: "start" | "center" | "end";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -53,6 +54,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant,
       size,
       asChild = false,
+      contentPos = "center",
       ...props
     },
     ref
@@ -69,7 +71,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <div
             className={`${
               isLoading ? "opacity-0" : "opacity-100"
-            } flex w-full items-center justify-center`}
+            } flex w-full items-center justify-${contentPos}`}
           >
             {children}
           </div>

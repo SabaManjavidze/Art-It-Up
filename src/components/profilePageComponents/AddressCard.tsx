@@ -1,95 +1,57 @@
 import React, { useState } from "react";
 import type { UserAddress } from "@prisma/client";
-import { nanoid } from "nanoid";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
 import { Button } from "../ui/button";
-import { api } from "@/utils/api";
-import { HiChevronUpDown } from "react-icons/hi2";
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { PublicKeys } from "@/utils/general/constants";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { limitTxt } from "@/utils/general/utils";
+import { formatAddress, limitTxt } from "@/utils/general/utils";
+import { HiHashtag, HiLocationMarker } from "react-icons/hi";
+import { TbPencil } from "react-icons/tb";
 
-const formatAddress = (details: UserAddress) => {
-  const { selected, userId, ...realDetails } = details;
-  let str = "";
-  Object.entries(realDetails).forEach(([key, value]) => {
-    const realValue = value ?? "";
-    if (str.length == 0) {
-      str += `${key}=${realValue}`;
-    } else {
-      str += `&${key}=${realValue}`;
-    }
-  });
-  return str;
-};
-
+const ICON_SIZE = 22;
+const userAddressesArr = [
+  {
+    title: "Country",
+    icon: <HiLocationMarker size={ICON_SIZE} />,
+    val: "country",
+  },
+  { title: "ZipCode", icon: <HiHashtag size={ICON_SIZE} />, val: "zip" },
+  {
+    title: "City/Region",
+    icon: <HiLocationMarker size={ICON_SIZE} />,
+    val: "region",
+  },
+  {
+    title: "Address",
+    icon: <HiLocationMarker size={ICON_SIZE} />,
+    val: "address1",
+  },
+] as const;
 export default function AddressCard({
-  details,
-  expanded,
-  handleHeaderClick,
+  userAddress,
 }: {
-  handleHeaderClick: () => void;
-  expanded: boolean;
-  details: UserAddress;
+  userAddress: UserAddress;
 }) {
-  const [removed, setRemoved] = useState(false);
-  const { mutateAsync: removeAddress, isLoading } =
-    api.address.removeAddress.useMutation();
-  const handleRemoveAddress = async () => {
-    await removeAddress({ addressId: details.id });
-    setRemoved(true);
-  };
-  const [cardRef] = useAutoAnimate();
   return (
-    <Card className={`${removed ? "hidden" : ""} relative w-64`}>
-      <CardHeader
-        className="flex cursor-pointer flex-row justify-between border py-3 transition-colors hover:bg-primary/5"
-        onClick={handleHeaderClick}
-      >
-        <CardTitle className="select-none text-xl">{details.title}</CardTitle>
-        <HiChevronUpDown size={20} className="text-primary-foreground" />
-      </CardHeader>
-
-      <div
-        className="absolute right-0 left-0 bottom-0 z-10 translate-y-full border bg-background py-3 "
-        hidden={!expanded}
-      >
-        <div className="ml-3" ref={cardRef}>
-          {(Object.keys(details) as (keyof UserAddress)[]).map((key) => {
-            if ((PublicKeys as any)[key])
-              return (
-                <p key={nanoid()}>
-                  {key}: {limitTxt(details?.[key]?.toString() || "", 15)}
-                </p>
-              );
-          })}
-        </div>
-        <CardFooter
-          className={`${
-            expanded ? "flex" : "hidden"
-          } mt-4 w-full justify-between p-0 px-3`}
-        >
-          <Link href={`/edit-shipping-address?${formatAddress(details)}`}>
-            <Button variant="outline">Edit</Button>
-          </Link>
-          <Button
-            isLoading={isLoading}
-            onClick={handleRemoveAddress}
-            variant={"destructive"}
-          >
-            Remove
-          </Button>
-        </CardFooter>
+    <div className="mt-6 flex w-1/2 justify-between first-of-type:mt-0">
+      <div>
+        {userAddressesArr.map((address) => (
+          <div className="flex items-center py-2" key={address.val}>
+            {address.icon}
+            <div className="ml-4 flex flex-col justify-center">
+              <h4 className="text-muted-foreground">{address.title}</h4>
+              <h4 className="">{userAddress[address.val] ?? "not provided"}</h4>
+            </div>
+          </div>
+        ))}
       </div>
-    </Card>
+      <Link href={`/edit-shipping-address/?${formatAddress(userAddress)}`}>
+        <Button
+          variant="ghost"
+          className="flex items-center text-lg text-accent-foreground"
+        >
+          <TbPencil size={20} />
+          <h3 className="ml-1">Edit address</h3>
+        </Button>
+      </Link>
+    </div>
   );
 }
