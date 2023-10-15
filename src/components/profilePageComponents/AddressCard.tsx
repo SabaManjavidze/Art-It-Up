@@ -43,15 +43,17 @@ export default function AddressCard({
           </div>
         ))}
       </div>
-      <Link href={`/edit-shipping-address/?${formatAddress(userAddress)}`}>
-        <Button
-          variant="ghost"
-          className="flex items-center text-sm text-accent-foreground sm:text-lg"
-        >
-          <TbPencil size={20} />
-          <h3 className="ml-1">Edit address</h3>
-        </Button>
-      </Link>
+      <div>
+        <Link href={`/edit-shipping-address/?${formatAddress(userAddress)}`}>
+          <Button
+            variant="ghost"
+            className="flex items-center text-sm text-accent-foreground sm:text-lg"
+          >
+            <TbPencil size={20} />
+            <h3 className="ml-1">Edit address</h3>
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }

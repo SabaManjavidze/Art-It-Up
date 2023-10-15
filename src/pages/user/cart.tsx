@@ -86,12 +86,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     ctx: await createContextInner({ session }),
     transformer: superjson,
   });
-  console.time("cart");
   await ssg.cart.getCart.prefetch();
-  console.timeEnd("cart");
-  console.time("addresses");
-  await ssg.user.getUserAddress.prefetch();
-  console.timeEnd("addresses");
+  await ssg.address.getUserAddress.prefetch();
   let redirect: { permanent: boolean; destination: string } | undefined;
   if (!session) {
     redirect = {

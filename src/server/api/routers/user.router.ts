@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { addressToSchema } from "@/utils/types/zodTypes";
+import {
+  addressToSchema,
+  personalDetailsInputSchema,
+  personalDetailsSchema,
+} from "@/utils/types/zodTypes";
 import { prisma } from "../../db";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
@@ -33,6 +37,7 @@ export const userRouter = createTRPCRouter({
     return {
       ...details,
       birthday: details.birthday?.toLocaleDateString(),
+      phone: details.phone || null,
       friendCount:
         details.friendUserFriends.length + details.userFriends.length,
     };
@@ -146,35 +151,13 @@ export const userRouter = createTRPCRouter({
       },
     })) as User;
   }),
-  addShippingAddress: protectedProcedure
-    .input(addressToSchema)
-    .mutation(async ({ input, ctx: { session } }) => {
-      try {
-        await prisma.userAddress.update({
-          where: {
-            selectedAddress: { userId: session.user.id, selected: true },
-          },
-          data: { selected: false },
-        });
-      } catch (e) {}
-      await prisma.userAddress.create({
-        data: {
-          ...input,
-          userId: session.user.id,
-          selected: true,
-        },
-      });
-    }),
+
   updatePersonalDetails: protectedProcedure
-    .input(addressToSchema.and(z.object({ id: z.string() })))
+    .input(personalDetailsInputSchema)
     .mutation(async ({ input, ctx: { session } }) => {
-      await prisma.userAddress.update({
-        where: { id: input.id },
-        data: {
-          ...input,
-          zip: input.zip,
-          userId: session.user.id,
-        },
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { ...input, phone: Number(input.phone) },
       });
     }),
 
@@ -185,10 +168,4 @@ export const userRouter = createTRPCRouter({
         where: { id: addressId },
       });
     }),
-  getUserAddress: protectedProcedure.query(async ({ ctx: { session } }) => {
-    const addresses = await prisma.userAddress.findMany({
-      where: { userId: session.user.id },
-    });
-    return addresses;
-  }),
 });

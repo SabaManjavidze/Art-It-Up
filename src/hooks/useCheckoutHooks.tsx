@@ -16,7 +16,7 @@ type CheckoutContextProps = {
   createOrder: (props: RouterInputs["order"]["createOrder"]) => Promise<void>;
   detailsLoading: boolean;
   shippingLoading: boolean;
-  userDetails?: RouterOutputs["user"]["getUserAddress"];
+  userDetails?: RouterOutputs["address"]["getUserAddress"];
   shippingCost?: RouterOutputs["order"]["calculateOrderShipping"];
   handleOnApprove: PayPalButtonsComponentProps["onApprove"];
   handleCreateOrder: PayPalButtonsComponentProps["createOrder"];
@@ -79,7 +79,7 @@ export const CheckoutProvider = ({
     data: userAddresses,
     isLoading: addressesLoading,
     error: addressError,
-  } = api.user.getUserAddress.useQuery();
+  } = api.address.getUserAddress.useQuery();
 
   const {
     data: shippingCost,

@@ -4,23 +4,40 @@ import { Loader2 } from "lucide-react";
 import PersonalDetailsSection from "@/components/profilePageComponents/PersonalDetailsSection";
 import { SIGNIN_ROUTE } from "@/utils/general/constants";
 import { BsPeople } from "react-icons/bs";
-import { HiMail, HiPhone, HiCake, HiPlusCircle } from "react-icons/hi";
+import {
+  HiMail,
+  HiPhone,
+  HiCake,
+  HiPlusCircle,
+  HiUserCircle,
+} from "react-icons/hi";
 import { TbPencil } from "react-icons/tb";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 const ICON_SIZE = 22;
-const personalDetailsArr = [
-  { val: "email", title: "Email Address", icon: <HiMail size={ICON_SIZE} /> },
+export const personalDetailsArr = [
+  {
+    title: "FirstName",
+    icon: <HiUserCircle size={ICON_SIZE} />,
+    val: "firstName",
+  },
+  {
+    title: "LastName",
+    icon: <HiUserCircle size={ICON_SIZE} />,
+    val: "lastName",
+  },
+  { title: "Email Address", icon: <HiMail size={ICON_SIZE} />, val: "email" },
   { title: "Phone Number", icon: <HiPhone size={ICON_SIZE} />, val: "phone" },
   { title: "Birthday", icon: <HiCake size={ICON_SIZE} />, val: "birthday" },
 ] as const;
 export default function Profile() {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const {
     data: userAddresses,
     isLoading,
     error: addressesError,
-  } = api.user.getUserAddress.useQuery();
+  } = api.address.getUserAddress.useQuery();
   const { data: friendRequests, isLoading: friendReqsLoading } =
     api.friends.getRecievedRequests.useQuery();
 
@@ -59,6 +76,7 @@ export default function Profile() {
 
   return (
     <div className="container flex min-h-screen w-full flex-col items-center bg-background px-3 pt-32 text-primary-foreground md:flex-row md:items-start lg:px-5">
+      <EditDetailsModal isOpen={isDetailsOpen} setIsOpen={setIsDetailsOpen} />
       <div className="flex w-full flex-col items-center md:w-1/4 md:items-start">
         <div className="flex w-4/5 flex-col items-center justify-start">
           <Image
@@ -74,11 +92,12 @@ export default function Profile() {
           </h2>
           <div className="flex items-center">
             <BsPeople size={20} />
-            <h2 className="ml-2">
-              {(personalDetails.friendCount <= 1 ? "Friend" : "Friends") + ": "}
-            </h2>
+
             <h2 className="ml-2 text-center font-medium text-primary-foreground">
               {personalDetails.friendCount}
+            </h2>
+            <h2 className="ml-2">
+              {personalDetails.friendCount <= 1 ? "Friend" : "Friends"}
             </h2>
           </div>
           <Button variant={"accent"} className="mt-6 w-full" size="lg">
@@ -139,7 +158,17 @@ export default function Profile() {
             <TabsContent value="Personal Information" className="w-full pb-4">
               <div className="flex flex-col">
                 <div className="p-10">
-                  <h2 className="text-2xl font-medium">Personal Details</h2>
+                  <div className="flex w-1/2 items-center justify-between">
+                    <h2 className="text-2xl font-medium">Personal Details</h2>
+                    <Button
+                      variant="ghost"
+                      className="flex items-center text-sm text-accent-foreground sm:text-lg"
+                      onClick={() => setIsDetailsOpen(true)}
+                    >
+                      <TbPencil size={20} />
+                      <h3 className="ml-1">Edit Details</h3>
+                    </Button>
+                  </div>
                   <div className="mt-4">
                     {personalDetails
                       ? personalDetailsArr.map((detail) => (
@@ -208,6 +237,7 @@ import { TabsList } from "@radix-ui/react-tabs";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { nanoid } from "nanoid";
 import FriendReqCard from "@/components/profilePageComponents/FriendReqCard";
+import { EditDetailsModal } from "@/components/profilePageComponents/EditDetailsModal";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({
@@ -221,7 +251,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   await ssg.user.getPersonalDetails.prefetch();
-  await ssg.user.getUserAddress.prefetch();
+  await ssg.address.getUserAddress.prefetch();
   await ssg.friends.getRecievedRequests.prefetch();
   await ssg.gallery.getUserGallery.prefetch();
   let redirect: { permanent: boolean; destination: string } | undefined;

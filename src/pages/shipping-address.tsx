@@ -28,9 +28,9 @@ export default function ShippingAddress() {
   const trpc = api.useContext();
   const [selected, setSelected] = useState("");
   const { mutateAsync: addShippingAddress, isLoading } =
-    api.user.addShippingAddress.useMutation({
+    api.address.addShippingAddress.useMutation({
       onSuccess() {
-        trpc.user.getUserAddress.invalidate();
+        trpc.address.getUserAddress.invalidate();
       },
     });
   const router = useRouter();

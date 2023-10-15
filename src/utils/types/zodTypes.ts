@@ -42,6 +42,11 @@ export const createOrderItemSchema = z.object({
   // shipping_method: z.number(),
   // send_shipping_notification: z.boolean(),
 });
+export const personalDetailsInputSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  phone: z.string().optional(),
+});
 export const personalDetailsSchema = z.object({
   firstName: z.string({
     required_error:
