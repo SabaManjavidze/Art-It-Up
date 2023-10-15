@@ -32,7 +32,8 @@ export const personalDetailsArr = [
   { title: "Birthday", icon: <HiCake size={ICON_SIZE} />, val: "birthday" },
 ] as const;
 export default function Profile() {
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [addressOpen, setAddressOpen] = useState(false);
   const {
     data: userAddresses,
     isLoading,
@@ -76,7 +77,8 @@ export default function Profile() {
 
   return (
     <div className="container flex min-h-screen w-full flex-col items-center bg-background px-3 pt-32 text-primary-foreground md:flex-row md:items-start lg:px-5">
-      <EditDetailsModal isOpen={isDetailsOpen} setIsOpen={setIsDetailsOpen} />
+      <EditDetailsModal isOpen={detailsOpen} setIsOpen={setDetailsOpen} />
+      <AddAddressModal isOpen={addressOpen} setIsOpen={setAddressOpen} />
       <div className="flex w-full flex-col items-center md:w-1/4 md:items-start">
         <div className="flex w-4/5 flex-col items-center justify-start">
           <Image
@@ -163,7 +165,7 @@ export default function Profile() {
                     <Button
                       variant="ghost"
                       className="flex items-center text-sm text-accent-foreground sm:text-lg"
-                      onClick={() => setIsDetailsOpen(true)}
+                      onClick={() => setDetailsOpen(true)}
                     >
                       <TbPencil size={20} />
                       <h3 className="ml-1">Edit Details</h3>
@@ -204,16 +206,17 @@ export default function Profile() {
                         })
                       : null}
                   </div>
-                  <Link href="/shipping-address">
-                    <Button className="mt-8 flex items-center">
-                      <HiPlusCircle size={20} />
-                      <h3 className="ml-1">
-                        {userAddresses?.length == 0
-                          ? "Add address"
-                          : "Add another address"}
-                      </h3>
-                    </Button>
-                  </Link>
+                  <Button
+                    onClick={() => setAddressOpen(true)}
+                    className="mt-8 flex items-center"
+                  >
+                    <HiPlusCircle size={20} />
+                    <h3 className="ml-1">
+                      {userAddresses?.length == 0
+                        ? "Add address"
+                        : "Add another address"}
+                    </h3>
+                  </Button>
                 </div>
               </div>
             </TabsContent>
@@ -238,6 +241,7 @@ import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { nanoid } from "nanoid";
 import FriendReqCard from "@/components/profilePageComponents/FriendReqCard";
 import { EditDetailsModal } from "@/components/profilePageComponents/EditDetailsModal";
+import AddAddressModal from "@/components/profilePageComponents/AddAddressModal";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({

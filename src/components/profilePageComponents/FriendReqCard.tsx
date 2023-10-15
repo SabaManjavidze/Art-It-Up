@@ -1,4 +1,5 @@
-import { RouterOutputs, api } from "@/utils/api";
+import type { RouterOutputs} from "@/utils/api";
+import { api } from "@/utils/api";
 import { BLANK_PROFILE_URL } from "@/utils/general/constants";
 import Image from "next/image";
 import { Button } from "../ui/button";

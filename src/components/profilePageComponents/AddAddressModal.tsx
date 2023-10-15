@@ -1,8 +1,9 @@
+import type { Dispatch} from "react";
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
-import { api } from "../utils/api";
-import { countriesArr, countriesObj } from "../utils/countriesArray";
+import { api } from "@/utils/api";
+import { countriesArr, countriesObj } from "@/utils/countriesArray";
 import { AddressObjectKeys, addressToSchema } from "@/utils/types/zodTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -20,11 +21,18 @@ import {
 import { Capitalize } from "@/utils/general/utils";
 import { Combobox } from "@/components/ui/combobox";
 import { useRouter } from "next/router";
+import Modal from "../ui/modal";
 
 const formSchema = addressToSchema.omit({ country: true });
 type FormType = z.infer<typeof formSchema>;
 
-export default function ShippingAddress() {
+export default function AddAddressModal({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen: Dispatch<boolean>;
+}) {
   const trpc = api.useContext();
   const [selected, setSelected] = useState("");
   const { mutateAsync: addShippingAddress, isLoading } =
@@ -33,7 +41,6 @@ export default function ShippingAddress() {
         trpc.address.getUserAddress.invalidate();
       },
     });
-  const router = useRouter();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
   });
@@ -44,16 +51,20 @@ export default function ShippingAddress() {
       ...data,
       country: countriesObj[Capitalize(selected) as keyof typeof countriesObj],
     });
-    router.push("/user/profile");
+    setIsOpen(false);
   };
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <Modal
+      isOpen={isOpen}
+      closeModal={() => setIsOpen(false)}
+      title="Add Address"
+    >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, (err) => {
             console.log(err);
           })}
-          className="flex flex-col items-center justify-center pb-20"
+          className="flex flex-col items-center justify-center py-4"
         >
           <div className="w-72">
             {AddressObjectKeys.map((key) => {
@@ -111,6 +122,6 @@ export default function ShippingAddress() {
           </div>
         </form>
       </Form>
-    </div>
+    </Modal>
   );
 }

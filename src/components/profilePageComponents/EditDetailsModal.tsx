@@ -1,4 +1,5 @@
-import { Dispatch, useState } from "react";
+import type { Dispatch} from "react";
+import { useState } from "react";
 import Modal from "../ui/modal";
 import {
   Form,
@@ -10,7 +11,7 @@ import {
 } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { personalDetailsInputSchema } from "@/utils/types/zodTypes";
-import { z } from "zod";
+import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/utils/api";
 import { personalDetailsArr } from "@/pages/user/profile";

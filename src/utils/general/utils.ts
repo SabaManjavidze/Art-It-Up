@@ -1,4 +1,4 @@
-import { UserAddress } from "@prisma/client";
+import type { UserAddress } from "@prisma/client";
 
 export const Capitalize = (s: string) => {
   return `${s[0]?.toUpperCase()}${s.slice(1, s.length)}`;

@@ -1,5 +1,5 @@
 import { LOREM_IPSUM } from "../general/constants";
-import { UserReview } from "../types/types";
+import type { UserReview } from "../types/types";
 
 export const creditPricing = [
   {
