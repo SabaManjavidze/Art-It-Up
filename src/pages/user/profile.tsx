@@ -58,8 +58,8 @@ export default function Profile() {
   }
 
   return (
-    <div className="container flex min-h-screen w-full items-start bg-background px-3 pt-32 text-primary-foreground lg:px-5">
-      <div className="flex w-[25%] flex-col items-start">
+    <div className="container flex min-h-screen w-full flex-col items-center bg-background px-3 pt-32 text-primary-foreground md:flex-row md:items-start lg:px-5">
+      <div className="flex w-full flex-col items-center md:w-1/4 md:items-start">
         <div className="flex w-4/5 flex-col items-center justify-start">
           <Image
             src={session.data.user.image || ""}
@@ -88,14 +88,14 @@ export default function Profile() {
             Add friends
           </Button>
         </div>
-        <div className="mt-6 w-full">
+        <div className="mt-6 w-4/5 md:w-full">
           <h3 className="text-md font-medium">Friend requests</h3>
           {friendRequests?.map((req) => (
             <FriendReqCard req={req} key={req.id} />
           ))}
         </div>
       </div>
-      <div className="w-[75%]">
+      <div className="mt-6 w-full md:mt-0 md:w-3/4">
         <div className="flex w-full text-lg">
           <Tabs
             className="flex w-full flex-col items-center rounded-lg"
@@ -120,7 +120,7 @@ export default function Profile() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="My Collections" className="w-full pb-4">
-              <div className="grid gap-4 gap-x-10 p-10 sm:grid-cols-2 md:grid-cols-4">
+              <div className="grid gap-4 gap-x-10 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {gallery
                   ? gallery.map((picture) => (
                       <div key={picture.id} className="w-58 relative h-64">

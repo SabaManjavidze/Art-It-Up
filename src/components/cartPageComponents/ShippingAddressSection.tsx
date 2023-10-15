@@ -42,13 +42,7 @@ export const ShippingAddressSection = () => {
               isSelected={address == addressItem.id}
               key={addressItem.id}
             >
-              <AddressCard
-                details={addressItem}
-                expanded={expanded == addressItem.id}
-                handleHeaderClick={() =>
-                  setExpanded(expanded == addressItem.id ? "" : addressItem.id)
-                }
-              />
+              <AddressCard userAddress={addressItem} />
             </SelectableCard>
           ))
         )}

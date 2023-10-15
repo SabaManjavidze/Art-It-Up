@@ -31,7 +31,7 @@ export default function AddressCard({
   userAddress: UserAddress;
 }) {
   return (
-    <div className="mt-6 flex w-1/2 justify-between first-of-type:mt-0">
+    <div className="mt-6 flex w-full justify-between first-of-type:mt-0 md:w-1/2">
       <div>
         {userAddressesArr.map((address) => (
           <div className="flex items-center py-2" key={address.val}>
@@ -46,7 +46,7 @@ export default function AddressCard({
       <Link href={`/edit-shipping-address/?${formatAddress(userAddress)}`}>
         <Button
           variant="ghost"
-          className="flex items-center text-lg text-accent-foreground"
+          className="flex items-center text-sm text-accent-foreground sm:text-lg"
         >
           <TbPencil size={20} />
           <h3 className="ml-1">Edit address</h3>
