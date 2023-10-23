@@ -24,40 +24,35 @@ const UserCart = () => {
   }
   return (
     <CheckoutProvider products={products}>
-      <div className="text-skin-base min-h-screen w-full bg-background ">
-        <div className="py-12">
-          <ShippingAddressSection />
-        </div>
-        <div className="flex flex-col justify-end lg:flex-row">
-          <div
-            className="w-full py-4 pr-4 
+      <div className="flex flex-col justify-end lg:flex-row">
+        <div
+          className="w-full py-4 pr-4 
         md:py-8 md:pr-6 lg:py-14 lg:pr-8"
-          >
-            <p className="ml-12 pt-9 text-3xl font-black leading-10 dark:text-primary-foreground lg:text-4xl">
-              Cart
-            </p>
+        >
+          <p className="ml-12 pt-9 text-3xl leading-10 dark:text-primary-foreground lg:text-4xl">
+            Cart
+          </p>
 
-            <div className="mt-4">
-              {products.length < 1 ? (
-                <div className="mt-16 flex px-12">
-                  <p className="text-lg">No Products In Your Cart</p>
-                </div>
-              ) : (
-                products.map((cartProduct, prodIdx) => {
-                  return (
-                    <CartProduct
-                      key={cartProduct.productId}
-                      cartProduct={cartProduct}
-                      prodIdx={prodIdx}
-                    />
-                  );
-                })
-              )}
-            </div>
+          <div className="mt-4 w-full lg:w-4/5">
+            {products.length < 1 ? (
+              <div className="mt-16 flex px-12">
+                <p className="text-lg">No Products In Your Cart</p>
+              </div>
+            ) : (
+              products.map((cartProduct, prodIdx) => {
+                return (
+                  <CartProduct
+                    key={cartProduct.productId}
+                    cartProduct={cartProduct}
+                    prodIdx={prodIdx}
+                  />
+                );
+              })
+            )}
           </div>
-          <div className="mt-32 mr-5 h-full w-full bg-gray-100 dark:bg-gray-800 md:w-full lg:w-96">
-            {products.length > 0 && <SummarySection />}
-          </div>
+        </div>
+        <div className="mt-32 mr-5 h-full w-full bg-gray-100 dark:bg-gray-800 md:w-full lg:w-96">
+          {products.length > 0 && <SummarySection />}
         </div>
       </div>
     </CheckoutProvider>

@@ -160,7 +160,7 @@ export default function Profile() {
             <TabsContent value="Personal Information" className="w-full pb-4">
               <div className="flex flex-col">
                 <div className="p-10">
-                  <div className="flex w-1/2 items-center justify-between">
+                  <div className="flex w-full items-center justify-between md:w-1/2">
                     <h2 className="text-2xl font-medium">Personal Details</h2>
                     <Button
                       variant="ghost"

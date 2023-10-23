@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { BiRadioCircle, BiRadioCircleMarked } from "react-icons/bi";
+import { RiCheckboxFill, RiCheckboxBlankLine } from "react-icons/ri";
 
 export function SelectableCard({
   children,
@@ -21,13 +22,19 @@ export function SelectableCard({
   }, [ref.current, ref2.current]);
 
   return (
-    <div className="flex w-full items-start bg-transparent">
-      <div ref={ref2} className="flex w-20 items-center justify-center px-4">
-        <button onClick={handleSelect}>
+    <div className="relative flex w-full items-start bg-transparent">
+      <div
+        ref={ref2}
+        className="flex items-center justify-center sm:w-20 sm:px-4"
+      >
+        <button
+          onClick={handleSelect}
+          className="absolute bottom-5 right-4 z-20 p-0 sm:static"
+        >
           {isSelected ? (
-            <BiRadioCircleMarked size={30} className="text-primary" />
+            <RiCheckboxFill size={30} className="text-accent " />
           ) : (
-            <BiRadioCircle size={30} className="text-primary" />
+            <RiCheckboxBlankLine size={30} className="text-primary" />
           )}
         </button>
       </div>

@@ -24,6 +24,7 @@ type SearchTypeDropDownPropType = {
   options?: SearchType[];
   handleOpenClick?: () => void;
   isLoading?: boolean;
+  responsive?: boolean;
   className?: string;
 };
 export default function SearchTypeDropDown({
@@ -33,6 +34,7 @@ export default function SearchTypeDropDown({
   handleOpenClick,
   isLoading = false,
   className = "",
+  responsive = true,
 }: SearchTypeDropDownPropType) {
   return (
     <DropdownMenu modal={false}>
@@ -46,9 +48,11 @@ export default function SearchTypeDropDown({
             className
           )}
         >
-          <p className="hidden sm:block">{Capitalize(selected?.title)}</p>
+          <p className={responsive ? "hidden sm:block" : undefined}>
+            {Capitalize(selected?.title)}
+          </p>
           <HiChevronUpDown
-            className="ml-0 h-4 w-4 sm:ml-4 "
+            className={`${responsive ? "ml-0" : "ml-4"} h-4 w-4 sm:ml-4`}
             aria-hidden="true"
           />
         </Button>

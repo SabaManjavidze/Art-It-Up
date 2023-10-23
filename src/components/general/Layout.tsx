@@ -42,7 +42,7 @@ export default function Layout({
       <div className="flex min-h-screen flex-col justify-between bg-background text-primary-foreground">
         <BarLoader
           loading={isLoading}
-          className="!fixed z-50 !w-full !bg-cyan-500"
+          className="!fixed z-50 !w-full !bg-accent"
           height={6}
         />
         <main>{children}</main>

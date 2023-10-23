@@ -11,7 +11,6 @@ import { filterProducts } from "../utils/checkout/filterProducts";
 import { TRPCError } from "@trpc/server";
 import { TRPCClientError } from "@trpc/client";
 
-type MinimalEntityType = { id: string; picture: string | null; name: string };
 type CheckoutContextProps = {
   createOrder: (props: RouterInputs["order"]["createOrder"]) => Promise<void>;
   detailsLoading: boolean;
@@ -30,8 +29,6 @@ type CheckoutContextProps = {
   handleSelectProduct: (id: string) => void;
   selected: string[];
   setSelected: Dispatch<SetStateAction<string[]>>;
-  entity?: MinimalEntityType | undefined;
-  setEntity: Dispatch<SetStateAction<MinimalEntityType | undefined>>;
   address: string;
   setAddress: Dispatch<SetStateAction<string>>;
   checkIfReady: () => boolean;
@@ -52,7 +49,6 @@ export const CheckoutContext = createContext<CheckoutContextProps>({
   setValuesChanged: () => {},
   setSelected: () => {},
   totalPrice: 0,
-  setEntity: () => {},
   handleOnApprove: async (data, actions) => {},
   handleCreateOrder: async (data, actions) => "",
   checkIfReady: () => false,
@@ -69,7 +65,6 @@ export const CheckoutProvider = ({
   const [selected, setSelected] = useState<string[]>([]);
   const [address, setAddress] = useState<string>("");
   const [valuesChanged, setValuesChanged] = useState(false);
-  const [entity, setEntity] = useState<MinimalEntityType | undefined>();
   const context = api.useContext();
 
   const { mutateAsync: createOrder, isLoading: orderLoading } =
@@ -128,6 +123,7 @@ export const CheckoutProvider = ({
     );
   };
   const handleChangeQuantity = (productId: string, quantity: number) => {
+    if (quantity < 1) return;
     setValuesChanged(true);
     context.cart.getCart.setData(
       undefined,
@@ -243,9 +239,6 @@ export const CheckoutProvider = ({
         handleSelectProduct,
         handleChangeQuantity,
         handleChangeSize,
-
-        entity,
-        setEntity,
 
         valuesChanged,
         handleUpdateShippingCost,

@@ -5,17 +5,17 @@ import React, { useState } from "react";
 import { SlPresent } from "react-icons/sl";
 import { useCheckout } from "../../hooks/useCheckoutHooks";
 import { BLANK_PROFILE_URL } from "@/utils/general/constants";
-import { IoClose, IoCloseCircle } from "react-icons/io5";
+import { IoClose, IoCloseCircle, IoReload } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { api } from "@/utils/api";
 import { personalDetailsSchema } from "@/utils/types/zodTypes";
 import { toast } from "react-toastify";
 import { ZodError } from "zod";
+import { AiOutlineReload } from "react-icons/ai";
 
 export default function SummarySection() {
   const {
-    entity: friendEntity,
     handleOnApprove,
     handleCreateOrder,
     totalPrice,
@@ -47,11 +47,9 @@ export default function SummarySection() {
   };
 
   return (
-    <section className="flex flex-col justify-between bg-primary/5 px-4 py-6 md:px-7 md:py-10 lg:px-8 lg:py-20">
+    <section className="flex flex-col justify-between rounded-lg border px-4 py-10 shadow-lg md:px-7 lg:px-8 lg:py-10">
       <div>
-        <p className="text-3xl font-black leading-9 text-gray-800 lg:text-4xl">
-          Summary
-        </p>
+        <p className="text-3xl leading-9 text-gray-800 lg:text-4xl">Summary</p>
         <div className="flex items-center justify-between pt-16">
           <p className="text-base leading-none text-gray-800 ">Subtotal</p>
           <p className="text-base leading-none text-gray-800 ">
@@ -59,12 +57,12 @@ export default function SummarySection() {
           </p>
         </div>
         <div className="flex items-center justify-between pt-5">
-          <p className="flex-1 text-base leading-none text-gray-800 ">
+          <p className="flex-1 text-base leading-none text-gray-800">
             Shipping
           </p>
           {valuesChanged ? (
             <Button onClick={handleUpdateShippingCost}>
-              Show Shipping Cost
+              <IoReload />
             </Button>
           ) : (
             <p className="flex-1 text-end leading-none text-gray-800 ">
@@ -79,8 +77,11 @@ export default function SummarySection() {
         </div>
       </div>
       <div>
-        <div className="flex items-center justify-between pb-6 pt-20 lg:pt-5">
-          <p className="text-2xl leading-normal text-gray-800 ">Total</p>
+        <div className="mt-5 h-[1px] w-full bg-muted-foreground/50"></div>
+        <div className="flex items-center justify-between pt-20 lg:pt-5">
+          <p className="text-2xl font-bold leading-normal text-gray-800 ">
+            Total
+          </p>
           <p className="text-right text-2xl font-bold leading-normal text-gray-800 ">
             {shippingLoading ? (
               <Loader2 className="text-primary-foreground" />
@@ -89,23 +90,7 @@ export default function SummarySection() {
             )}
           </p>
         </div>
-        {friendEntity && (
-          <button
-            className="my-4 flex w-4/5 items-center justify-around rounded-md 
-                border-2 border-white p-2 duration-150 hover:bg-white/20 active:bg-white/40
-                disabled:border-gray-400 disabled:text-gray-400 disabled:hover:bg-transparent"
-            disabled
-          >
-            <Image
-              src={friendEntity.picture || BLANK_PROFILE_URL}
-              width={50}
-              height={50}
-              className=" rounded-full"
-              alt="user profile image"
-            />
-            <h3 className="text-skin-base text-lg">{friendEntity.name}</h3>
-          </button>
-        )}
+
         <div className="mt-3">
           {showButtons ? (
             <div>
@@ -134,10 +119,8 @@ export default function SummarySection() {
               </PayPalScriptProvider>
             </div>
           ) : (
-            <button
-              className="flex w-full justify-center border border-gray-800 bg-gray-900 py-5
-              text-base leading-none text-secondary-foreground duration-150 ease-in-out hover:bg-gray-700 focus:outline-none 
-              focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
+            <Button
+              className="flex w-full justify-center rounded-xl"
               onClick={handleShowButtonsClick}
             >
               {detailsLoading ? (
@@ -145,7 +128,7 @@ export default function SummarySection() {
               ) : (
                 "Pay Now!"
               )}
-            </button>
+            </Button>
           )}
         </div>
       </div>
