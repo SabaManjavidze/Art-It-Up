@@ -37,6 +37,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
   const router = useRouter();
   const descRef = useRef<HTMLParagraphElement>(null);
 
+  const [image, setImage] = useState(product?.images?.[0]?.src || "");
   const [options, setOptions] = useState<OptionType>({
     quantity: 1,
     size: product?.sizes[0]?.id as number,
@@ -69,7 +70,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
         sizeTitle: product.sizes.find((size) => size.id == options.size)
           ?.title as string,
         variantId: options.variantId,
-        price: options.cost / options.quantity,
+        price: options.cost,
         isInWishList: product.isInWishList,
       });
       if (product.isInWishList) {
@@ -96,7 +97,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
           ?.title as string,
         variantId: options.variantId,
         quantity: options.quantity,
-        price: options.cost / options.quantity,
+        price: options.cost,
         isInCart: product.isInCart,
       });
       if (product.isInCart) {
@@ -108,208 +109,199 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
       toast.error(error as string);
     }
   };
-  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const quantity = parseInt(event.target.value);
-    const originalCost = product.sizes.find(
-      (size) => size.variantId == options.variantId
-    )?.cost as number;
+  const handleQuantityChange = (quantity: number) => {
+    if (quantity < 1) return;
     setOptions({
       ...options,
       quantity,
-      cost: originalCost * quantity,
     });
   };
 
-  const handleSizeChange = (id: string) => {
-    const intId = parseInt(id);
+  const handleSizeChange = (id: number) => {
     const variant = product?.sizes?.find((size) => {
-      return size.id == intId;
+      return size.id == id;
     });
     setOptions({
       ...options,
-      size: intId,
-      cost: (variant?.cost as number) * options.quantity,
+      size: id,
+      cost: variant?.cost as number,
       variantId: variant?.id as number,
     });
   };
-
+  const handleImageClick = (src: string) => {
+    setImage(src);
+  };
   return (
-    <div className="bg-background">
-      <div className="pt-6">
-        <nav>
-          <ol
-            role="list"
-            className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
-          >
-            <li className="text-sm">
-              <Link
-                href={`/product/${product.id}`}
-                aria-current="page"
-                className="font-medium text-primary-foreground hover:text-gray-200"
+    <div className="container min-h-screen bg-background">
+      {/* Product info */}
+      <div className="mt-16 flex min-h-[60vh] w-full flex-col justify-between lg:mt-32 lg:flex-row">
+        <div className="flex w-full flex-col items-center justify-center lg:w-4/5 lg:flex-row">
+          <Carousel className="lg:hidden">
+            {product.images.map((img) => (
+              <div
+                className="relative h-[50vh] w-full rounded-3xl border lg:w-2/5"
+                key={img.src}
               >
-                {product.title}
-              </Link>
-            </li>
-          </ol>
-        </nav>
-
-        {/* Image gallery */}
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-          <div className="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-            <Image
-              src={product.images?.[0]?.src || ""}
-              alt={product.images?.[0]?.src || ""}
-              className="h-full w-full object-cover object-center"
-              fill
-            />
-          </div>
-          <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
-            <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-              <Image
-                src={product.images?.[1]?.src || ""}
-                alt={product.images?.[1]?.src || ""}
-                fill
-                className="h-full w-full object-cover object-center"
-              />
-            </div>
-            <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-              <Image
-                src={product.images?.[2]?.src || product.images?.[1]?.src || ""}
-                alt={product.images?.[2]?.src || ""}
-                className="h-full w-full object-cover object-center"
-                fill
-              />
-            </div>
-          </div>
-          <div className="aspect-h-5 aspect-w-4 sm:overflow-hidden sm:rounded-lg lg:aspect-h-4 lg:aspect-w-3">
-            <Image
-              src={product.images?.[3]?.src || product.images?.[0]?.src || ""}
-              alt={product.images?.[3]?.src || ""}
-              className="h-full w-full object-cover object-center"
-              fill
-            />
-          </div>
-        </div>
-
-        {/* Product info */}
-        <div
-          className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 
-        lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16"
-        >
-          <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-            <h1 className="text-2xl font-bold tracking-tight text-primary-foreground sm:text-3xl">
-              {product.title}
-            </h1>
-          </div>
-
-          {/* Options */}
-          <div className="mt-4 lg:row-span-3 lg:mt-0">
-            <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl tracking-tight text-primary-foreground">
-              {options.cost / 100} $
-            </p>
-            <div className="mt-10">
-              <div className="flex flex-col">
-                <label
-                  htmlFor="quantity"
-                  className="block text-lg font-medium text-gray-700"
-                >
-                  Quantity:
-                </label>
-                <Input
-                  type="number"
-                  name="quantity"
-                  min="1"
-                  id="quantity"
-                  value={options.quantity}
-                  onChange={handleQuantityChange}
-                  className="mt-2 h-10 w-16 rounded-md border-gray-300 px-2 text-primary-foreground 
-                shadow-sm duration-150 focus:border-indigo-500 focus:ring-indigo-500"
+                <Image
+                  src={img.src || ""}
+                  alt={"product image"}
+                  sizes={SIZES_PROP}
+                  className="h-full w-full rounded-3xl object-cover sm:object-contain lg:object-cover"
+                  fill
                 />
               </div>
-              {/* Sizes */}
-              <div className="mt-10">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-primary-foreground">
-                    Size
-                  </h3>
-                </div>
-
-                <Label className="sr-only text-primary-foreground">
-                  Choose a size
-                </Label>
-                <div
-                  className={`grid ${
-                    product.isClothe
-                      ? "grid-cols-4 lg:grid-cols-2"
-                      : "grid-cols-2 lg:grid-cols-2"
-                  } mt-5 max-h-64 gap-3 gap-x-0 overflow-y-auto sm:grid-cols-4 `}
-                >
-                  {product.sizes.map((option) => (
-                    <div key={option.id} className="flex w-full justify-center">
-                      <Button
-                        // disabled={!size.inStock}
-                        className={`flex border-2 text-primary-foreground ${
-                          options.size == option.id ? "border-indigo-500" : null
-                        }
-                    items-center justify-center overflow-hidden ${
-                      product.isClothe ? "h-10 w-16" : "h-16 w-36"
-                    }`}
-                        onClick={() => handleSizeChange(option.id.toString())}
-                      >
-                        <Label
-                          className={`text-lg text-secondary-foreground ${
-                            product.isClothe ? "whitespace-nowrap" : ""
-                          }`}
-                        >
-                          {option.title}
-                        </Label>
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+            ))}
+          </Carousel>
+          <div className="relative hidden h-[50vh] w-full rounded-3xl border lg:block lg:w-2/5">
+            <Image
+              src={image}
+              alt={"product image"}
+              className="h-full w-full rounded-3xl object-cover sm:object-contain lg:object-cover"
+              fill
+            />
+          </div>
+          <div className="flex h-full w-full flex-col items-start justify-between lg:ml-4 lg:w-1/2">
+            <h1 className="h-1/3 text-2xl font-medium tracking-tight text-primary-foreground sm:text-4xl lg:w-3/5">
+              {product.title}
+            </h1>
+            {/* Sizes */}
+            <div className="h-full lg:w-1/2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-primary-foreground">
+                  Sizes:
+                </h3>
               </div>
-              <div className="mt-10 flex flex-col">
-                <Button
-                  type="submit"
-                  variant={"destructive"}
-                  className="mt-5 text-base"
-                  isLoading={addToWishListLoading}
-                  onClick={handleAddToWishList}
-                >
-                  {product.isInWishList
-                    ? "Remove Product From WishList"
-                    : "Add To WishList"}
-                </Button>
-                <Button
-                  type="submit"
-                  variant={"secondary"}
-                  className="mt-5 text-base"
-                  onClick={handleAddToCart}
-                  isLoading={addToCartLoading}
-                >
-                  {product.isInCart
-                    ? "Remove Product From Cart"
-                    : "Add To Cart"}
-                </Button>
+              <div
+                className={`grid max-h-44 ${
+                  product.isClothe
+                    ? "grid-cols-4 lg:grid-cols-3"
+                    : "grid-cols-2 lg:grid-cols-2"
+                } mt-5 max-h-64 gap-y-3 gap-x-3 overflow-y-auto sm:grid-cols-4 lg:gap-x-0 `}
+              >
+                {product.sizes.map((option) => (
+                  <div key={option.id} className="flex w-full justify-center">
+                    <Button
+                      // disabled={!size.inStock}
+                      variant={"outline"}
+                      className={`flex border ${
+                        options.size == option.id ? "border-indigo-500" : null
+                      }
+                    items-center justify-center overflow-hidden ${
+                      product.isClothe ? "h-10 w-16" : "lg:h-16 lg:w-36"
+                    }`}
+                      onClick={() => handleSizeChange(option.id)}
+                    >
+                      <Label
+                        className={`md:text-lg ${
+                          product.isClothe ? "whitespace-nowrap" : ""
+                        }`}
+                      >
+                        {option.title}
+                      </Label>
+                    </Button>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-
-          <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-            {/* Description and details */}
-            <div>
-              <h3 className="sr-only">Description</h3>
-
-              <div className="space-y-6">
-                <p
-                  className="text-base text-primary-foreground"
-                  ref={descRef}
-                ></p>
-              </div>
+            <div className="mt-3 flex h-1/3 w-full items-center border-2 px-5 text-xl lg:mt-0">
+              SOME SHIT
             </div>
           </div>
         </div>
+
+        {/* Options */}
+        <div className="mt-4 lg:row-span-3 lg:mt-0 lg:w-1/5">
+          <div className="flex w-full justify-between">
+            <p className="text-3xl font-medium tracking-tight text-primary-foreground">
+              ${(options.cost * options.quantity) / 100}
+            </p>
+            <div className="flex items-start">
+              <Button
+                variant="outline"
+                className="rounded-r-none"
+                onClick={() => handleQuantityChange(options.quantity - 1)}
+              >
+                -
+              </Button>
+              <div className="flex h-10 items-center justify-center border border-x-0 border-input px-4">
+                {options.quantity}
+              </div>
+              <Button
+                variant="outline"
+                className="rounded-l-none"
+                onClick={() => handleQuantityChange(options.quantity + 1)}
+              >
+                +
+              </Button>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="flex flex-col">
+              <Button
+                type="submit"
+                variant={"accent"}
+                className="mt-3 rounded-3xl py-8 text-base"
+              >
+                <BsWalletFill className="w-[10%]" />
+                <h3 className="w-[90%]">Purchase</h3>
+              </Button>
+              <Button
+                type="submit"
+                variant={"destructive"}
+                className="mt-2 rounded-3xl py-8 text-base"
+                isLoading={addToWishListLoading}
+                onClick={handleAddToWishList}
+              >
+                {product.isInWishList ? (
+                  <>
+                    <BsHeartFill className="w-[10%]" />
+                    <h3 className="w-[90%] ">Remove From WishList</h3>
+                  </>
+                ) : (
+                  <>
+                    <BsHeart className="w-[10%]" />
+                    <h3 className="w-[90%] ">Add To WishList</h3>
+                  </>
+                )}
+              </Button>
+              <Button
+                type="submit"
+                variant={"default"}
+                className="mt-2 rounded-3xl py-8 text-base"
+                onClick={handleAddToCart}
+                isLoading={addToCartLoading}
+              >
+                {product.isInCart ? (
+                  <>
+                    <BsCart className="w-[10%]" />
+                    <h3 className="w-[90%] ">Remove From Cart</h3>
+                  </>
+                ) : (
+                  <>
+                    <BsCartFill className="w-[10%]" />
+                    <h3 className="w-[90%] ">Add To Cart</h3>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-3 hidden lg:flex">
+        {product.images.slice(0, 3).map((image) => (
+          <button
+            key={image.src}
+            className="relative mx-2 h-40 w-40 rounded-3xl border first-of-type:ml-0"
+            onClick={() => handleImageClick(image.src)}
+          >
+            <Image
+              src={image.src}
+              alt={"product image"}
+              className="h-full w-full rounded-3xl object-cover object-center"
+              fill
+            />
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -325,8 +317,22 @@ import { appRouter } from "../../server/api/root.router";
 import { createContextInner } from "../../server/api/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { SIGNIN_ROUTE, BLANK_PROFILE_URL } from "@/utils/general/constants";
+import {
+  SIGNIN_ROUTE,
+  BLANK_PROFILE_URL,
+  SIZES_PROP,
+} from "@/utils/general/constants";
 import { AiOutlinePlusSquare } from "react-icons/ai";
+import {
+  BsCart,
+  BsCartFill,
+  BsChevronBarRight,
+  BsHeart,
+  BsHeartFill,
+  BsWallet,
+  BsWalletFill,
+} from "react-icons/bs";
+import { Carousel } from "@/components/ui/carousel";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({

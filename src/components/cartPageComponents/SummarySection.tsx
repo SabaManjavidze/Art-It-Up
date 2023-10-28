@@ -36,8 +36,14 @@ export default function SummarySection() {
   const handleShowButtonsClick = async () => {
     if (checkIfReady()) {
       const details = await fetchPersonalDetails();
-
-      const result = await personalDetailsSchema.safeParseAsync(details);
+      if (!details?.data) return;
+      const { firstName, lastName, phone } = details?.data;
+      const result = await personalDetailsSchema.safeParseAsync({
+        firstName,
+        lastName,
+        phone,
+      });
+      console.log({ details, result });
       if (!result.success) {
         toast.error(result.error.issues[0]?.message);
         return;

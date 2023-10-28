@@ -1,23 +1,16 @@
 import { type NextPage } from "next";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import CategoryCard from "../components/CategoryCard";
 import { api } from "../utils/api";
 import { Loader2 } from "lucide-react";
-import { Carousel } from "react-responsive-carousel";
+import { Carousel } from "@/components/ui/carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  BsCheck2,
-  BsCheckLg,
-  BsChevronLeft,
-  BsChevronRight,
-} from "react-icons/bs";
-import { LOREM_IPSUM, SIZES_PROP } from "@/utils/general/constants";
+import { BsCheck2 } from "react-icons/bs";
+import { SIZES_PROP } from "@/utils/general/constants";
 import UserReviewCard from "@/components/general/UserReviewCard";
-import type { UserReview } from "@/utils/types/types";
 import { nanoid } from "nanoid";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -115,60 +108,10 @@ const Home: NextPage = () => {
           <div className="bg-whiterst:w-full flex flex-wrap justify-center first:w-full">
             {!isLoading && data ? (
               <Carousel
-                showArrows={true}
-                selectedItem={selectedItem}
-                swipeable
-                className="w-[90%] px-5"
-                showThumbs={false}
-                renderArrowNext={(clickHandler, hasNext, label) => (
-                  <button
-                    type="button"
-                    onClick={clickHandler}
-                    className={`${
-                      hasNext ? "block" : "hidden"
-                    } absolute top-1/2 bottom-0 right-0 z-10 mt-0 -translate-y-1/2 p-1`}
-                  >
-                    <BsChevronRight
-                      size={30}
-                      className="text-primary duration-150 hover:scale-110"
-                    />
-                  </button>
-                )}
-                renderArrowPrev={(clickHandler, hasPrev, label) => (
-                  <button
-                    type="button"
-                    onClick={clickHandler}
-                    className={`${
-                      hasPrev ? "block" : "hidden"
-                    } absolute top-1/2 bottom-0 left-0 z-10 mt-0 -translate-y-1/2 p-1`}
-                  >
-                    <BsChevronLeft
-                      size={30}
-                      className="text-primary duration-150 hover:scale-110"
-                    />
-                  </button>
-                )}
-                renderIndicator={(e, isSelected, index) => {
-                  return (
-                    <li
-                      value={index}
-                      role="button"
-                      onClick={() => {
-                        setSelectedItem(index);
-                      }}
-                      className={`${
-                        isSelected ? "border-2 border-white" : null
-                      } mx-2 inline-block h-2 w-2 rounded-full bg-black duration-150`}
-                    ></li>
-                  );
-                }}
-                autoPlay
-                infiniteLoop
-                onClickItem={(_, product) => {
+                onClick={(_, product) => {
                   const prod = product as { props: { href: string } };
                   router.push(prod.props.href);
                 }}
-                emulateTouch
               >
                 {data.data.map((product) => (
                   <Link href={`/product/${product.id}`} key={product.id}>

@@ -50,13 +50,8 @@ export default function Profile() {
     error: detailsError,
   } = api.user.getPersonalDetails.useQuery();
 
-  const [expanded, setExpanded] = useState("");
   const [activeTab, setActiveTab] = useState("My Collections");
-  const [clicked, setClicked] = useState(false);
 
-  const handleHeaderClick = async (id: string) => {
-    setExpanded(expanded == id ? "" : id);
-  };
   const session = useSession();
 
   if (isLoading || detailsLoading) {
@@ -248,16 +243,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     req: context.req,
     res: context.res,
   });
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createContextInner({ session }),
-    transformer: superjson,
-  });
-
-  await ssg.user.getPersonalDetails.prefetch();
-  await ssg.address.getUserAddress.prefetch();
-  await ssg.friends.getRecievedRequests.prefetch();
-  await ssg.gallery.getUserGallery.prefetch();
   let redirect: { permanent: boolean; destination: string } | undefined;
   if (!session) {
     redirect = {
@@ -267,8 +252,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   return {
     redirect,
-    props: {
-      trpcState: ssg.dehydrate(),
-    },
+    props: {},
   };
 };
