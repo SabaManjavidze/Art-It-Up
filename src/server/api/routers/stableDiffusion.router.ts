@@ -3,6 +3,7 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import axios from "axios";
 import { IMG2IMG_COST } from "@/utils/general/constants";
 import { decreaseCredits } from "../utils/credits";
+import type { Text2Img } from "@/utils/types/stableDiffusionTypes";
 
 const rateLimitMsg = "Rate limit exceeded";
 
@@ -42,6 +43,40 @@ export const stableDiffusionRouter = createTRPCRouter({
       console.log(error);
     }
   }),
+  txt2img: protectedProcedure
+    .input(
+      z.object({
+        modelId: z.string().optional(),
+        prompt: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input: { prompt, modelId }, ctx: { session } }) => {
+      try {
+        const res = await StableDiffusion.post("text2img", {
+          key: apikey,
+          prompt,
+          model_id: modelId,
+          negative_prompt: null,
+          width: "512",
+          height: "512",
+          samples: "1",
+          num_inference_steps: "30",
+          safety_checker: "yes",
+          enhance_prompt: "yes",
+          guidance_scale: 7.5,
+          strength: 0.7,
+          seed: null,
+          webhook: null,
+          track_id: null,
+        });
+        // //decrease user credits
+        // await decreaseCredits(session.user.id, IMG2IMG_COST);
+        return res?.data as Text2Img;
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+
   img2img: protectedProcedure
     .input(
       z.object({
@@ -74,6 +109,7 @@ export const stableDiffusionRouter = createTRPCRouter({
           //decrease user credits
           await decreaseCredits(session.user.id, IMG2IMG_COST);
           console.log({ res });
+          return res;
         } catch (error) {
           console.log(error);
         }

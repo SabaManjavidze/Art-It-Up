@@ -133,8 +133,8 @@ model Friends {
     id        String   @id @default(cuid())
     userId    String
     friendId  String
-    user      User     @relation(name: "users", fields: [userId], references: [id])
-    friend    User     @relation(name: "friendUsers", fields: [friendId], references: [id])
+    user      User     @relation(name: "users", fields: [userId], references: [id], onDelete: Cascade)
+    friend    User     @relation(name: "friendUsers", fields: [friendId], references: [id], onDelete: Cascade)
     status    Status   @default(PENDING)
     createdAt DateTime @default(now())
 
@@ -190,6 +190,7 @@ model User {
     image             String?
     birthday          DateTime?
     credits           Int                    @default(30)
+    affiliateId       String?                @default("")
     gallery           UserImage[]
     userFriends       Friends[]              @relation(name: "users")
     friendUserFriends Friends[]              @relation(name: "friendUsers")

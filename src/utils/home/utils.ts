@@ -1,99 +1,100 @@
 import { LOREM_IPSUM } from "../general/constants";
 import type { UserReview } from "../types/types";
+import { nanoid } from "nanoid";
 
 export const creditPricing = [
   {
-    id: 1,
+    id: nanoid(),
     title: "150 Credits",
     price: 10,
     highlited: false,
     features: [
       {
-        id: 1,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 2,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 3,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 4,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 5,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 6,
+        id: nanoid(),
         title: "Unlimited Images",
       },
     ],
   },
   {
-    id: 2,
+    id: nanoid(),
     title: "150 Credits",
     price: 20,
     highlited: true,
     features: [
       {
-        id: 1,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 2,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 3,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 4,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 5,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 6,
+        id: nanoid(),
         title: "Unlimited Images",
       },
     ],
   },
   {
-    id: 1,
+    id: nanoid(),
     title: "150 Credits",
     price: 30,
     highlited: false,
     features: [
       {
-        id: 1,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 2,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 3,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 4,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 5,
+        id: nanoid(),
         title: "Unlimited Images",
       },
       {
-        id: 6,
+        id: nanoid(),
         title: "Unlimited Images",
       },
     ],
@@ -102,19 +103,19 @@ export const creditPricing = [
 export const styles = [
   {
     title: "Creative",
-    id: 1,
+    id: nanoid(),
   },
   {
     title: "Space",
-    id: 2,
+    id: nanoid(),
   },
   {
     title: "Galaxy",
-    id: 3,
+    id: nanoid(),
   },
   {
     title: "Dog",
-    id: 4,
+    id: nanoid(),
   },
 ];
 export const userReviews: UserReview[] = [

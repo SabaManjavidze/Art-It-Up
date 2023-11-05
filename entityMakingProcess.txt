@@ -1,7 +1,0 @@
-first the user uploads the images
-then he/she names the entity and uploads the profile picture (still deciding if this should be a seperate image)
-once the form is validated the user can submit it.
-
-the submit function goes like this:
-	1. first create the entity
-	2. then upload the images and pass the entityId to the mutation

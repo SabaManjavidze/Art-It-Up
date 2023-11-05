@@ -1,6 +1,7 @@
+import type { SignInOptions} from "next-auth/react";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FiShoppingCart, FiHeart, FiLogIn, FiSearch } from "react-icons/fi";
 import UserProfileButton from "../UserProfileButton";
 import SearchBar from "../SearchBar";
@@ -20,6 +21,7 @@ import { Loader2, MenuIcon } from "lucide-react";
 import { AiOutlineArrowsAlt } from "react-icons/ai";
 import Modal from "../ui/modal";
 import { useSearch } from "@/hooks/useSearchHook";
+import { useRouter } from "next/router";
 
 const buttons = [
   {
@@ -71,9 +73,11 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 type AuthProviders = "google" | "facebook";
 const Navbar = () => {
+  const { query } = useRouter();
   const { data: session, status } = useSession();
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [authClosable, setAuthClosable] = useState(true);
   const { setShowSearchBar, showSearchBar, closeSearchBar } = useSearch();
 
   const [loading, setLoading] = useState<AuthProviders | "none">("none");
@@ -82,11 +86,30 @@ const Navbar = () => {
     components: false,
   });
   const [divRef] = useAutoAnimate<HTMLDivElement>();
+  const closeAuthModal = () => {
+    if (authClosable) setModalOpen(false);
+  };
   const logIn = (provider: AuthProviders) => {
     setLoading(provider);
-    signIn(provider);
+    let authOptions: SignInOptions | undefined;
+    if (!authClosable) {
+      const url = `${process.env.NEXTAUTH_URL}/api/affiliate-auth?invite=${query.invite}`;
+      authOptions = {
+        callbackUrl: url,
+        redirect: true,
+      };
+    }
+    signIn(provider, authOptions);
     setLoading("none");
   };
+  useEffect(() => {
+    if (query.invite) {
+      if (status == "unauthenticated") {
+        setModalOpen(true);
+        setAuthClosable(false);
+      }
+    }
+  }, [query, status]);
   return (
     <nav className="h-18 fixed top-0 z-20 flex w-full flex-col items-center justify-around bg-transparent p-4 py-2 text-foreground">
       <Modal
@@ -100,11 +123,7 @@ const Navbar = () => {
           <SearchBar />
         </div>
       </Modal>
-      <Modal
-        isOpen={modalOpen}
-        title="Sign In"
-        closeModal={() => setModalOpen(false)}
-      >
+      <Modal isOpen={modalOpen} title="Sign In" closeModal={closeAuthModal}>
         <div className="flex flex-col items-center justify-center py-12">
           <Button
             onClick={() => logIn("google")}
@@ -268,6 +287,7 @@ const Navbar = () => {
                 <UserProfileButton
                   userPicture={session.user.image as string}
                   username={session.user?.name as string}
+                  credits={session.user?.credits as number}
                 />
               ) : (
                 <Button

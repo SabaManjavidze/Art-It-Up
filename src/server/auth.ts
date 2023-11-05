@@ -1,10 +1,9 @@
 import type { GetServerSidePropsContext } from "next";
-import type {
-  DefaultUser} from "next-auth";
+import type { DefaultUser } from "next-auth";
 import {
   getServerSession,
   type NextAuthOptions,
-  type DefaultSession
+  type DefaultSession,
 } from "next-auth";
 import type { FacebookProfile } from "next-auth/providers/facebook";
 import FacebookProvider from "next-auth/providers/facebook";
@@ -14,20 +13,13 @@ import { prisma } from "./db";
 import type { GoogleProfile } from "next-auth/providers/google";
 import axios from "axios";
 
-/**
- * Module augmentation for `next-auth` types.
- * Allows us to add custom properties to the `session` object and keep type
- * safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- **/
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: User;
   }
   interface User extends DefaultUser {
     id: string;
-    credits?: number
+    credits?: number;
   }
 }
 
@@ -40,8 +32,9 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+
     redirect(params) {
-      return params.baseUrl;
+      return params.url;
     },
   },
   adapter: PrismaAdapter(prisma),
@@ -51,14 +44,18 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET?.toString() as string,
       allowDangerousEmailAccountLinking: true,
       async profile(prof: GoogleProfile, tokens) {
-        let birthday: undefined | Date
+        let birthday: undefined | Date;
         try {
-          const baseUrl = "https://people.googleapis.com/v1/people"
-          const { data } = await axios.get(`${baseUrl}/${prof.sub}?personFields=birthdays&key=${process.env.GOOGLE_API_KEY as string}&access_token=${tokens.access_token}`)
-          const bd = data.birthdays[0].date
-          birthday = new Date(bd.year, bd.month - 1, bd.day)
+          const baseUrl = "https://people.googleapis.com/v1/people";
+          const { data } = await axios.get(
+            `${baseUrl}/${prof.sub}?personFields=birthdays&key=${
+              process.env.GOOGLE_API_KEY as string
+            }&access_token=${tokens.access_token}`
+          );
+          const bd = data.birthdays[0].date;
+          birthday = new Date(bd.year, bd.month - 1, bd.day);
         } catch (e) {
-          console.log("erori xdebbaaaa", JSON.stringify(e))
+          console.log("birthday error", JSON.stringify(e));
         }
         return {
           firstName: prof.given_name,
@@ -68,7 +65,7 @@ export const authOptions: NextAuthOptions = {
           id: prof.sub,
           image: prof.picture,
           name: prof.name,
-          birthday
+          birthday,
         };
       },
     }),
@@ -80,10 +77,11 @@ export const authOptions: NextAuthOptions = {
         "https://www.facebook.com/v11.0/dialog/oauth?scope=email,public_profile,user_birthday",
       userinfo: {
         url: "https://graph.facebook.com/me",
-        params: { fields: "first_name,last_name,id,name,email,picture,birthday" },
+        params: {
+          fields: "first_name,last_name,id,name,email,picture,birthday",
+        },
       },
       profile(profile: FacebookProfile) {
-        console.log({ profile })
         return {
           id: profile.id,
           firstName: profile.first_name,
@@ -92,7 +90,7 @@ export const authOptions: NextAuthOptions = {
           emailVerified: true,
           name: profile.name,
           image: profile.picture.data.url,
-          birthday: new Date(profile.birthday)
+          birthday: new Date(profile.birthday),
         };
       },
     }),

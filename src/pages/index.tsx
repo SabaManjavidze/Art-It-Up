@@ -1,5 +1,10 @@
 import { type NextPage } from "next";
-import { useState } from "react";
+import {
+  EventHandler,
+  FormEventHandler,
+  KeyboardEventHandler,
+  useState,
+} from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { api } from "../utils/api";
@@ -19,11 +24,16 @@ import { creditPricing, styles, userReviews } from "@/utils/home/utils";
 import { useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
-  const [selectedItem, setSelectedItem] = useState(0);
+  const [value, setValue] = useState("");
   const [copyActive, setCopyActive] = useState(false);
   const router = useRouter();
   const session = useSession();
   const { data, isLoading } = api.product.getPrintifyShopProducts.useQuery();
+  const {
+    data: sd,
+    isLoading: sdLoad,
+    mutateAsync: txt2img,
+  } = api.stableDiffusion.txt2img.useMutation();
 
   if (isLoading)
     return (
@@ -34,13 +44,20 @@ const Home: NextPage = () => {
   const handleCopyAffiliate = () => {
     if (session?.data) {
       navigator.clipboard.writeText(
-        `${process.env.NEXTAUTH_URL}/affiliate/${session.data.user.id}`
+        `${process.env.NEXTAUTH_URL}/?invite=${session.data.user.id}`
       );
       setCopyActive(true);
       setTimeout(() => {
         setCopyActive(false);
       }, 1000);
     }
+  };
+  const handlePromptSubmit = async () => {
+    const data = await txt2img({
+      modelId: undefined,
+      prompt: value,
+    });
+    console.log(data?.output[0]);
   };
   return (
     <>
@@ -66,9 +83,13 @@ const Home: NextPage = () => {
               <Input
                 className="rounded-3xl bg-primary py-8 text-secondary-foreground"
                 placeholder="Describe what you want"
+                onSubmitCapture={handlePromptSubmit}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
               />
               <Button
                 variant={"outline"}
+                onClick={handlePromptSubmit}
                 className="absolute right-5 top-1/2 -translate-y-1/2 rounded-xl bg-background px-2 text-primary lg:px-5"
               >
                 Generate
@@ -170,17 +191,17 @@ const Home: NextPage = () => {
               <h2 className="pt-10 text-center text-4xl font-semibold text-primary-foreground">
                 Credits
               </h2>
-              <p className="mt-5 text-center">
+              <h3 className="mt-5 text-center">
                 Invite a friend for{" "}
                 <p className="contents text-accent"> FREE </p>
                 Credits.
-              </p>
+              </h3>
 
               {session.status == "authenticated" ? (
                 <div className="relative mt-2 mb-5 flex w-3/5 flex-col items-center lg:w-1/2">
                   <Input
                     className="rounded-3xl border-primary bg-background py-6 placeholder:text-base placeholder:text-primary"
-                    placeholder={`${process.env.NEXTAUTH_URL}/affiliate/${session.data.user.id}`}
+                    placeholder={`${process.env.NEXTAUTH_URL}/?invite=${session.data.user.id}`}
                   />
                   <Button
                     variant={"outline"}

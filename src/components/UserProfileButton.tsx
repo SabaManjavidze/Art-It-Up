@@ -15,11 +15,13 @@ import { signOut } from "next-auth/react";
 type UserProfileButtonPropTypes = {
   userPicture: string;
   username: string;
+  credits: number;
 };
 
 const UserProfileButton = ({
   userPicture,
   username,
+  credits,
 }: UserProfileButtonPropTypes) => {
   const profileOptions = [
     { title: "Profile", path: "/user/profile" },
@@ -42,10 +44,16 @@ const UserProfileButton = ({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
-        <DropdownMenuLabel>
+        <DropdownMenuLabel className="flex w-full flex-col items-center">
           <h3 className="text-md mx-3 whitespace-nowrap">
             {username.slice(0, 20)}
           </h3>
+          <div className="flex items-center justify-center">
+            <h3 className="text-md mr-1 whitespace-nowrap rounded-lg border-2 border-accent-foreground px-1 py-[2px] text-accent-foreground">
+              {credits}
+            </h3>
+            <h3 className="text-md whitespace-nowrap">Credits</h3>
+          </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
           {profileOptions.map((item) => (
