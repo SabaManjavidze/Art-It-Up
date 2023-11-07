@@ -3,3 +3,5 @@ export interface UserReview {
   user: { picture: string; name: string };
   rating: number;
 }
+
+export type AuthProviders = "google" | "facebook";

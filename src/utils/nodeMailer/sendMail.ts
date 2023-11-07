@@ -1,4 +1,4 @@
-import NodeMailer from "nodemailer";
+import { createTransport } from "nodemailer";
 
 type messageType = {
   from?: string;
@@ -8,7 +8,7 @@ type messageType = {
   html?: string;
 };
 export async function sendEmail({ subject, text, html, to }: messageType) {
-  const transporter = NodeMailer.createTransport({
+  const transporter = createTransport({
     host: "smtp.gmail.com",
     secure: true,
     port: 465,

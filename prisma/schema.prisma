@@ -190,7 +190,7 @@ model User {
     image             String?
     birthday          DateTime?
     credits           Int                    @default(30)
-    affiliateId       String?                @default("")
+    referralId       String?                @default("")
     gallery           UserImage[]
     userFriends       Friends[]              @relation(name: "users")
     friendUserFriends Friends[]              @relation(name: "friendUsers")

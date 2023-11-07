@@ -1,4 +1,4 @@
-import type { SignInOptions} from "next-auth/react";
+import type { SignInOptions } from "next-auth/react";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -22,6 +22,7 @@ import { AiOutlineArrowsAlt } from "react-icons/ai";
 import Modal from "../ui/modal";
 import { useSearch } from "@/hooks/useSearchHook";
 import { useRouter } from "next/router";
+import type { AuthProviders } from "@/utils/types/types";
 
 const buttons = [
   {
@@ -71,7 +72,6 @@ const components: { title: string; href: string; description: string }[] = [
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
   },
 ];
-type AuthProviders = "google" | "facebook";
 const Navbar = () => {
   const { query } = useRouter();
   const { data: session, status } = useSession();
@@ -89,17 +89,17 @@ const Navbar = () => {
   const closeAuthModal = () => {
     if (authClosable) setModalOpen(false);
   };
-  const logIn = (provider: AuthProviders) => {
+  const logIn = async (provider: AuthProviders) => {
     setLoading(provider);
     let authOptions: SignInOptions | undefined;
     if (!authClosable) {
-      const url = `${process.env.NEXTAUTH_URL}/api/affiliate-auth?invite=${query.invite}`;
+      const url = `${process.env.NEXTAUTH_URL}/api/referral-auth?invite=${query.invite}`;
       authOptions = {
         callbackUrl: url,
         redirect: true,
       };
     }
-    signIn(provider, authOptions);
+    await signIn(provider, authOptions);
     setLoading("none");
   };
   useEffect(() => {

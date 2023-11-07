@@ -1,16 +1,15 @@
-import { appRouter } from "@/server/api/root.router";
 import { increaseCredits } from "@/server/api/utils/credits";
 import { getServerAuthSession } from "@/server/auth";
 import { prisma } from "@/server/db";
 import {
-  AFFILIATE_CREDITS,
+  REFERRAL_CREDITS,
   invitationConfirmEmail,
 } from "@/utils/general/constants";
 import { sendEmail } from "@/utils/nodeMailer/sendMail";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const AffiliateAuth = async (req: NextApiRequest, res: NextApiResponse) => {
-  const inviterId = (req.query.invite as string).replace("/", "");
+const ReferralAuth = async (req: NextApiRequest, res: NextApiResponse) => {
+  const inviterId = (req.query.invite as string)?.replace("/", "");
   if (!inviterId) {
     res.status(500).end();
   }
@@ -21,9 +20,10 @@ const AffiliateAuth = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const user = await prisma.user.findFirst({
     where: { id: session?.user.id },
-    select: { createdAt: true, affiliateId: true },
+    select: { createdAt: true, referralId: true },
   });
-  if (!user || user.affiliateId) {
+  if (!user || user.referralId) {
+    res.statusMessage = "invalid inviter";
     res.status(500).end();
     return;
   }
@@ -36,9 +36,9 @@ const AffiliateAuth = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   await prisma.user.update({
     where: { id: session.user.id },
-    data: { affiliateId: inviterId },
+    data: { referralId: inviterId },
   });
-  await increaseCredits(inviterId, AFFILIATE_CREDITS);
+  await increaseCredits(inviterId, REFERRAL_CREDITS);
 
   const inviter = await prisma.user.findFirst({
     where: { id: inviterId },
@@ -60,4 +60,4 @@ const AffiliateAuth = async (req: NextApiRequest, res: NextApiResponse) => {
   });
   res.redirect("/").end();
 };
-export default AffiliateAuth;
+export default ReferralAuth;

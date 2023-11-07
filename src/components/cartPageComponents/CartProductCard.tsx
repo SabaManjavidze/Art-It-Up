@@ -103,14 +103,12 @@ const CartProductCard = ({
             isLoading={sizesLoading}
             handleOpenClick={handleOpenClick}
             className="mt-2"
-            options={
-              sizes?.map((item) => {
-                return {
-                  id: item.id,
-                  title: item.title,
-                };
-              }) as any
-            }
+            options={sizes?.map((item) => {
+              return {
+                id: item.id.toString(),
+                title: item.title,
+              };
+            })}
           />
           <h2 className="mt-2">$ {price}</h2>
         </div>

@@ -7,10 +7,12 @@ import TabVisibility from "./TabVisibility";
 import { COMEBACK_MESSAGE } from "@/utils/general/constants";
 
 export default function Layout({
-  title = "Art It Up",
+  title,
+  ogImage,
   children,
 }: {
   title?: string;
+  ogImage?: string;
   children: React.ReactElement | React.ReactElement[] | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +34,7 @@ export default function Layout({
     <>
       <Head>
         <title>{isTabVisible ? title : COMEBACK_MESSAGE}</title>
+        <meta property="og:image" content={ogImage} />
       </Head>
       <div className="flex min-h-screen flex-col justify-between bg-background text-primary-foreground">
         <BarLoader

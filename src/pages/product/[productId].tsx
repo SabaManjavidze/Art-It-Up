@@ -132,178 +132,187 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
     setImage(src);
   };
   return (
-    <div className="container min-h-screen bg-background">
-      {/* Product info */}
-      <div className="mt-16 flex min-h-[60vh] w-full flex-col justify-between lg:mt-32 lg:flex-row">
-        <div className="flex w-full flex-col items-center justify-center lg:w-4/5 lg:flex-row">
-          <Carousel className="lg:hidden">
-            {product.images.map((img) => (
-              <div
-                className="relative h-[50vh] w-full rounded-3xl border lg:w-2/5"
-                key={img.src}
-              >
-                <Image
-                  src={img.src || ""}
-                  alt={"product image"}
-                  sizes={SIZES_PROP}
-                  className="h-full w-full rounded-3xl object-cover sm:object-contain lg:object-cover"
-                  fill
-                />
-              </div>
-            ))}
-          </Carousel>
-          <div className="relative hidden h-[50vh] w-full rounded-3xl border lg:block lg:w-2/5">
-            <Image
-              src={image}
-              alt={"product image"}
-              className="h-full w-full rounded-3xl object-cover sm:object-contain lg:object-cover"
-              fill
-            />
-          </div>
-          <div className="flex h-full w-full flex-col items-start justify-between lg:ml-4 lg:w-1/2">
-            <h1 className="h-1/3 text-2xl font-medium tracking-tight text-primary-foreground sm:text-4xl lg:w-3/5">
-              {product.title}
-            </h1>
-            {/* Sizes */}
-            <div className="h-full lg:w-1/2">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-primary-foreground">
-                  Sizes:
-                </h3>
-              </div>
-              <div
-                className={`grid max-h-44 ${
-                  product.isClothe
-                    ? "grid-cols-4 lg:grid-cols-3"
-                    : "grid-cols-2 lg:grid-cols-2"
-                } mt-5 max-h-64 gap-y-3 gap-x-3 overflow-y-auto sm:grid-cols-4 lg:gap-x-0 `}
-              >
-                {product.sizes.map((option) => (
-                  <div key={option.id} className="flex w-full justify-center">
-                    <Button
-                      // disabled={!size.inStock}
-                      variant={"outline"}
-                      className={`flex border ${
-                        options.size == option.id ? "border-indigo-500" : null
-                      }
+    <>
+      <Head>
+        <title>{product.title}</title>
+        <meta
+          property="og:image"
+          content={product?.images?.[0]?.src as string}
+        />
+      </Head>
+      <div className="container min-h-screen bg-background">
+        {/* Product info */}
+        <div className="mt-16 flex min-h-[60vh] w-full flex-col justify-between lg:mt-32 lg:flex-row">
+          <div className="flex w-full flex-col items-center justify-center lg:w-4/5 lg:flex-row">
+            <Carousel className="lg:hidden">
+              {product.images.map((img) => (
+                <div
+                  className="relative h-[50vh] w-full rounded-3xl border lg:w-2/5"
+                  key={img.src}
+                >
+                  <Image
+                    src={img.src || ""}
+                    alt={"product image"}
+                    sizes={SIZES_PROP}
+                    className="h-full w-full rounded-3xl object-cover sm:object-contain lg:object-cover"
+                    fill
+                  />
+                </div>
+              ))}
+            </Carousel>
+            <div className="relative hidden h-[50vh] w-full rounded-3xl border lg:block lg:w-2/5">
+              <Image
+                src={image}
+                alt={"product image"}
+                className="h-full w-full rounded-3xl object-cover sm:object-contain lg:object-cover"
+                fill
+              />
+            </div>
+            <div className="flex h-full w-full flex-col items-start justify-between lg:ml-4 lg:w-1/2">
+              <h1 className="h-1/3 text-2xl font-medium tracking-tight text-primary-foreground sm:text-4xl lg:w-3/5">
+                {product.title}
+              </h1>
+              {/* Sizes */}
+              <div className="h-full lg:w-1/2">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-primary-foreground">
+                    Sizes:
+                  </h3>
+                </div>
+                <div
+                  className={`grid max-h-44 ${
+                    product.isClothe
+                      ? "grid-cols-4 lg:grid-cols-3"
+                      : "grid-cols-2 lg:grid-cols-2"
+                  } mt-5 max-h-64 gap-y-3 gap-x-3 overflow-y-auto sm:grid-cols-4 lg:gap-x-0 `}
+                >
+                  {product.sizes.map((option) => (
+                    <div key={option.id} className="flex w-full justify-center">
+                      <Button
+                        // disabled={!size.inStock}
+                        variant={"outline"}
+                        className={`flex border ${
+                          options.size == option.id ? "border-indigo-500" : null
+                        }
                     items-center justify-center overflow-hidden ${
                       product.isClothe ? "h-10 w-16" : "lg:h-16 lg:w-36"
                     }`}
-                      onClick={() => handleSizeChange(option.id)}
-                    >
-                      <Label
-                        className={`md:text-lg ${
-                          product.isClothe ? "whitespace-nowrap" : ""
-                        }`}
+                        onClick={() => handleSizeChange(option.id)}
                       >
-                        {option.title}
-                      </Label>
-                    </Button>
-                  </div>
-                ))}
+                        <Label
+                          className={`md:text-lg ${
+                            product.isClothe ? "whitespace-nowrap" : ""
+                          }`}
+                        >
+                          {option.title}
+                        </Label>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3 flex h-1/3 w-full items-center border-2 px-5 text-xl lg:mt-0">
+                SOME SHIT
               </div>
             </div>
-            <div className="mt-3 flex h-1/3 w-full items-center border-2 px-5 text-xl lg:mt-0">
-              SOME SHIT
-            </div>
           </div>
-        </div>
 
-        {/* Options */}
-        <div className="mt-4 lg:row-span-3 lg:mt-0 lg:w-1/5">
-          <div className="flex w-full justify-between">
-            <p className="text-3xl font-medium tracking-tight text-primary-foreground">
-              ${(options.cost * options.quantity) / 100}
-            </p>
-            <div className="flex items-start">
-              <Button
-                variant="outline"
-                className="rounded-r-none"
-                onClick={() => handleQuantityChange(options.quantity - 1)}
-              >
-                -
-              </Button>
-              <div className="flex h-10 items-center justify-center border border-x-0 border-input px-4">
-                {options.quantity}
+          {/* Options */}
+          <div className="mt-4 lg:row-span-3 lg:mt-0 lg:w-1/5">
+            <div className="flex w-full justify-between">
+              <p className="text-3xl font-medium tracking-tight text-primary-foreground">
+                ${(options.cost * options.quantity) / 100}
+              </p>
+              <div className="flex items-start">
+                <Button
+                  variant="outline"
+                  className="rounded-r-none"
+                  onClick={() => handleQuantityChange(options.quantity - 1)}
+                >
+                  -
+                </Button>
+                <div className="flex h-10 items-center justify-center border border-x-0 border-input px-4">
+                  {options.quantity}
+                </div>
+                <Button
+                  variant="outline"
+                  className="rounded-l-none"
+                  onClick={() => handleQuantityChange(options.quantity + 1)}
+                >
+                  +
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                className="rounded-l-none"
-                onClick={() => handleQuantityChange(options.quantity + 1)}
-              >
-                +
-              </Button>
             </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex flex-col">
-              <Button
-                type="submit"
-                variant={"accent"}
-                className="mt-3 rounded-3xl py-8 text-base"
-              >
-                <BsWalletFill className="w-[10%]" />
-                <h3 className="w-[90%]">Purchase</h3>
-              </Button>
-              <Button
-                type="submit"
-                variant={"destructive"}
-                className="mt-2 rounded-3xl py-8 text-base"
-                isLoading={addToWishListLoading}
-                onClick={handleAddToWishList}
-              >
-                {product.isInWishList ? (
-                  <>
-                    <BsHeartFill className="w-[10%]" />
-                    <h3 className="w-[90%] ">Remove From WishList</h3>
-                  </>
-                ) : (
-                  <>
-                    <BsHeart className="w-[10%]" />
-                    <h3 className="w-[90%] ">Add To WishList</h3>
-                  </>
-                )}
-              </Button>
-              <Button
-                type="submit"
-                variant={"default"}
-                className="mt-2 rounded-3xl py-8 text-base"
-                onClick={handleAddToCart}
-                isLoading={addToCartLoading}
-              >
-                {product.isInCart ? (
-                  <>
-                    <BsCart className="w-[10%]" />
-                    <h3 className="w-[90%] ">Remove From Cart</h3>
-                  </>
-                ) : (
-                  <>
-                    <BsCartFill className="w-[10%]" />
-                    <h3 className="w-[90%] ">Add To Cart</h3>
-                  </>
-                )}
-              </Button>
+            <div className="mt-4">
+              <div className="flex flex-col">
+                <Button
+                  type="submit"
+                  variant={"accent"}
+                  className="mt-3 rounded-3xl py-8 text-base"
+                >
+                  <BsWalletFill className="w-[10%]" />
+                  <h3 className="w-[90%]">Purchase</h3>
+                </Button>
+                <Button
+                  type="submit"
+                  variant={"destructive"}
+                  className="mt-2 rounded-3xl py-8 text-base"
+                  isLoading={addToWishListLoading}
+                  onClick={handleAddToWishList}
+                >
+                  {product.isInWishList ? (
+                    <>
+                      <BsHeartFill className="w-[10%]" />
+                      <h3 className="w-[90%] ">Remove From WishList</h3>
+                    </>
+                  ) : (
+                    <>
+                      <BsHeart className="w-[10%]" />
+                      <h3 className="w-[90%] ">Add To WishList</h3>
+                    </>
+                  )}
+                </Button>
+                <Button
+                  type="submit"
+                  variant={"default"}
+                  className="mt-2 rounded-3xl py-8 text-base"
+                  onClick={handleAddToCart}
+                  isLoading={addToCartLoading}
+                >
+                  {product.isInCart ? (
+                    <>
+                      <BsCart className="w-[10%]" />
+                      <h3 className="w-[90%] ">Remove From Cart</h3>
+                    </>
+                  ) : (
+                    <>
+                      <BsCartFill className="w-[10%]" />
+                      <h3 className="w-[90%] ">Add To Cart</h3>
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
+        <div className="mt-3 hidden lg:flex">
+          {product.images.slice(0, 3).map((image) => (
+            <button
+              key={image.src}
+              className="relative mx-2 h-40 w-40 rounded-3xl border first-of-type:ml-0"
+              onClick={() => handleImageClick(image.src)}
+            >
+              <Image
+                src={image.src}
+                alt={"product image"}
+                className="h-full w-full rounded-3xl object-cover object-center"
+                fill
+              />
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="mt-3 hidden lg:flex">
-        {product.images.slice(0, 3).map((image) => (
-          <button
-            key={image.src}
-            className="relative mx-2 h-40 w-40 rounded-3xl border first-of-type:ml-0"
-            onClick={() => handleImageClick(image.src)}
-          >
-            <Image
-              src={image.src}
-              alt={"product image"}
-              className="h-full w-full rounded-3xl object-cover object-center"
-              fill
-            />
-          </button>
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 
@@ -333,6 +342,7 @@ import {
   BsWalletFill,
 } from "react-icons/bs";
 import { Carousel } from "@/components/ui/carousel";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({
