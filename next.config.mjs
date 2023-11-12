@@ -23,6 +23,9 @@ const config = {
    */
   images: {
     domains: [
+      "i.redd.it",
+      "replicate.delivery",
+      "prompthero.com",
       "platform-lookaside.fbsbx.com",
       "res.cloudinary.com",
       "lh3.googleusercontent.com",

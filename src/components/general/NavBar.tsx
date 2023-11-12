@@ -77,7 +77,6 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [authClosable, setAuthClosable] = useState(true);
   const { setShowSearchBar, showSearchBar, closeSearchBar } = useSearch();
 
   const [loading, setLoading] = useState<AuthProviders | "none">("none");
@@ -87,29 +86,13 @@ const Navbar = () => {
   });
   const [divRef] = useAutoAnimate<HTMLDivElement>();
   const closeAuthModal = () => {
-    if (authClosable) setModalOpen(false);
+    setModalOpen(false);
   };
   const logIn = async (provider: AuthProviders) => {
     setLoading(provider);
-    let authOptions: SignInOptions | undefined;
-    if (!authClosable) {
-      const url = `${process.env.NEXTAUTH_URL}/api/referral-auth?invite=${query.invite}`;
-      authOptions = {
-        callbackUrl: url,
-        redirect: true,
-      };
-    }
-    await signIn(provider, authOptions);
+    await signIn(provider);
     setLoading("none");
   };
-  useEffect(() => {
-    if (query.invite) {
-      if (status == "unauthenticated") {
-        setModalOpen(true);
-        setAuthClosable(false);
-      }
-    }
-  }, [query, status]);
   return (
     <nav className="h-18 fixed top-0 z-20 flex w-full flex-col items-center justify-around bg-transparent p-4 py-2 text-foreground">
       <Modal

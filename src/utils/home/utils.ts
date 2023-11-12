@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 export const creditPricing = [
   {
     id: nanoid(),
-    title: "150 Credits",
+    amount: 150,
     price: 10,
     highlited: false,
     features: [
@@ -37,7 +37,7 @@ export const creditPricing = [
   },
   {
     id: nanoid(),
-    title: "150 Credits",
+    amount: 150,
     price: 20,
     highlited: true,
     features: [
@@ -69,7 +69,7 @@ export const creditPricing = [
   },
   {
     id: nanoid(),
-    title: "150 Credits",
+    amount: 150,
     price: 30,
     highlited: false,
     features: [

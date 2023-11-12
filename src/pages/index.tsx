@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { api } from "../utils/api";
 import { Loader2 } from "lucide-react";
@@ -15,6 +15,17 @@ import { Button } from "@/components/ui/button";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { creditPricing, styles, userReviews } from "@/utils/home/utils";
 import { useSession } from "next-auth/react";
+import type {
+  PayPalButtonsComponentProps} from "@paypal/react-paypal-js";
+import {
+  PayPalButtons,
+  PayPalScriptProvider,
+  usePayPalScriptReducer,
+} from "@paypal/react-paypal-js";
+import { PayPalButtonsComponent } from "@paypal/paypal-js";
+import Modal from "@/components/ui/modal";
+import { toast } from "react-toastify";
+import { useProfile } from "@/hooks/useProfileHook";
 
 const Home = () => {
   const [value, setValue] = useState("");
@@ -48,11 +59,11 @@ const Home = () => {
     }
   };
   const handlePromptSubmit = async () => {
-    const data = await txt2img({
-      modelId: undefined,
-      prompt: value,
-    });
-    console.log(data?.output[0]);
+    // const data = await txt2img({
+    //   modelId: undefined,
+    //   prompt: value,
+    // });
+    // console.log(data?.output[0]);
   };
   return (
     <>
@@ -214,148 +225,17 @@ const Home = () => {
                     aria-labelledby="pills-home-tab02"
                     data-te-tab-active
                   >
-                    <div className="grid gap-6 lg:grid-cols-3 lg:gap-x-12">
-                      {creditPricing.map((credit) => (
-                        <div className="mb-6 lg:mb-0" key={credit.id}>
-                          <div
-                            className={`relative block h-full rounded-[55px] bg-white dark:bg-neutral-700 ${
-                              credit.highlited
-                                ? "shadow-2xl shadow-accent/50"
-                                : "shadow-xl shadow-primary/20"
-                            }`}
-                          >
-                            <div className="border-b-2 border-neutral-100 border-opacity-100 p-6 text-center dark:border-opacity-10">
-                              <p className="mb-4 text-sm uppercase">
-                                <strong>{credit.title}</strong>
-                              </p>
-                              <h3 className="mb-6 text-3xl">
-                                <strong>$ {credit.price}</strong>
-                                {/* <small className="text-base text-neutral-500 dark:text-neutral-300">
-                                  /mo
-                                </small> */}
-                              </h3>
-                            </div>
-                            <div className="p-6">
-                              {/* 
-                              <ol className="mb-20 list-inside">
-                                {credit.features.map((feature) => (
-                                  <li className="mb-4 flex" key={feature.id}>
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke-width="2"
-                                      stroke="currentColor"
-                                      className="dark:text-primary-400 mr-3 h-5 w-5 text-primary"
-                                    >
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M4.5 12.75l6 6 9-13.5"
-                                      />
-                                    </svg>
-                                    {feature.title}
-                                  </li>
-                                ))}
-                              </ol>
-*/}
-
-                              <div className="absolute bottom-6 left-10 right-10">
-                                <Button
-                                  type="button"
-                                  variant={
-                                    credit.highlited ? "accent" : "outline"
-                                  }
-                                  className="w-full rounded-xl border-primary py-6"
-                                >
-                                  Buy {credit.title}
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div
-                    className="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
-                    id="pills-profile02"
-                    role="tabpanel"
-                    aria-labelledby="pills-profile-tab02"
-                  >
-                    <div className="grid gap-6 lg:grid-cols-3 lg:gap-x-12">
-                      <div className="mb-6 lg:mb-0">
-                        <div className="block h-full border-2 border-primary bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                          <div className="p-6 pt-6 pb-10 text-center">
-                            <p className="mb-4 text-sm uppercase">
-                              <strong>3 users</strong>
-                            </p>
-                            <h3 className="mb-6 text-3xl">
-                              <strong>$ 799</strong>
-                              <small className="text-base text-neutral-500 dark:text-neutral-300">
-                                /year
-                              </small>
-                            </h3>
-
-                            <button
-                              type="button"
-                              className="text-primary-700 inline-block w-full rounded bg-[hsl(0,0%,95%)] px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out hover:bg-[hsl(0,0%,93%)] focus:bg-[hsl(0,0%,95%)] focus:outline-none focus:ring-0 active:bg-[hsl(0,0%,90%)]"
-                              data-te-ripple-init
-                              data-te-ripple-color="light"
-                            >
-                              Buy
-                            </button>
-                          </div>
-                        </div>
+                    <PayPalScriptProvider
+                      options={{
+                        "client-id": process.env.PAYPAL_CLIENT_ID as string,
+                      }}
+                    >
+                      <div className="grid gap-6 lg:grid-cols-3 lg:gap-x-12">
+                        {creditPricing.map((credit) => (
+                          <CreditItem credit={credit} key={credit.id} />
+                        ))}
                       </div>
-
-                      <div className="mb-6 lg:mb-0">
-                        <div className="rondedbg-white rounded-x  border-primaryl block h-full border-2 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                          <div className="p-6 pt-6 pb-10 text-center">
-                            <p className="mb-4 text-sm uppercase">
-                              <strong>4 users</strong>
-                            </p>
-                            <h3 className="mb-6 text-3xl">
-                              <strong>$ 999</strong>
-                              <small className="text-base text-neutral-500 dark:text-neutral-300">
-                                /year
-                              </small>
-                            </h3>
-
-                            <button
-                              type="button"
-                              className="text-primary-700 inline-block w-full rounded bg-[hsl(0,0%,95%)] px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out hover:bg-[hsl(0,0%,93%)] focus:bg-[hsl(0,0%,95%)] focus:outline-none focus:ring-0 active:bg-[hsl(0,0%,90%)]"
-                              data-te-ripple-init
-                              data-te-ripple-color="light"
-                            >
-                              Buy
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-6 lg:mb-0">
-                        <div className="block h-full border-2 border-primary bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-                          <div className="p-6 pt-6 pb-10 text-center">
-                            <p className="mb-4 text-sm uppercase">
-                              <strong>More users</strong>
-                            </p>
-                            <h3 className="mb-6 text-3xl">
-                              <strong>Custom offer</strong>
-                            </h3>
-
-                            <button
-                              type="button"
-                              className="hover:bg-primary-600 focus:bg-primary-600 active:bg-primary-700 inline-block w-full rounded bg-primary px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                              data-te-ripple-init
-                              data-te-ripple-color="light"
-                            >
-                              Contact us
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    </PayPalScriptProvider>
                   </div>
                 </div>
               </section>
@@ -366,5 +246,100 @@ const Home = () => {
     </>
   );
 };
+function CreditItem({
+  credit,
+  onClick,
+}: {
+  onClick?: () => void;
+  credit: (typeof creditPricing)[number];
+}) {
+  const [showPay, setShowPay] = useState(false);
+  const { update } = useSession();
+  const { setChanges } = useProfile();
+  const { mutateAsync: buyCredits, isLoading } =
+    api.credits.buyCredits.useMutation();
+  const handleOnApprove: PayPalButtonsComponentProps["onApprove"] = async (
+    data,
+    actions
+  ) => {
+    await buyCredits({
+      amount: credit.amount,
+    });
+    await update();
+    setChanges((changes) => changes + 1);
+    return actions?.order?.capture().then((details) => {
+      const name = details?.payer?.name?.given_name;
+      toast.success(`Transaction completed by ${name}(paypal)`);
+    });
+  };
+  const handleCreateOrder: PayPalButtonsComponentProps["createOrder"] = async (
+    data,
+    actions
+  ) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: credit.price.toString(),
+          },
+        },
+      ],
+    });
+  };
+  const handleCreditClick = () => {
+    if (onClick) onClick();
+    setShowPay(true);
+  };
 
+  return (
+    <div className="mb-6 lg:mb-0">
+      <Modal
+        isOpen={showPay}
+        closeModal={() => setShowPay(false)}
+        title="Pay with PayPal"
+      >
+        <div className="flex h-full w-full items-center justify-center py-6">
+          <PayPalButtons
+            style={{
+              label: "checkout",
+              tagline: false,
+              shape: "pill",
+            }}
+            className="flex justify-center"
+            onApprove={handleOnApprove}
+            createOrder={handleCreateOrder}
+          />
+        </div>
+      </Modal>
+      <div
+        className={`relative block h-full rounded-[55px] bg-white dark:bg-neutral-700 ${
+          credit.highlited
+            ? "shadow-2xl shadow-accent/50"
+            : "shadow-xl shadow-primary/20"
+        }`}
+      >
+        <div className="border-b-2 border-neutral-100 border-opacity-100 p-6 text-center dark:border-opacity-10">
+          <p className="mb-4 text-sm uppercase">
+            <strong>{credit.amount} Credits</strong>
+          </p>
+          <h3 className="mb-6 text-3xl">
+            <strong>$ {credit.price}</strong>
+          </h3>
+        </div>
+        <div className="p-6">
+          <div className="absolute bottom-6 left-10 right-10">
+            <Button
+              type="button"
+              variant={credit.highlited ? "accent" : "outline"}
+              className="w-full rounded-xl border-primary py-6"
+              onClick={handleCreditClick}
+            >
+              Buy {credit.amount}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 export default Home;

@@ -11,6 +11,7 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
+import { useProfile } from "@/hooks/useProfileHook";
 
 type UserProfileButtonPropTypes = {
   userPicture: string;
@@ -28,11 +29,12 @@ const UserProfileButton = ({
     { title: "Gallery", path: "/user/gallery" },
     { title: "My Orders", path: "/user/orders" },
   ];
+  const { changes, setChanges } = useProfile();
   return (
-    <DropdownMenu modal={false}>
+    <DropdownMenu modal={false} onOpenChange={() => setChanges(0)}>
       <DropdownMenuTrigger asChild>
         <button className="p-0 !outline-none">
-          <div className="flex items-center justify-center">
+          <div className="relative flex items-center justify-center">
             <Image
               src={userPicture}
               width={30}
@@ -40,6 +42,13 @@ const UserProfileButton = ({
               className="rounded-full border-2 border-primary-foreground/70"
               alt="user profile image"
             />
+            {changes > 0 ? (
+              <div className="absolute top-1 right-0 translate-x-1/2 -translate-y-1/2">
+                <h4 className="flex h-5 w-5 items-center justify-center rounded-full bg-accent font-serif leading-3 text-secondary-foreground">
+                  {changes}
+                </h4>
+              </div>
+            ) : null}
           </div>
         </button>
       </DropdownMenuTrigger>

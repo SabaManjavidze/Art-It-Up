@@ -5,6 +5,7 @@ import { BarLoader } from "react-spinners";
 import { Router } from "next/router";
 import TabVisibility from "./TabVisibility";
 import { COMEBACK_MESSAGE } from "@/utils/general/constants";
+import { ProfileContext, ProfileProvider } from "@/hooks/useProfileHook";
 
 export default function Layout({
   title,
@@ -42,7 +43,9 @@ export default function Layout({
           className="!fixed z-50 !w-full !bg-accent"
           height={6}
         />
-        <main>{children}</main>
+        <main>
+          <ProfileProvider>{children}</ProfileProvider>
+        </main>
         <Footer />
       </div>
     </>

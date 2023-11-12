@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/server/db";
-import { AuthProviders } from "@/utils/types/types";
-import { GetServerSideProps } from "next";
+import type { AuthProviders } from "@/utils/types/types";
+import type { GetServerSideProps } from "next";
 import { SignInOptions, signIn } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";

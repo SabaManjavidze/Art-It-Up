@@ -10,6 +10,7 @@ import { orderRouter } from "./routers/order.router";
 import { galleryRouter } from "./routers/gallery.router";
 import { cartRouter } from "./routers/cart.router";
 import { friendsRouter } from "./routers/friends.router";
+import { creditRouter } from "./routers/credit.router";
 import { prisma } from "../db";
 import { addressRouter } from "./routers/address.router";
 import { wishListRouter } from "./routers/wishList.router";
@@ -30,6 +31,7 @@ export const appRouter = createTRPCRouter({
   cart: cartRouter,
   wishList: wishListRouter,
   friends: friendsRouter,
+  credits: creditRouter,
   getTags: publicProcedure.query(async () => {
     return await prisma.tags.findMany();
   }),
