@@ -19,20 +19,32 @@ export const galleryRouter = createTRPCRouter({
       });
     }),
   getUserGallery: protectedProcedure
-    .input(z.object({ userId: z.string() }).optional())
+    .input(
+      z.object({
+        userId: z.string().optional(),
+
+        limit: z.number().min(1).max(20).optional().default(12),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
+      })
+    )
     .query(async ({ input, ctx: { session } }) => {
-      if (input?.userId) {
-        return await prisma.userImage.findMany({
-          where: {
-            ownerId: input.userId,
-          },
-        });
-      }
-      return await prisma.userImage.findMany({
+      const { skip, cursor, limit } = input;
+      const items = await prisma.userImage.findMany({
+        take: limit + 1,
+        skip,
+        cursor: cursor ? { id: cursor } : undefined,
         where: {
-          ownerId: session.user.id,
+          ownerId: input?.userId ? input.userId : session.user.id,
         },
       });
+
+      let nextCursor: typeof cursor | undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop();
+        nextCursor = nextItem?.id;
+      }
+      return { imgs: items, nextCursor };
     }),
   uploadStyle: protectedProcedure
     .input(z.object({ picture: z.string() }))
@@ -49,14 +61,14 @@ export const galleryRouter = createTRPCRouter({
         select: { ownerId: true },
       });
       if (arr.length >= MAX_IMAGE_COUNT) return;
-      await prisma.userImage.create({
+      const img = await prisma.userImage.create({
         data: {
           id: result.public_id,
           ownerId: session.user.id,
           url: result.url,
         },
-        include: { _count: true },
       });
+      return img.id;
     }),
   deleteStyle: protectedProcedure
     .input(

@@ -10,6 +10,7 @@ interface Props {
   onImagesSelected: (images: File[]) => void;
   images: File[];
   setImages: Dispatch<SetStateAction<File[]>>;
+  title?: string;
   multiple?: boolean;
   showButton?: boolean;
   isLoading?: boolean;
@@ -19,6 +20,7 @@ const ImageInput: React.FC<Props> = ({
   onImagesSelected,
   images,
   setImages,
+  title = "Drag and drop images here, or click to select files",
   multiple = true,
   showButton = true,
   isLoading = false,
@@ -51,32 +53,42 @@ const ImageInput: React.FC<Props> = ({
   };
 
   return (
-    <div className="w-full">
-      <div
-        {...getRootProps()}
-        className="cursor-pointer rounded-md border-2 border-dashed border-gray-300 p-4"
-      >
-        <input multiple={multiple} {...getInputProps()} />
-        <div className="flex flex-col items-center justify-center space-y-2">
-          <PlusCircleIcon className="h-12 w-12 text-gray-400" />
-          {isDragActive ? (
-            <p className="text-lg font-medium text-accent-foreground">
-              Drop the images here
-            </p>
-          ) : (
-            <p className="text-lg font-medium text-gray-400">
-              Drag and drop images here, or click to select files
-            </p>
-          )}
-        </div>
-      </div>
-      <div className="flex w-full justify-end px-3">
-        <button onClick={handleClearClick}>
-          <h2 className="text-lg">Clear</h2>
-        </button>
-      </div>
+    <div className="h-full w-full">
+      {images.length == 0 ? (
+        <>
+          <div
+            {...getRootProps()}
+            className="h-full cursor-pointer rounded-md border-2 border-dashed border-gray-300 p-4"
+          >
+            <input multiple={multiple} {...getInputProps()} />
+            <div className="flex h-full flex-col items-center justify-center space-y-2">
+              <PlusCircleIcon className="h-12 w-12 text-gray-400" />
+              {isDragActive ? (
+                <p className="text-center text-lg font-medium text-accent-foreground">
+                  Drop the images here
+                </p>
+              ) : (
+                <p className="text-center text-lg font-medium text-gray-400">
+                  {title}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex w-full justify-end px-3">
+            <button onClick={handleClearClick}>
+              <h2 className="text-lg">Clear</h2>
+            </button>
+          </div>
+        </>
+      ) : null}
       {images.length > 0 && (
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+        <div
+          className={
+            multiple
+              ? "mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
+              : "flex justify-center"
+          }
+        >
           {multiple ? (
             images.map((image, index) => (
               <div key={nanoid()} className="flex w-full justify-center">
@@ -117,15 +129,16 @@ const ImageInput: React.FC<Props> = ({
           )}
         </div>
       )}
-      {showButton && images.length > 0 && (
-        <Button
-          isLoading={isLoading}
-          className="mt-10"
-          onClick={handleImagesSelected}
-        >
-          Upload Images
-        </Button>
-      )}
+      {showButton ||
+        (images.length > 0 && (
+          <Button
+            isLoading={isLoading}
+            className="mt-10 w-full"
+            onClick={handleImagesSelected}
+          >
+            Upload Images
+          </Button>
+        ))}
     </div>
   );
 };

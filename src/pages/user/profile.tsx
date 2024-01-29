@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RouterOutputs, api } from "../../utils/api";
 import { Loader2 } from "lucide-react";
 import PersonalDetailsSection from "@/components/profilePageComponents/PersonalDetailsSection";
@@ -34,6 +34,7 @@ export const personalDetailsArr = [
 export default function Profile() {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [addressOpen, setAddressOpen] = useState(false);
+
   const {
     data: userAddresses,
     isLoading,
@@ -42,8 +43,17 @@ export default function Profile() {
   const { data: friendRequests, isLoading: friendReqsLoading } =
     api.friends.getRecievedRequests.useQuery();
 
-  const { data: gallery, isLoading: galleryLoading } =
-    api.gallery.getUserGallery.useQuery();
+  const {
+    data: gallery,
+    isLoading: galleryLoading,
+    error,
+    fetchNextPage,
+  } = api.gallery.getUserGallery.useInfiniteQuery(
+    {},
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
   const {
     data: personalDetails,
     isLoading: detailsLoading,
@@ -136,21 +146,14 @@ export default function Profile() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="My Collections" className="w-full pb-4">
-              <div className="grid gap-4 gap-x-10 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {gallery
-                  ? gallery.map((picture) => (
-                      <div key={picture.id} className="w-58 relative h-64">
-                        <Image
-                          src={picture.url}
-                          fill
-                          quality={100}
-                          className="rounded-lg border-2 border-primary-foreground/70 object-contain"
-                          alt="User Profile Picture rounded-full"
-                        />
-                      </div>
-                    ))
-                  : null}
-              </div>
+              {galleryLoading || error ? null : (
+                <PaginationProvider
+                  fetchNextPage={fetchNextPage as any}
+                  pagesData={gallery?.pages}
+                >
+                  <UserGalleryTab gallery={gallery} />
+                </PaginationProvider>
+              )}
             </TabsContent>
             <TabsContent value="Personal Information" className="w-full pb-4">
               <div className="flex flex-col">
@@ -237,6 +240,8 @@ import { nanoid } from "nanoid";
 import FriendReqCard from "@/components/profilePageComponents/FriendReqCard";
 import { EditDetailsModal } from "@/components/profilePageComponents/EditDetailsModal";
 import AddAddressModal from "@/components/profilePageComponents/AddAddressModal";
+import { PaginationProvider, usePagination } from "@/hooks/usePaginationHook";
+import UserGalleryTab from "@/components/profilePageComponents/UserGalleryTab";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({

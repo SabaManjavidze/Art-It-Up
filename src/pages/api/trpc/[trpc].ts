@@ -8,7 +8,7 @@ import { appRouter } from "../../../server/api/root.router";
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "15mb",
+      sizeLimit: "30mb",
     },
   },
 };

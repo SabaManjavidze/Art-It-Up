@@ -103,6 +103,7 @@ const seedProducts = async () => {
       defaultVariantId: variant.id,
       description: product.description,
       picture: product.images[0]?.src.toString() as string,
+      styleId: "",
       created_at: new Date(product.created_at),
     };
   });

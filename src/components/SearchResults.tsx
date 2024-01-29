@@ -23,10 +23,12 @@ function ResultCard({
   disabled: boolean;
 }) {
   const context = api.useContext();
+  const [dis, setDis] = useState(disabled);
   const { mutateAsync: sendFriendReq, isLoading } =
     api.friends.sendFriendRequest.useMutation({
       onSuccess() {
         context.friends.getSentRequests.invalidate();
+        setDis(true);
       },
     });
 
@@ -50,7 +52,7 @@ function ResultCard({
       </h3>
       <Button
         tabIndex={3}
-        disabled={disabled}
+        disabled={dis || disabled}
         variant="outline"
         isLoading={isLoading}
         className="w-[35%]"

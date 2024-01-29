@@ -27,8 +27,8 @@ export default function Modal({
     >
       <DialogContent className={twMerge("", className)}>
         {title ? (
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
+          <DialogHeader className="relative w-full">
+            <DialogTitle className="text-center">{title}</DialogTitle>
           </DialogHeader>
         ) : null}
         {children}

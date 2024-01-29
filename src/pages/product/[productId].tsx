@@ -38,6 +38,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
   const descRef = useRef<HTMLParagraphElement>(null);
 
   const [image, setImage] = useState(product?.images?.[0]?.src || "");
+  const [showModal, setShowModal] = useState(false);
   const [options, setOptions] = useState<OptionType>({
     quantity: 1,
     size: product?.sizes[0]?.id as number,
@@ -82,6 +83,9 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
       toast.error(error as string);
     }
   };
+  const handlePurchaseClick = async () => {
+    router.push("/user/cart");
+  };
   const handleAddToCart = async () => {
     if (session.status == "unauthenticated") {
       toast.error("Unauthenticated. click here to sign in", {
@@ -91,7 +95,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
     try {
       await addToCart({
         productId: product.id,
-        styleId: "",
+        styleId: "asstaenjlcxdrvrvwe9f",
         sizeId: options.size,
         sizeTitle: product.sizes.find((size) => size.id == options.size)
           ?.title as string,
@@ -142,9 +146,14 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
       </Head>
       <div className="container min-h-screen bg-background">
         {/* Product info */}
-        <div className="mt-16 flex min-h-[60vh] w-full flex-col justify-between lg:mt-32 lg:flex-row">
-          <div className="flex w-full flex-col items-center justify-center lg:w-4/5 lg:flex-row">
-            <Carousel className="lg:hidden">
+        <StyleUploadModal
+          closeModal={() => setShowModal(false)}
+          isOpen={showModal}
+          productId={product.id}
+        />
+        <div className="mt-12 flex min-h-[60vh] w-full flex-col justify-between lg:mt-28 lg:flex-row">
+          <div className="flex w-full flex-col items-center lg:flex-row lg:pr-12">
+            <Carousel className="w-full px-0 lg:hidden">
               {product.images.map((img) => (
                 <div
                   className="relative h-[50vh] w-full rounded-3xl border lg:w-2/5"
@@ -160,7 +169,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                 </div>
               ))}
             </Carousel>
-            <div className="relative hidden h-[50vh] w-full rounded-3xl border lg:block lg:w-2/5">
+            <div className="relative hidden h-full w-full rounded-3xl border lg:block lg:w-2/5">
               <Image
                 src={image}
                 alt={"product image"}
@@ -168,19 +177,21 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                 fill
               />
             </div>
-            <div className="flex h-full w-full flex-col items-start justify-between lg:ml-4 lg:w-1/2">
-              <h1 className="h-1/3 text-2xl font-medium tracking-tight text-primary-foreground sm:text-4xl lg:w-3/5">
-                {product.title}
-              </h1>
+            <div className="mt-10 flex h-full w-full flex-col justify-between lg:mt-0 lg:ml-4 lg:w-1/2 lg:items-start">
+              <div className="flex items-start">
+                <h1 className="text-2xl font-medium tracking-tight text-primary-foreground sm:text-4xl">
+                  {product.title}
+                </h1>
+              </div>
               {/* Sizes */}
-              <div className="h-full lg:w-1/2">
+              <div className="mt-5 h-full lg:w-1/2">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-primary-foreground">
                     Sizes:
                   </h3>
                 </div>
                 <div
-                  className={`grid max-h-44 ${
+                  className={`grid ${
                     product.isClothe
                       ? "grid-cols-4 lg:grid-cols-3"
                       : "grid-cols-2 lg:grid-cols-2"
@@ -211,8 +222,19 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                   ))}
                 </div>
               </div>
-              <div className="mt-3 flex h-1/3 w-full items-center border-2 px-5 text-xl lg:mt-0">
-                SOME SHIT
+              <div className="mt-10 flex h-full items-end px-5 text-xl lg:mt-0">
+                <Button
+                  variant={"outline"}
+                  className={"h-28 w-36 rounded-2xl bg-muted"}
+                  onClick={() => setShowModal(true)}
+                >
+                  <div className="flex w-full flex-col items-center">
+                    <AiOutlineCloudUpload size={30} />
+                    <Label className="whitespace-nowrap text-base">
+                      Upload a photo
+                    </Label>
+                  </div>
+                </Button>
               </div>
             </div>
           </div>
@@ -249,6 +271,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                   type="submit"
                   variant={"accent"}
                   className="mt-3 rounded-3xl py-8 text-base"
+                  onClick={handlePurchaseClick}
                 >
                   <BsWalletFill className="w-[10%]" />
                   <h3 className="w-[90%]">Purchase</h3>
@@ -331,7 +354,7 @@ import {
   BLANK_PROFILE_URL,
   SIZES_PROP,
 } from "@/utils/general/constants";
-import { AiOutlinePlusSquare } from "react-icons/ai";
+import { AiOutlineCloudUpload, AiOutlinePlusSquare } from "react-icons/ai";
 import {
   BsCart,
   BsCartFill,
@@ -343,6 +366,9 @@ import {
 } from "react-icons/bs";
 import { Carousel } from "@/components/ui/carousel";
 import Head from "next/head";
+import Modal from "@/components/ui/modal";
+import ImageInput from "@/components/general/ImageInput";
+import { StyleUploadModal } from "@/components/productPageComponents/StyleUploadModal";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession({

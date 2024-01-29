@@ -102,6 +102,14 @@ export const productRouter = createTRPCRouter({
         isInWishList,
       };
     }),
+  setProductStyle: publicProcedure
+    .input(z.object({ styleId: z.string(), productId: z.string() }))
+    .mutation(async ({ input: { styleId, productId } }) => {
+      await prisma.product.update({
+        where: { id: productId },
+        data: { styleId },
+      });
+    }),
   getPrintifyProductSizes: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id } }) => {
