@@ -153,10 +153,13 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
         />
         <div className="mt-12 flex min-h-[60vh] w-full flex-col justify-between lg:mt-28 lg:flex-row">
           <div className="flex w-full flex-col items-center lg:flex-row lg:pr-12">
-            <Carousel className="w-full px-0 lg:hidden">
-              {product.images.map((img) => (
+            <Carousel
+              autoPlay={false}
+              className="flex h-full w-1/2 items-center border px-0"
+            >
+              {product.images.slice(0, 3).map((img) => (
                 <div
-                  className="relative h-[50vh] w-full rounded-3xl border lg:w-2/5"
+                  className="relative h-[50vh] w-full rounded-3xl"
                   key={img.src}
                 >
                   <Image
@@ -169,14 +172,6 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                 </div>
               ))}
             </Carousel>
-            <div className="relative hidden h-full w-full rounded-3xl border lg:block lg:w-2/5">
-              <Image
-                src={image}
-                alt={"product image"}
-                className="h-full w-full rounded-3xl object-cover sm:object-contain lg:object-cover"
-                fill
-              />
-            </div>
             <div className="mt-10 flex h-full w-full flex-col justify-between lg:mt-0 lg:ml-4 lg:w-1/2 lg:items-start">
               <div className="flex items-start">
                 <h1 className="text-2xl font-medium tracking-tight text-primary-foreground sm:text-4xl">
@@ -191,29 +186,25 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                   </h3>
                 </div>
                 <div
-                  className={`grid ${
-                    product.isClothe
+                  className={`grid ${product.isClothe
                       ? "grid-cols-4 lg:grid-cols-3"
                       : "grid-cols-2 lg:grid-cols-2"
-                  } mt-5 max-h-64 gap-y-3 gap-x-3 overflow-y-auto sm:grid-cols-4 lg:gap-x-0 `}
+                    } mt-5 max-h-64 gap-y-3 gap-x-3 overflow-y-auto sm:grid-cols-4 lg:gap-x-0 `}
                 >
                   {product.sizes.map((option) => (
                     <div key={option.id} className="flex w-full justify-center">
                       <Button
                         // disabled={!size.inStock}
                         variant={"outline"}
-                        className={`flex border ${
-                          options.size == option.id ? "border-indigo-500" : null
-                        }
-                    items-center justify-center overflow-hidden ${
-                      product.isClothe ? "h-10 w-16" : "lg:h-16 lg:w-36"
-                    }`}
+                        className={`flex border ${options.size == option.id ? "border-indigo-500" : null
+                          }
+                    items-center justify-center overflow-hidden ${product.isClothe ? "h-10 w-16" : "lg:h-16 lg:w-36"
+                          }`}
                         onClick={() => handleSizeChange(option.id)}
                       >
                         <Label
-                          className={`md:text-lg ${
-                            product.isClothe ? "whitespace-nowrap" : ""
-                          }`}
+                          className={`md:text-lg ${product.isClothe ? "whitespace-nowrap" : ""
+                            }`}
                         >
                           {option.title}
                         </Label>
@@ -317,22 +308,6 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="mt-3 hidden lg:flex">
-          {product.images.slice(0, 3).map((image) => (
-            <button
-              key={image.src}
-              className="relative mx-2 h-40 w-40 rounded-3xl border first-of-type:ml-0"
-              onClick={() => handleImageClick(image.src)}
-            >
-              <Image
-                src={image.src}
-                alt={"product image"}
-                className="h-full w-full rounded-3xl object-cover object-center"
-                fill
-              />
-            </button>
-          ))}
         </div>
       </div>
     </>

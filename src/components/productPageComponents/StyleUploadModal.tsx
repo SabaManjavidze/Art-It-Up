@@ -50,6 +50,13 @@ export const StyleUploadModal = ({
     setPage("main");
   };
 
+  const handleImageClick = async (url: string) => {
+    if (selectedImage == url) {
+      closeModal();
+    } else {
+      setSelectedImage(url);
+    }
+  };
   const handleImageUpload = async () => {
     const image = images[0];
     if (!image) return;
@@ -109,7 +116,13 @@ export const StyleUploadModal = ({
               pagesData={data.pages}
               fetchNextPage={fetchNextPage}
             >
-              <UserGalleryTab size="sm" gallery={data} className="py-4" />
+              <UserGalleryTab
+                size="sm"
+                gallery={data}
+                className="py-4"
+                onClick={(url) => handleImageClick(url)}
+                isActive={(url) => selectedImage == url}
+              />
             </PaginationProvider>
           ) : (
             <Loader2 />

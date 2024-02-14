@@ -1,4 +1,4 @@
-import type { ReactNode} from "react";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { Carousel as ReactCarousel } from "react-responsive-carousel";
@@ -9,9 +9,11 @@ export function Carousel({
   children,
   className,
   onClick,
+  autoPlay = true,
 }: {
   className?: string;
   children: any;
+  autoPlay?: boolean;
   onClick?: (index: number, item: ReactNode) => void;
 }) {
   const [selectedItem, setSelectedItem] = useState(0);
@@ -64,7 +66,7 @@ export function Carousel({
           ></li>
         );
       }}
-      autoPlay
+      autoPlay={autoPlay}
       infiniteLoop
       onClickItem={onClick}
       emulateTouch

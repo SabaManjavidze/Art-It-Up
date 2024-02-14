@@ -49,6 +49,8 @@ model Product {
     defautlSize      String                 @default("")
     defaultPrice     Int                    @default(0)
     defaultVariantId Int                    @default(0)
+    styleId String?                         
+    style UserImage?                        @relation(fields: [styleId] , references: [id])
     picture          String
     created_at       DateTime               @default(now())
     reviews          Review[]
@@ -56,6 +58,7 @@ model Product {
     orders           LineItems[]
     cartHolder       UserCartProducts[]
     wishHolder       UserWishListProducts[]
+    @@index([styleId])
 }
 
 model UserWishListProducts {
@@ -117,6 +120,7 @@ model UserImage {
     createdAt    DateTime           @default(now())
     cartProducts UserCartProducts[]
     lineItems    LineItems[]
+    product      Product[]
     ownerId      String
     owner        User?              @relation(fields: [id], references: [id], onDelete: Cascade)
 
