@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ImageInput from "../general/ImageInput";
 import Modal from "../ui/modal";
 import { Button } from "../ui/button";
-import { api } from "@/utils/api";
+import { RouterOutputs, api } from "@/utils/api";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { BsChevronLeft } from "react-icons/bs";
@@ -14,11 +14,11 @@ import { PaginationProvider } from "@/hooks/usePaginationHook";
 export const StyleUploadModal = ({
   closeModal,
   isOpen,
-  productId,
+  product,
 }: {
   closeModal: () => void;
   isOpen: boolean;
-  productId: string;
+  product: RouterOutputs["product"]["getPrintifyProduct"];
 }) => {
   const [page, setPage] = useState<"main" | "gallery" | "uploaded">("main");
   const [images, setImages] = useState<File[]>([]);
@@ -26,11 +26,13 @@ export const StyleUploadModal = ({
   const context = api.useContext();
   const { mutateAsync: setStyle } = api.product.setProductStyle.useMutation({
     onSuccess() {
-      context.product.getPrintifyProduct.invalidate({ id: productId });
+      context.product.getPrintifyProduct.invalidate({ id: product.id });
     },
   });
   const { mutateAsync: uploadImage, isLoading: imageUploadLoading } =
     api.gallery.uploadStyle.useMutation();
+  const { mutateAsync: mockupPreview, isLoading: mockupLoading } =
+    api.product.productMockupPreview.useMutation();
   const {
     data,
     isLoading,
@@ -55,6 +57,33 @@ export const StyleUploadModal = ({
       closeModal();
     } else {
       setSelectedImage(url);
+      await mockupPreview({
+        title: product.title,
+        blueprint_id: product.blueprint_id,
+        print_provider_id: product.print_provider_id,
+        variants: product.variants,
+        print_areas: [
+          {
+            variant_ids: product.variants.map((i) => i.id),
+            placeholders: [
+              {
+                position: "front",
+                images: [
+                  {
+                    src: url,
+                    height: 400,
+                    width: 400,
+                    x: 0.5,
+                    y: 0.5,
+                    scale: 1,
+                    angle: 0,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
     }
   };
   const handleImageUpload = async () => {
@@ -64,7 +93,7 @@ export const StyleUploadModal = ({
     const finalImg = await uploadImage({ picture: img });
     if (!finalImg) return;
     toast.success("image uploaded to your gallery");
-    await setStyle({ styleId: finalImg, productId });
+    await setStyle({ styleId: finalImg, productId: product.id });
     setImages([]);
   };
   if (page == "main") {

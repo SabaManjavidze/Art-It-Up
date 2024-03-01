@@ -6,8 +6,17 @@ import { TRPCError } from "@trpc/server";
 import type { UploadApiResponse } from "cloudinary";
 import { v2 } from "cloudinary";
 import { MAX_IMAGE_COUNT } from "@/utils/general/constants";
+import { printify } from "@/server/PrintifyClient";
 
 export const galleryRouter = createTRPCRouter({
+  // uploadImagePrintify: protectedProcedure
+  //   .input(z.object({ url: z.string(), file_name: z.string() }))
+  //   .query(async ({ input: { url, file_name }, ctx: { session } }) => {
+  //     return await printify.uploadImage({
+  //       url,
+  //       file_name,
+  //     });
+  //   }),
   getStyle: protectedProcedure
     .input(z.object({ styleId: z.string() }))
     .query(async ({ input: { styleId }, ctx: { session } }) => {

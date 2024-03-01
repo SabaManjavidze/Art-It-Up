@@ -49,6 +49,11 @@ export interface Value {
   sizes?: string[];
 }
 
+export interface ShortVariant {
+  id: number;
+  price: number;
+  is_enabled: boolean;
+}
 export interface Variant {
   id: number;
   sku: string;

@@ -92,7 +92,7 @@ const CartProductCard = ({
         </Link>
       </div>
       <div className="ml-4 flex w-full flex-col items-start sm:flex-row sm:justify-between">
-        <div className="mt-5 sm:mt-0">
+        <div className="mt-5 w-1/2 sm:mt-0">
           <h2 className="text-lg font-bold text-gray-900">
             {limitTxt(title, 25)}
           </h2>
@@ -112,7 +112,7 @@ const CartProductCard = ({
           />
           <h2 className="mt-2">$ {price}</h2>
         </div>
-        <div className="flex items-start">
+        <div className="flex w-1/4 items-start">
           <Button
             variant="outline"
             className="rounded-r-none"
@@ -131,17 +131,19 @@ const CartProductCard = ({
             +
           </Button>
         </div>
-        <button
-          className="hidden cursor-pointer pr-5 text-xs leading-3 text-red-500 underline duration-150 hover:scale-105 sm:block"
-          onClick={() => handleRemoveCartProduct(productId)}
-          title="Remove Product"
-        >
-          {removeProductLoading ? (
-            <Loader2 />
-          ) : (
-            <IoCloseOutline size={30} className="text-red-500" />
-          )}
-        </button>
+        <div className="flex justify-end">
+          <button
+            className="hidden cursor-pointer pr-5 text-xs leading-3 text-red-500 underline duration-150 hover:scale-105 sm:block"
+            onClick={() => handleRemoveCartProduct(productId)}
+            title="Remove Product"
+          >
+            {removeProductLoading ? (
+              <Loader2 />
+            ) : (
+              <IoCloseOutline size={30} className="text-red-500" />
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

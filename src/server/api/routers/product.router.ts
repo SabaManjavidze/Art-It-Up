@@ -8,6 +8,8 @@ import type {
 import { prisma } from "../../db";
 import { TRPCError } from "@trpc/server";
 import { printify } from "../../PrintifyClient";
+import PrintifyClient from "@kastlabs/printify-client";
+import { printAreaSchema, variantSchema } from "@/utils/printify/printifyZod";
 
 export const productRouter = createTRPCRouter({
   searchProducts: protectedProcedure
@@ -94,7 +96,10 @@ export const productRouter = createTRPCRouter({
         id: product.id,
         images: product.images,
         title: product.title,
+        blueprint_id: product.blueprint_id,
         description: product.description,
+        variants: product.variants,
+        print_provider_id: product.print_provider_id,
         sizes,
         isClothe,
         isInCart,
@@ -119,13 +124,70 @@ export const productRouter = createTRPCRouter({
       if (!product) throw new TRPCError({ code: "NOT_FOUND" });
       return extractSizesFromProduct(product);
     }),
+  productMockupPreview: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        blueprint_id: z.number(),
+        print_provider_id: z.number(),
+        variants: variantSchema.array(),
+        print_areas: printAreaSchema.array().nonempty(),
+      })
+    )
+    .mutation(
+      async ({
+        input: {
+          title,
+          blueprint_id,
+          print_provider_id,
+          variants,
+          print_areas,
+        },
+      }) => {
+        const print_areas2 = [];
+        for (let j = 0; j < print_areas[0].placeholders.length; j++) {
+          const placeholder = print_areas[0].placeholders[j];
+          if (!placeholder) throw new Error("hello");
+          const imgs = [];
+          for (let i = 0; i < placeholder.images.length; i++) {
+            const image = placeholder.images[i];
+            if (!image) throw new Error("hello");
+            const img = await printify.uploadImage({
+              url: image?.src as string,
+              file_name: image?.src as string,
+            });
+            imgs.push({
+              id: img.id,
+              ...image,
+            });
+          }
+          print_areas2.push({
+            images: imgs,
+            position: placeholder.position,
+          });
+        }
+        const product = await printify.createProduct({
+          title,
+          blueprint_id,
+          print_provider_id,
+          variants,
+          print_areas: [
+            {
+              placeholders: print_areas2,
+              variant_ids: print_areas[0].variant_ids,
+            },
+          ],
+        });
+        return product;
+      }
+    ),
   getPrintifyShopProducts: publicProcedure.query(async () => {
     const products = await printify.getProducts();
     return products;
   }),
 });
 
-function ProductIsClothe(product: PrintifyGetProductResponse) {
+export function ProductIsClothe(product: PrintifyGetProductResponse) {
   const HomeNLivingTag = "Home & Living";
   return product.tags.find((item) => item == HomeNLivingTag) === undefined;
 }

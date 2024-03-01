@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 type OptionType = {
@@ -149,7 +148,7 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
         <StyleUploadModal
           closeModal={() => setShowModal(false)}
           isOpen={showModal}
-          productId={product.id}
+          product={product}
         />
         <div className="mt-12 flex min-h-[60vh] w-full flex-col justify-between lg:mt-28 lg:flex-row">
           <div className="flex w-full flex-col items-center lg:flex-row lg:pr-12">
@@ -186,25 +185,29 @@ const ProductPageContainer = ({ productId }: { productId: string }) => {
                   </h3>
                 </div>
                 <div
-                  className={`grid ${product.isClothe
+                  className={`grid ${
+                    product.isClothe
                       ? "grid-cols-4 lg:grid-cols-3"
                       : "grid-cols-2 lg:grid-cols-2"
-                    } mt-5 max-h-64 gap-y-3 gap-x-3 overflow-y-auto sm:grid-cols-4 lg:gap-x-0 `}
+                  } mt-5 max-h-64 gap-y-3 gap-x-3 overflow-y-auto sm:grid-cols-4 lg:gap-x-0 `}
                 >
                   {product.sizes.map((option) => (
                     <div key={option.id} className="flex w-full justify-center">
                       <Button
                         // disabled={!size.inStock}
                         variant={"outline"}
-                        className={`flex border ${options.size == option.id ? "border-indigo-500" : null
-                          }
-                    items-center justify-center overflow-hidden ${product.isClothe ? "h-10 w-16" : "lg:h-16 lg:w-36"
-                          }`}
+                        className={`flex border ${
+                          options.size == option.id ? "border-indigo-500" : null
+                        }
+                    items-center justify-center overflow-hidden ${
+                      product.isClothe ? "h-10 w-16" : "lg:h-16 lg:w-36"
+                    }`}
                         onClick={() => handleSizeChange(option.id)}
                       >
                         <Label
-                          className={`md:text-lg ${product.isClothe ? "whitespace-nowrap" : ""
-                            }`}
+                          className={`md:text-lg ${
+                            product.isClothe ? "whitespace-nowrap" : ""
+                          }`}
                         >
                           {option.title}
                         </Label>
