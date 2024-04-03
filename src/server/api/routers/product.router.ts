@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import type {
+  Image2,
   PrintifyGetProductResponse,
   Variant,
 } from "../../../utils/printify/printifyTypes";
@@ -10,6 +11,7 @@ import { TRPCError } from "@trpc/server";
 import { printify } from "../../PrintifyClient";
 import PrintifyClient from "@kastlabs/printify-client";
 import { printAreaSchema, variantSchema } from "@/utils/printify/printifyZod";
+import { UploadApiResponse, v2 } from "cloudinary";
 
 export const productRouter = createTRPCRouter({
   searchProducts: protectedProcedure
@@ -100,6 +102,9 @@ export const productRouter = createTRPCRouter({
         description: product.description,
         variants: product.variants,
         print_provider_id: product.print_provider_id,
+        imgProps: product.print_areas[0]?.placeholders.find(
+          (i) => i.position == "front"
+        )?.images[0] as Image2,
         sizes,
         isClothe,
         isInCart,
@@ -143,6 +148,7 @@ export const productRouter = createTRPCRouter({
           variants,
           print_areas,
         },
+        ctx: { session },
       }) => {
         const print_areas2 = [];
         for (let j = 0; j < print_areas[0].placeholders.length; j++) {
@@ -166,6 +172,7 @@ export const productRouter = createTRPCRouter({
             position: placeholder.position,
           });
         }
+        // create new product
         const product = await printify.createProduct({
           title,
           blueprint_id,
@@ -178,7 +185,21 @@ export const productRouter = createTRPCRouter({
             },
           ],
         });
-        return product;
+        // upload new product images to the db to use it after deleting the product
+        const newImgs: string[] = [];
+        for (let i = 0; i < product.images.length; i++) {
+          const result: UploadApiResponse = await v2.uploader.upload(
+            product.images[i]?.src as string,
+            {
+              filename_override: session?.user.name as string,
+              image_metadata: true,
+            }
+          );
+          newImgs.push(result.url);
+        }
+        // delete the product
+        await printify.deleteProduct({ id: product.id });
+        return newImgs[0];
       }
     ),
   getPrintifyShopProducts: publicProcedure.query(async () => {

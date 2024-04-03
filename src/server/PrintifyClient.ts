@@ -42,6 +42,14 @@ export class Printify extends PrintifyClient {
       }),
     });
   }
+  public async deleteProduct({ id }: { id: string }): Promise<null> {
+    return this.invoke(
+      `/shops/${process.env.PRINTIFY_SHOP_ID}/products/${id}.json`,
+      {
+        method: "DELETE",
+      }
+    );
+  }
   public async createProduct({
     title,
     blueprint_id,

@@ -22,6 +22,7 @@ export const StyleUploadModal = ({
 }) => {
   const [page, setPage] = useState<"main" | "gallery" | "uploaded">("main");
   const [images, setImages] = useState<File[]>([]);
+  const [mockup, setMockup] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState("");
   const context = api.useContext();
   const { mutateAsync: setStyle } = api.product.setProductStyle.useMutation({
@@ -54,10 +55,9 @@ export const StyleUploadModal = ({
 
   const handleImageClick = async (url: string) => {
     if (selectedImage == url) {
-      closeModal();
-    } else {
-      setSelectedImage(url);
-      await mockupPreview({
+      setPage("uploaded");
+      const { height, width, x, y, angle, scale } = product.imgProps;
+      const imgs = await mockupPreview({
         title: product.title,
         blueprint_id: product.blueprint_id,
         print_provider_id: product.print_provider_id,
@@ -71,12 +71,12 @@ export const StyleUploadModal = ({
                 images: [
                   {
                     src: url,
-                    height: 400,
-                    width: 400,
-                    x: 0.5,
-                    y: 0.5,
-                    scale: 1,
-                    angle: 0,
+                    height,
+                    width,
+                    x,
+                    y,
+                    scale,
+                    angle,
                   },
                 ],
               },
@@ -84,6 +84,10 @@ export const StyleUploadModal = ({
           },
         ],
       });
+      if (!imgs) throw new Error("no img");
+      setMockup(imgs);
+    } else {
+      setSelectedImage(url);
     }
   };
   const handleImageUpload = async () => {
@@ -155,6 +159,18 @@ export const StyleUploadModal = ({
             </PaginationProvider>
           ) : (
             <Loader2 />
+          )}
+        </div>
+      </Modal>
+    );
+  } else if (page == "uploaded") {
+    return (
+      <Modal closeModal={closeModal2} isOpen={isOpen}>
+        <div className="flex justify-center">
+          {mockupLoading ? (
+            <Loader2 />
+          ) : (
+            <Image src={mockup} alt="mockup preview" width={500} height={500} />
           )}
         </div>
       </Modal>
