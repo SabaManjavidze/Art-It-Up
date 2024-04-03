@@ -7,11 +7,12 @@
     "genpush": "prisma generate && prisma db push",
     "dev": "next dev",
     "postinstall": "prisma generate",
-    "lint": "next lint",
+    "lint": "next lint --fix",
     "start": "next start",
     "db": "pscale connect dorten main-shadow --port=3309",
     "all": "npm-run-all --parallel dev db",
-    "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonJS\\\"}\""
+    "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonJS\\\"}\"",
+    "seed": "npm run ts-node ./scripts/seedProducts.ts"
   },
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",

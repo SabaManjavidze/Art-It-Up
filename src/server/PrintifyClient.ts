@@ -2,13 +2,14 @@ import PrintifyClient from "@kastlabs/printify-client";
 import type { z } from "zod";
 import type { lineItemsZT, printifyLineItemsZT } from "../utils/types/zodTypes";
 import { addressToSchema } from "../utils/types/zodTypes";
+import type {
+  PrintifyProductType,
+  ShortVariant} from "@/utils/printify/printifyTypes";
 import {
   PrintArea,
-  PrintifyProductType,
-  ShortVariant,
   Variant,
 } from "@/utils/printify/printifyTypes";
-import { printAreaSchema } from "@/utils/printify/printifyZod";
+import type { printAreaSchema } from "@/utils/printify/printifyZod";
 const addressWithoutTitle = addressToSchema.omit({ title: true });
 type userDetails = {
   first_name: string;
@@ -41,6 +42,14 @@ export class Printify extends PrintifyClient {
         file_name,
       }),
     });
+  }
+  public async deleteProduct({ id }: { id: string }): Promise<null> {
+    return this.invoke(
+      `/shops/${process.env.PRINTIFY_SHOP_ID}/products/${id}.json`,
+      {
+        method: "DELETE",
+      }
+    );
   }
   public async createProduct({
     title,
