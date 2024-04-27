@@ -182,7 +182,15 @@ model Order {
     @@index([creatorId])
     @@index([addressId])
 }
+model Whitelist{
+    id              String @id @default(cuid())
+    userId              String  @unique
+    user                User @relation(references: [id],fields: [userId], onDelete: Cascade)
+    createdAt         DateTime               @default(now())
 
+    @@index([userId])
+
+}
 model User {
     id                String                 @id @default(cuid())
     name              String
@@ -190,11 +198,13 @@ model User {
     lastName          String?
     phone             Int?
     email             String?                @unique
-    emailVerified     DateTime?
+    emailSubscription     Boolean           @default(false)
     image             String?
     birthday          DateTime?
     credits           Int                    @default(30)
+    whitelisted           Boolean                    @default(false)
     referralId       String?                @default("")
+    whitelist         Whitelist?            
     gallery           UserImage[]
     userFriends       Friends[]              @relation(name: "users")
     friendUserFriends Friends[]              @relation(name: "friendUsers")

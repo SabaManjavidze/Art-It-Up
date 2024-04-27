@@ -2,6 +2,7 @@ import {
   createContext,
   createContextInner,
   createTRPCRouter,
+  protectedProcedure,
   publicProcedure,
 } from "./trpc";
 import { productRouter } from "./routers/product.router";
@@ -34,6 +35,13 @@ export const appRouter = createTRPCRouter({
   credits: creditRouter,
   getTags: publicProcedure.query(async () => {
     return await prisma.tags.findMany();
+  }),
+  whitelist: protectedProcedure.mutation(async ({ ctx: { session } }) => {
+    await prisma.whitelist.create({
+      data: {
+        user: { connect: { id: session.user.id } },
+      },
+    });
   }),
 });
 // export type definition of API

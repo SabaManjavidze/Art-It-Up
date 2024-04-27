@@ -1,6 +1,7 @@
 export const BLANK_PROFILE_URL =
   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-
+export const WHITELIST_SESS_KEY = "whitelist";
+export const MODAL_SESS = "modal";
 export const IMG2IMG_COST = 30;
 export const REFERRAL_CREDITS = 30;
 

@@ -271,6 +271,7 @@ const Navbar = () => {
                   userPicture={session.user.image as string}
                   username={session.user?.name as string}
                   credits={session.user?.credits as number}
+                  whitelist={session.user.whitelisted as boolean}
                 />
               ) : (
                 <Button

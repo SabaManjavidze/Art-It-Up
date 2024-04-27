@@ -20,6 +20,7 @@ declare module "next-auth" {
   interface User extends DefaultUser {
     id: string;
     credits?: number;
+    whitelisted?: boolean;
   }
 }
 
@@ -29,6 +30,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = user.id;
         session.user.credits = user.credits;
+        session.user.whitelisted = user.whitelisted;
       }
       return session;
     },
@@ -61,7 +63,6 @@ export const authOptions: NextAuthOptions = {
           firstName: prof.given_name,
           lastName: prof.family_name,
           email: prof.email,
-          emailVerified: prof.email_verified,
           id: prof.sub,
           image: prof.picture,
           name: prof.name,
@@ -87,7 +88,6 @@ export const authOptions: NextAuthOptions = {
           firstName: profile.first_name,
           lastName: profile.last_name,
           email: profile.email,
-          emailVerified: true,
           name: profile.name,
           image: profile.picture.data.url,
           birthday: new Date(profile.birthday),

@@ -11,8 +11,7 @@ import { TRPCError } from "@trpc/server";
 import { printify } from "../../PrintifyClient";
 import PrintifyClient from "@kastlabs/printify-client";
 import { printAreaSchema, variantSchema } from "@/utils/printify/printifyZod";
-import type { UploadApiResponse } from "cloudinary";
-import { v2 } from "cloudinary";
+import type { v2 } from "cloudinary";
 
 export const productRouter = createTRPCRouter({
   searchProducts: protectedProcedure

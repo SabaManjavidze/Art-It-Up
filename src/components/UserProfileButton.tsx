@@ -12,17 +12,20 @@ import {
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
 import { useProfile } from "@/hooks/useProfileHook";
+import { HiBadgeCheck } from "react-icons/hi";
 
 type UserProfileButtonPropTypes = {
   userPicture: string;
   username: string;
   credits: number;
+  whitelist: boolean;
 };
 
 const UserProfileButton = ({
   userPicture,
   username,
   credits,
+  whitelist = false,
 }: UserProfileButtonPropTypes) => {
   const profileOptions = [
     { title: "Profile", path: "/user/profile" },
@@ -39,9 +42,14 @@ const UserProfileButton = ({
               src={userPicture}
               width={30}
               height={30}
-              className="rounded-full border-2 border-primary-foreground/70"
+              className={`rounded-full border-[3px] ${
+                whitelist ? "border-yellow-300" : "border-primary-foreground/70"
+              }`}
               alt="user profile image"
             />
+            {whitelist ? (
+              <HiBadgeCheck className="absolute top-0 left-0 text-yellow-300" />
+            ) : null}
             {changes > 0 ? (
               <div className="absolute top-1 right-0 translate-x-1/2 -translate-y-1/2">
                 <h4 className="flex h-5 w-5 items-center justify-center rounded-full bg-accent font-serif leading-3 text-secondary-foreground">
