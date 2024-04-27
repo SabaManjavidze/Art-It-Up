@@ -11,6 +11,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "@/components/general/Layout";
 import { SearchProvider } from "@/hooks/useSearchHook";
+import { ModalProvider } from "@/hooks/useLoginModal";
+import { useEffect } from "react";
+import { WHITELIST_SESS_KEY } from "@/utils/general/constants";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -22,8 +25,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <SearchProvider>
           <Navbar />
         </SearchProvider>
-        <Component {...pageProps} />
-        <ToastContainer limit={1} position="bottom-center" />
+        <ModalProvider>
+          <Component {...pageProps} />
+          <ToastContainer limit={1} position="bottom-center" />
+        </ModalProvider>
       </Layout>
     </SessionProvider>
   );

@@ -41,12 +41,8 @@ const UserCart = () => {
             ) : (
               products.map((cartProduct, prodIdx) => {
                 return (
-                  <div className="my-3">
-                    <CartProduct
-                      key={cartProduct.productId}
-                      cartProduct={cartProduct}
-                      prodIdx={prodIdx}
-                    />
+                  <div key={cartProduct.productId} className="my-3">
+                    <CartProduct cartProduct={cartProduct} prodIdx={prodIdx} />
                   </div>
                 );
               })

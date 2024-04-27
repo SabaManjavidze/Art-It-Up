@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState } from "react";
+import type { FocusEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { api } from "../utils/api";
 import { Loader2 } from "lucide-react";
@@ -7,7 +8,12 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BsCheck2 } from "react-icons/bs";
-import { SIZES_PROP } from "@/utils/general/constants";
+import { FaListCheck } from "react-icons/fa6";
+import {
+  MODAL_SESS,
+  SIZES_PROP,
+  WHITELIST_SESS_KEY,
+} from "@/utils/general/constants";
 import UserReviewCard from "@/components/general/UserReviewCard";
 import { nanoid } from "nanoid";
 import { Input } from "@/components/ui/input";
@@ -15,34 +21,44 @@ import { Button } from "@/components/ui/button";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { creditPricing, styles, userReviews } from "@/utils/home/utils";
 import { useSession } from "next-auth/react";
-import type {
-  PayPalButtonsComponentProps} from "@paypal/react-paypal-js";
-import {
-  PayPalButtons,
-  PayPalScriptProvider,
-  usePayPalScriptReducer,
-} from "@paypal/react-paypal-js";
+import type { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { PayPalButtonsComponent } from "@paypal/paypal-js";
 import Modal from "@/components/ui/modal";
 import { toast } from "react-toastify";
 import { useProfile } from "@/hooks/useProfileHook";
+import backdrop from "../../assets/blurdrop.png";
+import { useModal } from "@/hooks/useLoginModal";
+import WhitelistModal from "@/components/homePageComponents/WhitelistModal";
 
 const Home = () => {
   const [value, setValue] = useState("");
   const [copyActive, setCopyActive] = useState(false);
+  const { setListModal } = useModal();
   const router = useRouter();
   const session = useSession();
   const { data, isLoading } = api.product.getPrintifyShopProducts.useQuery();
-  const {
-    data: sd,
-    isLoading: sdLoad,
-    mutateAsync: txt2img,
-  } = api.stableDiffusion.txt2img.useMutation();
+  // const {
+  //   data: sd,
+  //   isLoading: sdLoad,
+  //   mutateAsync: txt2img,
+  // } = api.stableDiffusion.txt2img.useMutation();
 
   const ReferralLink = useMemo(
     () => `${process.env.NEXTAUTH_URL}/referral/${session?.data?.user.id}`,
     [session]
   );
+  useEffect(() => {
+    setTimeout(() => {
+      const modal = sessionStorage.getItem(MODAL_SESS);
+      console.log(modal);
+
+      if (!session.data?.user.whitelisted && !modal) {
+        setListModal(true);
+        // sessionStorage.setItem(WHITELIST_SESS_KEY, "true");
+      }
+    }, 5000);
+  }, [session.data?.user]);
   if (isLoading)
     return (
       <div className="flex min-h-screen w-full items-center justify-center bg-background">
@@ -58,19 +74,17 @@ const Home = () => {
       }, 1000);
     }
   };
-  const handlePromptSubmit = async () => {
-    // const data = await txt2img({
-    //   modelId: undefined,
-    //   prompt: value,
-    // });
-    // console.log(data?.output[0]);
+  const handlePromptFocus = (
+    e: FocusEvent<HTMLInputElement | HTMLButtonElement>
+  ) => {
+    setListModal(true);
   };
   return (
     <>
       <section className="radial-gradient relative flex h-screen w-full flex-col items-center pb-20">
         <div className="flex w-full flex-col items-center text-center">
           <h1 className="mt-52 w-4/5 text-5xl font-medium leading-snug md:w-1/2 md:text-7xl">
-            Art it up , but we are still working on it
+            Use AI To Generate Custom Styles
           </h1>
           <p className="w-4/5 py-3 text-sm text-muted-foreground md:w-2/5">
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -84,13 +98,15 @@ const Home = () => {
               <Input
                 className="rounded-3xl bg-primary py-8 text-secondary-foreground"
                 placeholder="Describe what you want"
-                onSubmitCapture={handlePromptSubmit}
+                // onSubmitCapture={handlePromptSubmit}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
+                onFocus={handlePromptFocus}
               />
               <Button
                 variant={"outline"}
-                onClick={handlePromptSubmit}
+                // onClick={handlePromptSubmit}
+                onFocus={handlePromptFocus}
                 className="absolute right-5 top-1/2 -translate-y-1/2 rounded-xl bg-background px-2 text-primary lg:px-5"
               >
                 Generate
@@ -100,6 +116,7 @@ const Home = () => {
               <Button
                 variant={"outline"}
                 className="text-md rounded-2xl bg-background py-6 text-primary-foreground"
+                onFocus={handlePromptFocus}
               >
                 <AiOutlineCloudUpload className="mr-2" size={25} />
                 Upload a photo
